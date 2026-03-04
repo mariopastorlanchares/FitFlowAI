@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function LoginScreen() {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Login</Text>
+            <Text style={styles.title}>FitFlow AI</Text>
             <Text style={styles.subtitle}>Pantalla de inicio de sesión</Text>
         </View>
     );
@@ -17,12 +17,13 @@ const styles = StyleSheet.create({
         padding: 24,
     },
     title: {
-        fontSize: 28,
-        fontWeight: '700',
+        fontSize: 32,
+        fontWeight: '800',
+        color: '#FFFFFF',
         marginBottom: 8,
     },
     subtitle: {
         fontSize: 16,
-        opacity: 0.6,
+        color: '#A0A0A0',
     },
 });
