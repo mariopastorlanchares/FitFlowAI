@@ -1,50 +1,117 @@
-# Welcome to your Expo app 👋
+<p align="center">
+  <img src="assets/images/icon.png" width="120" alt="FitFlow AI Logo" />
+</p>
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+<h1 align="center">FitFlow AI</h1>
 
-## Get started
+<p align="center">
+  <strong>Asistente de entrenamiento inteligente impulsado por IA</strong><br/>
+  Planifica, entrena y evoluciona — todo desde tu bolsillo.
+</p>
 
-1. Install dependencies
+<p align="center">
+  <img src="https://img.shields.io/badge/Expo-SDK_52-000020?logo=expo&logoColor=white" alt="Expo SDK" />
+  <img src="https://img.shields.io/badge/React_Native-0.76-61DAFB?logo=react&logoColor=white" alt="React Native" />
+  <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/License-Private-grey" alt="License" />
+</p>
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## 🎨 Identidad Visual
 
-   ```bash
-   npx expo start
-   ```
+FitFlow AI sigue una estética **"Energetic & Motivational"**, diseñada para transmitir fuerza y dinamismo:
 
-In the output, you'll find options to open the app in a
+| Token              | Valor       | Uso                              |
+| ------------------- | ----------- | -------------------------------- |
+| **Background**      | `#0D0D0D`   | Fondo principal — negro puro     |
+| **Accent**          | `#FF8C00`   | Botones, highlights, CTAs        |
+| **Surface**         | `#1A1A1A`   | Tarjetas y contenedores          |
+| **Text Primary**    | `#FFFFFF`   | Texto principal                  |
+| **Text Secondary**  | `#A0A0A0`   | Texto de apoyo                   |
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+> Dark mode por defecto. Interfaz limpia con acentos naranja vibrante para guiar la atención del usuario.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 🛠️ Stack Tecnológico
 
-When you're ready, run:
+| Tecnología                  | Propósito                                    |
+| --------------------------- | -------------------------------------------- |
+| **React Native**            | Framework de desarrollo móvil multiplataforma |
+| **Expo SDK 52**             | Toolchain, builds y servicios nativos         |
+| **Expo Router**             | Navegación basada en sistema de archivos      |
+| **NativeWind (Tailwind v4)**| Estilos utility-first para React Native       |
+| **Firebase** *(próximamente)* | Auth, Firestore, Analytics y Cloud Functions |
+| **TypeScript**              | Tipado estático y mejor DX                   |
+
+---
+
+## ✅ Prerrequisitos
+
+Antes de empezar, asegúrate de tener instalado:
+
+- **Node.js 24 LTS** — [descargar aquí](https://nodejs.org/)
+- **Expo Go** — disponible en [App Store](https://apps.apple.com/app/expo-go/id982107779) y [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent)
+- **Git** — para clonar el repositorio
+
+---
+
+## 🚀 Instalación y Uso
 
 ```bash
-npm run reset-project
+# 1. Clona el repositorio
+git clone https://github.com/tu-usuario/FitFlowAI.git
+cd FitFlowAI
+
+# 2. Instala las dependencias
+npm install
+
+# 3. Arranca el servidor de desarrollo
+npx expo start --clear
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Escanea el **código QR** desde la terminal con la app **Expo Go** para ver la app en tu dispositivo.
 
-## Learn more
+> [!TIP]
+> Usa la flag `--clear` al arrancar para limpiar la caché del bundler si experimentas errores tras cambios en la configuración.
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 📁 Estructura de Carpetas
 
-## Join the community
+```
+FitFlowAI/
+├── app/                      # 📱 Rutas — navegación basada en archivos (Expo Router)
+│   ├── _layout.tsx           #    Layout raíz — decide entre Auth o Main
+│   ├── (auth)/               #    🔒 Stack de Autenticación
+│   │   ├── _layout.tsx       #       Layout del stack (sin header)
+│   │   └── login.tsx         #       Pantalla de Login
+│   └── (main)/               #    🏠 Stack Principal (usuario autenticado)
+│       ├── _layout.tsx       #       Layout del stack (con header)
+│       └── index.tsx         #       Pantalla de Inicio
+│
+├── components/               # 🧩 Componentes reutilizables
+├── constants/                # 🎨 Tokens de diseño, colores y tipografía
+├── hooks/                    # 🪝 Custom hooks (useColorScheme, etc.)
+├── assets/                   # 🖼️ Imágenes, fuentes y recursos estáticos
+├── app.json                  # ⚙️ Configuración de Expo
+├── tailwind.config.js        # 🌬️ Configuración de NativeWind / Tailwind
+└── tsconfig.json             # 📘 Configuración de TypeScript
+```
 
-Join our community of developers creating universal apps.
+> La carpeta `app/` utiliza **enrutamiento basado en archivos**: cada archivo `.tsx` dentro de ella se convierte automáticamente en una ruta. Los grupos entre paréntesis como `(auth)` y `(main)` permiten organizar rutas sin afectar la URL.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+
+## 📐 Decisiones de Arquitectura
+
+- **Navegación condicional**: el layout raíz evalúa el estado de autenticación y renderiza el Stack correspondiente (`(auth)` o `(main)`).
+- **Separación clara**: la lógica de UI vive en `components/`, los tokens de diseño en `constants/`, y las rutas de la app en `app/`.
+- **Expo Go first**: el proyecto está diseñado para funcionar en Expo Go sin necesidad de builds nativos personalizados.
+
+---
+
+<p align="center">
+  <sub>Hecho con 💪 y ☕ — FitFlow AI © 2026</sub>
+</p>
