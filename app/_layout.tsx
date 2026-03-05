@@ -1,14 +1,15 @@
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import 'react-native-reanimated';
 
 import { AppBackground } from '@/components/app-background';
 import { palette } from '@/constants/theme';
+import { AuthContext, AuthProvider } from '@/contexts/auth-context';
 
 // React Navigation theme — transparent so the AppBackground texture shows through.
-// This is separate from Tailwind: Tailwind styles components, this theme controls
-// the navigation system's own backgrounds (screen bg, header bg, card bg, etc.)
 const NavigationTheme = {
   ...DarkTheme,
   colors: {
@@ -21,27 +22,43 @@ const NavigationTheme = {
   },
 };
 
-export default function RootLayout() {
-  // TODO: Replace with real auth state (e.g. from a context/provider)
-  const isAuthenticated = false;
+function RootNavigator() {
+  const { user, isLoading } = React.use(AuthContext);
+
+  // Show a loading spinner while Firebase checks auth state
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color={palette.primary} />
+      </View>
+    );
+  }
 
   return (
-    <ThemeProvider value={NavigationTheme}>
-      <AppBackground>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: 'transparent' },
-          }}
-        >
-          {isAuthenticated ? (
-            <Stack.Screen name="(main)" />
-          ) : (
-            <Stack.Screen name="(auth)" />
-          )}
-        </Stack>
-      </AppBackground>
-      <StatusBar style="light" />
-    </ThemeProvider>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: 'transparent' },
+      }}
+    >
+      {user ? (
+        <Stack.Screen name="(main)" />
+      ) : (
+        <Stack.Screen name="(auth)" />
+      )}
+    </Stack>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <ThemeProvider value={NavigationTheme}>
+        <AppBackground>
+          <RootNavigator />
+        </AppBackground>
+        <StatusBar style="light" />
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
