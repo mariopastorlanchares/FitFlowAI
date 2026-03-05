@@ -33,8 +33,8 @@
 - [x] Inicialización del proyecto y enrutamiento base (Expo Router)
 - [x] Configuración de Firebase SDK + variables de entorno (`.env`)
 - [x] Textura de fondo global (`AppBackground`)
-- [ ] Configuración del Sistema de Diseño (NativeWind, tokens en `constants/theme.ts`, layout principal)
-- [ ] **Pantalla: Login** — Revisar mockup en [`docs/mockups/`](docs/mockups/)
+- [/] Configuración del Sistema de Diseño (NativeWind, tokens en `constants/theme.ts`, layout principal)
+- [/] **Pantalla: Login** — Revisar mockup en [`docs/mockups/`](docs/mockups/)
 - [ ] **Pantalla: Dashboard / Home** — Revisar mockup modular en [`docs/mockups/`](docs/mockups/)
 - [ ] **Pantalla: Ejecución de Entrenamiento** — Revisar mockup de temporizador y tarjeta IA en [`docs/mockups/`](docs/mockups/)
 
