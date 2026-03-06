@@ -34,17 +34,17 @@
 - [x] Configuración de Firebase SDK + variables de entorno (`.env`)
 - [x] Textura de fondo global (`AppBackground`)
 - [x] Configuración del Sistema de Diseño (NativeWind, tokens en `constants/theme.ts`, layout principal)
-- [x] **Pantalla: Login** — Revisar mockup en [`docs/mockups/`](docs/mockups/)
+- [x] **Pantalla: Login / Registro** — Revisar mockup en [`docs/mockups/`](docs/mockups/)
 - [ ] **Pantalla: Dashboard / Home** — Revisar mockup modular en [`docs/mockups/`](docs/mockups/)
 - [ ] **Pantalla: Ejecución de Entrenamiento** — Revisar mockup de temporizador y tarjeta IA en [`docs/mockups/`](docs/mockups/)
 
 ---
 
-## 🔧 Fase 2 — Lógica Backend e IA `PENDIENTE`
+## 🔧 Fase 2 — Lógica Backend e IA `EN CURSO`
 
 > Objetivo: conectar la app con Firebase y el motor de IA para funcionalidad real.
 
-- [ ] Integración de Firebase Auth (Email/Password)
+- [x] Integración de Firebase Auth (Email/Password) + Internacionalización (i18n)
 - [ ] Integración de Firebase Auth (Apple Sign-In + Google Sign-In) — requiere build nativo
 - [ ] Configuración de Firestore (esquemas de datos: usuarios, rutinas, historial)
 - [ ] Conexión segura con Gemini vía Genkit (generación de rutinas y alternativas)
@@ -80,5 +80,5 @@
 ---
 
 <p align="center">
-  <sub>Última actualización: 5 de marzo de 2026</sub>
+  <sub>Última actualización: 7 de marzo de 2026</sub>
 </p>

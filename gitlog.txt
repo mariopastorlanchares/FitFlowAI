@@ -1,0 +1,45 @@
+﻿commit 10715080b6de35a20d66aad71f00b7fe1be7abfd
+Merge: 479a1da 4b04441
+Author: Mario Pastor Lanchares <mariopastorlanchares@gmail.com>
+Date:   Fri Mar 6 23:58:49 2026 +0100
+
+    Merge pull request #1 from mariopastorlanchares/feat/firebase-email-auth-18076268018740496758
+    
+    feat: implement firebase email/password authentication
+
+commit 4b04441374453005c188b9e0f43aa2f964f54df3
+Author: google-labs-jules[bot] <161369871+google-labs-jules[bot]@users.noreply.github.com>
+Date:   Fri Mar 6 22:50:37 2026 +0000
+
+    chore: remove playwright dependency
+    
+    Co-authored-by: mariopastorlanchares <35641887+mariopastorlanchares@users.noreply.github.com>
+
+commit 23c15a77de2b2419ae4672144b75b9d112168970
+Author: google-labs-jules[bot] <161369871+google-labs-jules[bot]@users.noreply.github.com>
+Date:   Fri Mar 6 22:49:22 2026 +0000
+
+    chore: acknowledge playwright addition in package.json
+    
+    Co-authored-by: mariopastorlanchares <35641887+mariopastorlanchares@users.noreply.github.com>
+
+commit 4cc86704852a8fd96498fa9d350167b26a2e6c46
+Author: google-labs-jules[bot] <161369871+google-labs-jules[bot]@users.noreply.github.com>
+Date:   Fri Mar 6 22:07:08 2026 +0000
+
+    feat: implement firebase email/password authentication
+    
+    - Set up Firebase app initialization with environment variables
+    - Implement AuthContext with email/password login and signup
+    - Create (auth) and (main) layout routes
+    - Add login UI page with FitFlow AI branding
+    - Pass routing and component tests with mocked Firebase Auth
+    - Add React 19 testing fixes for act() warnings
+    
+    Co-authored-by: mariopastorlanchares <35641887+mariopastorlanchares@users.noreply.github.com>
+
+commit 479a1da6fe38c995ce7e14a9d1c2638ff1b8e700
+Author: Mario Pastor <mariopastorlanchares@gmail.com>
+Date:   Fri Mar 6 18:53:15 2026 +0100
+
+    feat: Add initial login screen UI with email/password and social login options.

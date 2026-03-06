@@ -8,7 +8,7 @@ import {
     Pressable,
     ScrollView,
     Text,
-    View
+    View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -21,28 +21,34 @@ import { AuthContext } from '@/contexts/auth-context';
 import { getFirebaseErrorMessage } from '@/lib/i18n';
 import { useTranslation } from 'react-i18next';
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
     const insets = useSafeAreaInsets();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const { signIn } = useContext(AuthContext);
+    const { signUp } = useContext(AuthContext);
     const { t } = useTranslation();
 
-    const handleLogin = async () => {
-        if (!email || !password) {
-            setError(t('login.errorEmptyFields'));
+    const handleRegister = async () => {
+        if (!email || !password || !confirmPassword) {
+            setError(t('register.errorEmptyFields'));
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            setError(t('register.errorPasswordsDontMatch'));
             return;
         }
 
         try {
             setError('');
             setIsLoading(true);
-            await signIn(email, password);
+            await signUp(email, password);
         } catch (err: any) {
-            console.error('Login error:', err);
+            console.error('Register error:', err);
             setError(getFirebaseErrorMessage(err));
         } finally {
             setIsLoading(false);
@@ -65,28 +71,38 @@ export default function LoginScreen() {
                 {/* ── Logo + Title ── */}
                 <View
                     style={{
-                        flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: 10,
                         marginBottom: 32,
+                        gap: 8,
                     }}
                 >
-                    <Image
-                        source={require('@/assets/images/fitflow_logo.png')}
-                        style={{ width: 56, height: 56 }}
-                        contentFit="contain"
-                    />
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <Image
+                            source={require('@/assets/images/fitflow_logo.png')}
+                            style={{ width: 56, height: 56 }}
+                            contentFit="contain"
+                        />
+                        <Text
+                            style={{
+                                fontSize: 40,
+                                fontFamily: fonts.extraBold,
+                                color: palette.textPrimary,
+                                letterSpacing: 0.3,
+                            }}
+                        >
+                            FitFlow{' '}
+                            <Text style={{ color: palette.primary }}>AI</Text>
+                        </Text>
+                    </View>
                     <Text
                         style={{
-                            fontSize: 40,
-                            fontFamily: fonts.extraBold,
-                            color: palette.textPrimary,
-                            letterSpacing: 0.3,
+                            fontSize: 18,
+                            fontFamily: fonts.semiBold,
+                            color: palette.textSecondary,
                         }}
                     >
-                        FitFlow{' '}
-                        <Text style={{ color: palette.primary }}>AI</Text>
+                        {t('common.createAccount')}
                     </Text>
                 </View>
 
@@ -127,18 +143,27 @@ export default function LoginScreen() {
                             onChangeText={setPassword}
                             secureTextEntry
                             autoComplete="password"
-                            textContentType="password"
+                            textContentType="newPassword"
+                        />
+                        <FormInput
+                            icon="check-circle-outline"
+                            placeholder={t('common.confirmPasswordPlaceholder')}
+                            value={confirmPassword}
+                            onChangeText={setConfirmPassword}
+                            secureTextEntry
+                            autoComplete="password"
+                            textContentType="newPassword"
                         />
                     </View>
 
                     {/* ── CTA ── */}
                     <PrimaryButton
-                        label={isLoading ? t('common.loading') : t('login.cta')}
-                        onPress={handleLogin}
+                        label={isLoading ? t('common.loading') : t('register.cta')}
+                        onPress={handleRegister}
                     />
 
                     {/* ── Social Login ── */}
-                    <Divider label={t('common.orConnectWith')} />
+                    <Divider label={t('common.orRegisterWith')} />
 
                     <View style={{ flexDirection: 'row', gap: 14 }}>
                         <SocialButton
@@ -170,7 +195,7 @@ export default function LoginScreen() {
                     </View>
                 </BlurView>
 
-                {/* ── Sign-up link ── */}
+                {/* ── Sign-in link ── */}
                 <View
                     style={{
                         flexDirection: 'row',
@@ -186,9 +211,9 @@ export default function LoginScreen() {
                             fontFamily: fonts.regular,
                         }}
                     >
-                        {t('login.noAccountText')}
+                        {t('register.hasAccountText')}
                     </Text>
-                    <Link href="/(auth)/register" asChild>
+                    <Link href="/(auth)/login" asChild>
                         <Pressable>
                             <Text
                                 style={{
@@ -197,7 +222,7 @@ export default function LoginScreen() {
                                     fontFamily: fonts.bold,
                                 }}
                             >
-                                {t('login.noAccountLink')}
+                                {t('register.hasAccountLink')}
                             </Text>
                         </Pressable>
                     </Link>

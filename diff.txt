@@ -1,0 +1,317 @@
+﻿diff --git a/lib/firebase.ts b/lib/firebase.ts
+index ca88df5..c004ec1 100644
+--- a/lib/firebase.ts
++++ b/lib/firebase.ts
+@@ -1,5 +1,7 @@
+-import { initializeApp } from 'firebase/app';
+-import { getAuth } from 'firebase/auth';
++import { initializeApp, getApps, getApp } from 'firebase/app';
++import { getAuth, initializeAuth, getReactNativePersistence } from 'firebase/auth';
++import AsyncStorage from '@react-native-async-storage/async-storage';
++import { Platform } from 'react-native';
+ 
+ /**
+  * Firebase config loaded from environment variables.
+@@ -7,13 +9,34 @@ import { getAuth } from 'firebase/auth';
+  * To find them again: Firebase Console ÔåÆ ÔÜÖ´©Å Settings ÔåÆ General ÔåÆ Your apps.
+  */
+ const firebaseConfig = {
+-    apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+-    authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+-    projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+-    storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+-    messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+-    appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
++    apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY || "dummy",
++    authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN || "dummy",
++    projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || "dummy",
++    storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET || "dummy",
++    messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "dummy",
++    appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID || "dummy",
+ };
+ 
+-const app = initializeApp(firebaseConfig);
+-export const auth = getAuth(app);
++let app;
++if (getApps().length === 0) {
++    app = initializeApp(firebaseConfig);
++} else {
++    app = getApp();
++}
++
++let auth;
++try {
++    if (Platform.OS === 'web') {
++        auth = getAuth(app);
++    } else {
++        // Attempt to initialize auth with persistence
++        auth = initializeAuth(app, {
++            persistence: getReactNativePersistence(AsyncStorage)
++        });
++    }
++} catch (error) {
++    // If it's already initialized (e.g. in hot reload), use getAuth
++    auth = getAuth(app);
++}
++
++export { app, auth };
+diff --git a/login_screen_test.png b/login_screen_test.png
+new file mode 100644
+index 0000000..66c7554
+Binary files /dev/null and b/login_screen_test.png differ
+diff --git a/npm_output.log b/npm_output.log
+new file mode 100644
+index 0000000..029b1cc
+--- /dev/null
++++ b/npm_output.log
+@@ -0,0 +1,133 @@
++Starting project at /app
++React Compiler enabled
++Starting Metro Bundler
++Waiting on http://localhost:8081
++Logs for your project will appear below.
++Web node_modules/expo-router/entry.js ÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ  0.0% (0/1)
++Web node_modules/expo-router/entry.js ÔûôÔûôÔûôÔûôÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ 25.0% ( 92/201)
++╬╗ node_modules/expo-router/node/render.js ÔûôÔûôÔûôÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ 20.6% (153/337)
++Web node_modules/expo-router/entry.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ 49.4% (251/379)
++╬╗ node_modules/expo-router/node/render.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæÔûæÔûæÔûæÔûæÔûæÔûæ 57.9% (464/610)
++Web node_modules/expo-router/entry.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ 52.8% (372/512)
++╬╗ node_modules/expo-router/node/render.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæÔûæÔûæÔûæÔûæÔûæ 64.2% (618/771)
++Web node_modules/expo-router/entry.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæÔûæÔûæÔûæÔûæÔûæ 64.0% (661/826)
++╬╗ node_modules/expo-router/node/render.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæÔûæÔûæÔûæ 79.0% (822/925)
++Web node_modules/expo-router/entry.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæÔûæÔûæÔûæ 77.9% ( 904/1024)
++╬╗ node_modules/expo-router/node/render.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæÔûæ 89.2% ( 994/1054)
++╬╗ Bundled 20257ms node_modules/expo-router/node/render.js (1177 modules)
++Web node_modules/expo-router/entry.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæ 96.2% (1183/1206)
++
++Metro error: Firebase: Error (auth/invalid-api-key).
++
++Code: firebase.ts
++[0m [90m 17 |[39m
++ [90m 18 |[39m [36mconst[39m app [33m=[39m initializeApp(firebaseConfig)[33m;[39m
++[31m[1m>[22m[39m[90m 19 |[39m [36mexport[39m [36mconst[39m auth [33m=[39m getAuth(app)[33m;[39m
++ [90m    |[39m                            [31m[1m^[22m[39m
++ [90m 20 |[39m[0m
++Call Stack
++  factory (lib/firebase.ts:19:28)
++Web node_modules/expo-router/entry.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæ 96.4% (1184/1206)
++Web Bundled 24031ms node_modules/expo-router/entry.js (1231 modules)
++Web node_modules/expo-router/_error.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæÔûæÔûæ 83.1% (267/301)
++Web Bundled 3807ms node_modules/expo-router/_error.js (323 modules)
++ LOG  [web] Logs will appear in the browser console
++Web node_modules/expo-router/entry.js ÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ  0.0% (0/1)
++╬╗ Bundling failed 40ms node_modules/expo-router/node/render.js (1 module)
++
++Metro error: Unable to resolve module @react-native-async-storage/async-storage from /app/lib/firebase.ts: @react-native-async-storage/async-storage could not be found within the project or in these directories:
++  node_modules
++[0m [90m 1 |[39m [36mimport[39m { initializeApp[33m,[39m getApps[33m,[39m getApp } [36mfrom[39m [32m'firebase/app'[39m[33m;[39m
++ [90m 2 |[39m [36mimport[39m { getAuth[33m,[39m initializeAuth[33m,[39m getReactNativePersistence } [36mfrom[39m [32m'firebase/auth'[39m[33m;[39m
++[31m[1m>[22m[39m[90m 3 |[39m [36mimport[39m [33mAsyncStorage[39m [36mfrom[39m [32m'@react-native-async-storage/async-storage'[39m[33m;[39m
++ [90m   |[39m                           [31m[1m^[22m[39m
++ [90m 4 |[39m [36mimport[39m { [33mPlatform[39m } [36mfrom[39m [32m'react-native'[39m[33m;[39m
++ [90m 5 |[39m
++ [90m 6 |[39m [90m/**[39m[0m
++
++Import stack:
++
++ lib/firebase.ts
++ | import "@react-native-async-storage/async-storage"
++
++ contexts/auth-context.tsx
++ | import "@/lib/firebase"
++
++ app/_layout.tsx
++ | import "@/contexts/auth-context"
++
++ app (require.context)
++
++
++Call Stack
++  <unknown> (lib/firebase.ts:0)
++Web node_modules/expo-router/entry.js ÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ  0.0% (0/1)
++Web Bundling failed 74ms node_modules/expo-router/entry.js (1 module)
++Web Bundled 23ms node_modules/expo-router/_error.js (1 module)
++ LOG  [web] Logs will appear in the browser console
++Web node_modules/expo-router/entry.js ÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ  0.0% (0/1)
++╬╗ Bundled 2670ms node_modules/expo-router/node/render.js (1 module)
++Web Bundled 3429ms node_modules/expo-router/entry.js (1 module)
++Web node_modules/expo-router/entry.js ÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ  0.0% (0/1)
++Web node_modules/expo-router/entry.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ 44.7% (433/648)
++Web node_modules/expo-router/entry.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæÔûæÔûæÔûæÔûæ 71.9% (770/908)
++Web node_modules/expo-router/entry.js ÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûôÔûæ 95.3% (1150/1178)
++Web Bundled 11504ms node_modules/expo-router/entry.js (1238 modules)
++ LOG  [web] Logs will appear in the browser console
++Web node_modules/expo-router/entry.js ÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ  0.0% (0/1)
++╬╗ Bundled 2098ms node_modules/expo-router/node/render.js (1 module)
++Web Bundled 2674ms node_modules/expo-router/entry.js (1 module)
++Web Bundled 775ms node_modules/expo-router/entry.js (1 module)
++Web node_modules/expo-router/entry.js ÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ  0.0% (0/1)
++ LOG  [web] Logs will appear in the browser console
++Web node_modules/expo-router/entry.js ÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ  0.0% (0/1)
++╬╗ Bundled 36ms node_modules/expo-router/node/render.js (1 module)
++Web Bundled 461ms node_modules/expo-router/entry.js (1 module)
++Web Bundled 69ms node_modules/expo-router/entry.js (1 module)
++ LOG  [web] Logs will appear in the browser console
++Web node_modules/expo-router/entry.js ÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ  0.0% (0/1)
++╬╗ Bundled 63ms node_modules/expo-router/node/render.js (1 module)
++Web Bundled 579ms node_modules/expo-router/entry.js (1 module)
++Web Bundled 55ms node_modules/expo-router/entry.js (1 module)
++ LOG  [web] Logs will appear in the browser console
++Web node_modules/expo-router/entry.js ÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ  0.0% (0/1)
++╬╗ Bundled 63ms node_modules/expo-router/node/render.js (1 module)
++Web Bundled 467ms node_modules/expo-router/entry.js (1 module)
++Web Bundled 62ms node_modules/expo-router/entry.js (1 module)
++ LOG  [web] Logs will appear in the browser console
++Web node_modules/expo-router/entry.js ÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ  0.0% (0/1)
++╬╗ Bundled 56ms node_modules/expo-router/node/render.js (1 module)
++Web Bundled 516ms node_modules/expo-router/entry.js (1 module)
++Web Bundled 82ms node_modules/expo-router/entry.js (1 module)
++ LOG  [web] Logs will appear in the browser console
++Web node_modules/expo-router/entry.js ÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæÔûæ  0.0% (0/1)
++╬╗ Bundled 67ms node_modules/expo-router/node/render.js (1 module)
++Web Bundled 538ms node_modules/expo-router/entry.js (1 module)
++Web Bundled 82ms node_modules/expo-router/entry.js (1 module)
++ LOG  [web] Logs will appear in the browser console
++╬╗ Bundled 39ms node_modules/expo-router/node/render.js (1 module)
++Web Bundled 431ms node_modules/expo-router/entry.js (1 module)
++Web Bundled 61ms node_modules/expo-router/entry.js (1 module)
++ LOG  [web] Logs will appear in the browser console
++/app/node_modules/expo/node_modules/@expo/cli/build/src/utils/errors.js:130
++    throw error;
++    ^
++
++Error: ENOENT: no such file or directory, watch '/app/node_modules/.playwright-RSDCh5UZ/lib/agents'
++    at FSWatcher.<computed> (node:internal/fs/watchers:254:19)
++    at Object.watch (node:fs:2561:36)
++    at FallbackWatcher._watchdir (/app/node_modules/metro-file-map/src/watchers/FallbackWatcher.js:119:33)
++    at /app/node_modules/metro-file-map/src/watchers/FallbackWatcher.js:219:22
++    at Walker.<anonymous> (/app/node_modules/metro-file-map/src/watchers/FallbackWatcher.js:358:5)
++    at Walker.emit (node:events:519:28)
++    at /app/node_modules/walker/lib/walker.js:69:16
++    at FSReqCallback.oncomplete (node:fs:186:23)
++    at FSReqCallback.callbackTrampoline (node:internal/async_hooks:130:17) {
++  errno: -2,
++  syscall: 'watch',
++  code: 'ENOENT',
++  path: '/app/node_modules/.playwright-RSDCh5UZ/lib/agents',
++  filename: '/app/node_modules/.playwright-RSDCh5UZ/lib/agents'
++}
++
++Node.js v22.22.0
+diff --git a/package-lock.json b/package-lock.json
+index 7fe47b9..ef1e8b7 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -10,6 +10,7 @@
+       "dependencies": {
+         "@expo-google-fonts/inter": "^0.4.2",
+         "@expo/vector-icons": "^15.0.3",
++        "@react-native-async-storage/async-storage": "^2.2.0",
+         "@react-navigation/bottom-tabs": "^7.4.0",
+         "@react-navigation/elements": "^2.6.3",
+         "@react-navigation/native": "^7.1.8",
+@@ -3505,6 +3506,18 @@
+         }
+       }
+     },
++    "node_modules/@react-native-async-storage/async-storage": {
++      "version": "2.2.0",
++      "resolved": "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-2.2.0.tgz",
++      "integrity": "sha512-gvRvjR5JAaUZF8tv2Kcq/Gbt3JHwbKFYfmb445rhOj6NUMx3qPLixmDx5pZAyb9at1bYvJ4/eTUipU5aki45xw==",
++      "license": "MIT",
++      "dependencies": {
++        "merge-options": "^3.0.4"
++      },
++      "peerDependencies": {
++        "react-native": "^0.0.0-0 || >=0.65 <1.0"
++      }
++    },
+     "node_modules/@react-native/assets-registry": {
+       "version": "0.81.5",
+       "resolved": "https://registry.npmjs.org/@react-native/assets-registry/-/assets-registry-0.81.5.tgz",
+@@ -8795,6 +8808,15 @@
+         "url": "https://github.com/sponsors/ljharb"
+       }
+     },
++    "node_modules/is-plain-obj": {
++      "version": "2.1.0",
++      "resolved": "https://registry.npmjs.org/is-plain-obj/-/is-plain-obj-2.1.0.tgz",
++      "integrity": "sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=8"
++      }
++    },
+     "node_modules/is-regex": {
+       "version": "1.2.1",
+       "resolved": "https://registry.npmjs.org/is-regex/-/is-regex-1.2.1.tgz",
+@@ -9806,6 +9828,18 @@
+       "integrity": "sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==",
+       "license": "MIT"
+     },
++    "node_modules/merge-options": {
++      "version": "3.0.4",
++      "resolved": "https://registry.npmjs.org/merge-options/-/merge-options-3.0.4.tgz",
++      "integrity": "sha512-2Sug1+knBjkaMsMgf1ctR1Ujx+Ayku4EdJN4Z+C2+JzoeF7A3OZ9KM2GY0CpQS51NR61LTurMJrRKPhSs3ZRTQ==",
++      "license": "MIT",
++      "dependencies": {
++        "is-plain-obj": "^2.1.0"
++      },
++      "engines": {
++        "node": ">=10"
++      }
++    },
+     "node_modules/merge-stream": {
+       "version": "2.0.0",
+       "resolved": "https://registry.npmjs.org/merge-stream/-/merge-stream-2.0.0.tgz",
+diff --git a/package.json b/package.json
+index f18b312..daece8b 100644
+--- a/package.json
++++ b/package.json
+@@ -13,6 +13,7 @@
+   "dependencies": {
+     "@expo-google-fonts/inter": "^0.4.2",
+     "@expo/vector-icons": "^15.0.3",
++    "@react-native-async-storage/async-storage": "^2.2.0",
+     "@react-navigation/bottom-tabs": "^7.4.0",
+     "@react-navigation/elements": "^2.6.3",
+     "@react-navigation/native": "^7.1.8",
+diff --git a/test-results/.last-run.json b/test-results/.last-run.json
+new file mode 100644
+index 0000000..5fca3f8
+--- /dev/null
++++ b/test-results/.last-run.json
+@@ -0,0 +1,4 @@
++{
++  "status": "failed",
++  "failedTests": []
++}
+\ No newline at end of file
+diff --git a/test-web.mjs b/test-web.mjs
+new file mode 100644
+index 0000000..7350167
+--- /dev/null
++++ b/test-web.mjs
+@@ -0,0 +1,22 @@
++import { chromium } from 'playwright';
++
++(async () => {
++  const browser = await chromium.launch();
++  const page = await browser.newPage();
++
++  page.on('console', msg => console.log('PAGE LOG:', msg.text()));
++  page.on('pageerror', error => console.log('PAGE ERROR:', error.message));
++
++  await page.goto('http://localhost:8081/login');
++
++  // Wait for React to mount and some content to appear
++  await page.waitForTimeout(3000);
++
++  // Save screenshot
++  await page.screenshot({ path: 'login_screen_test.png' });
++
++  const content = await page.content();
++  console.log("HTML CONTENT:", content);
++
++  await browser.close();
++})();

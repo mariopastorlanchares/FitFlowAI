@@ -7,7 +7,7 @@ import {
   useFonts,
 } from '@expo-google-fonts/inter';
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
@@ -17,6 +17,7 @@ import 'react-native-reanimated';
 import { AppBackground } from '@/components/app-background';
 import { palette } from '@/constants/theme';
 import { AuthContext, AuthProvider } from '@/contexts/auth-context';
+import '@/lib/i18n';
 
 // Keep splash visible while fonts load
 SplashScreen.preventAutoHideAsync();
@@ -36,6 +37,22 @@ const NavigationTheme = {
 
 function RootNavigator() {
   const { user, isLoading } = React.use(AuthContext);
+  const router = useRouter();
+  const segments = useSegments();
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    const inAuthGroup = segments[0] === '(auth)';
+
+    if (user && inAuthGroup) {
+      // Si el usuario está logueado y trata de acceder o sigue en auth, lo pasamos al dashboard.
+      router.replace('/(main)');
+    } else if (!user && !inAuthGroup) {
+      // Si el usuario no está logueado y trata de acceder a main, a login.
+      router.replace('/(auth)/login');
+    }
+  }, [user, isLoading, segments]);
 
   // Show a loading spinner while Firebase checks auth state
   if (isLoading) {
@@ -53,11 +70,8 @@ function RootNavigator() {
         contentStyle: { backgroundColor: 'transparent' },
       }}
     >
-      {user ? (
-        <Stack.Screen name="(main)" />
-      ) : (
-        <Stack.Screen name="(auth)" />
-      )}
+      <Stack.Screen name="(main)" />
+      <Stack.Screen name="(auth)" />
     </Stack>
   );
 }
