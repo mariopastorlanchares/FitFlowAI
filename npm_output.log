@@ -1,0 +1,111 @@
+Starting project at /app
+React Compiler enabled
+Starting Metro Bundler
+Waiting on http://localhost:8081
+Logs for your project will appear below.
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web node_modules/expo-router/entry.js ▓▓▓▓░░░░░░░░░░░░ 25.0% ( 92/201)
+λ node_modules/expo-router/node/render.js ▓▓▓░░░░░░░░░░░░░ 20.6% (153/337)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓░░░░░░░░░ 49.4% (251/379)
+λ node_modules/expo-router/node/render.js ▓▓▓▓▓▓▓▓▓░░░░░░░ 57.9% (464/610)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓░░░░░░░░ 52.8% (372/512)
+λ node_modules/expo-router/node/render.js ▓▓▓▓▓▓▓▓▓▓░░░░░░ 64.2% (618/771)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓▓▓░░░░░░ 64.0% (661/826)
+λ node_modules/expo-router/node/render.js ▓▓▓▓▓▓▓▓▓▓▓▓░░░░ 79.0% (822/925)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓▓▓▓▓░░░░ 77.9% ( 904/1024)
+λ node_modules/expo-router/node/render.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░ 89.2% ( 994/1054)
+λ Bundled 20257ms node_modules/expo-router/node/render.js (1177 modules)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 96.2% (1183/1206)
+
+Metro error: Firebase: Error (auth/invalid-api-key).
+
+Code: firebase.ts
+[0m [90m 17 |[39m
+ [90m 18 |[39m [36mconst[39m app [33m=[39m initializeApp(firebaseConfig)[33m;[39m
+[31m[1m>[22m[39m[90m 19 |[39m [36mexport[39m [36mconst[39m auth [33m=[39m getAuth(app)[33m;[39m
+ [90m    |[39m                            [31m[1m^[22m[39m
+ [90m 20 |[39m[0m
+Call Stack
+  factory (lib/firebase.ts:19:28)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 96.4% (1184/1206)
+Web Bundled 24031ms node_modules/expo-router/entry.js (1231 modules)
+Web node_modules/expo-router/_error.js ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 83.1% (267/301)
+Web Bundled 3807ms node_modules/expo-router/_error.js (323 modules)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundling failed 40ms node_modules/expo-router/node/render.js (1 module)
+
+Metro error: Unable to resolve module @react-native-async-storage/async-storage from /app/lib/firebase.ts: @react-native-async-storage/async-storage could not be found within the project or in these directories:
+  node_modules
+[0m [90m 1 |[39m [36mimport[39m { initializeApp[33m,[39m getApps[33m,[39m getApp } [36mfrom[39m [32m'firebase/app'[39m[33m;[39m
+ [90m 2 |[39m [36mimport[39m { getAuth[33m,[39m initializeAuth[33m,[39m getReactNativePersistence } [36mfrom[39m [32m'firebase/auth'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 3 |[39m [36mimport[39m [33mAsyncStorage[39m [36mfrom[39m [32m'@react-native-async-storage/async-storage'[39m[33m;[39m
+ [90m   |[39m                           [31m[1m^[22m[39m
+ [90m 4 |[39m [36mimport[39m { [33mPlatform[39m } [36mfrom[39m [32m'react-native'[39m[33m;[39m
+ [90m 5 |[39m
+ [90m 6 |[39m [90m/**[39m[0m
+
+Import stack:
+
+ lib/firebase.ts
+ | import "@react-native-async-storage/async-storage"
+
+ contexts/auth-context.tsx
+ | import "@/lib/firebase"
+
+ app/_layout.tsx
+ | import "@/contexts/auth-context"
+
+ app (require.context)
+
+
+Call Stack
+  <unknown> (lib/firebase.ts:0)
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundling failed 74ms node_modules/expo-router/entry.js (1 module)
+Web Bundled 23ms node_modules/expo-router/_error.js (1 module)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundled 2670ms node_modules/expo-router/node/render.js (1 module)
+Web Bundled 3429ms node_modules/expo-router/entry.js (1 module)
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓░░░░░░░░░ 44.7% (433/648)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓▓▓▓░░░░░ 71.9% (770/908)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 95.3% (1150/1178)
+Web Bundled 11504ms node_modules/expo-router/entry.js (1238 modules)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundled 2098ms node_modules/expo-router/node/render.js (1 module)
+Web Bundled 2674ms node_modules/expo-router/entry.js (1 module)
+Web Bundled 775ms node_modules/expo-router/entry.js (1 module)
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundled 36ms node_modules/expo-router/node/render.js (1 module)
+Web Bundled 461ms node_modules/expo-router/entry.js (1 module)
+Web Bundled 69ms node_modules/expo-router/entry.js (1 module)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundled 63ms node_modules/expo-router/node/render.js (1 module)
+Web Bundled 579ms node_modules/expo-router/entry.js (1 module)
+Web Bundled 55ms node_modules/expo-router/entry.js (1 module)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundled 63ms node_modules/expo-router/node/render.js (1 module)
+Web Bundled 467ms node_modules/expo-router/entry.js (1 module)
+Web Bundled 62ms node_modules/expo-router/entry.js (1 module)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundled 56ms node_modules/expo-router/node/render.js (1 module)
+Web Bundled 516ms node_modules/expo-router/entry.js (1 module)
+Web Bundled 82ms node_modules/expo-router/entry.js (1 module)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundled 67ms node_modules/expo-router/node/render.js (1 module)
+Web Bundled 538ms node_modules/expo-router/entry.js (1 module)
+Web Bundled 82ms node_modules/expo-router/entry.js (1 module)
+ LOG  [web] Logs will appear in the browser console
+λ Bundled 39ms node_modules/expo-router/node/render.js (1 module)
+Web Bundled 431ms node_modules/expo-router/entry.js (1 module)
+Web Bundled 61ms node_modules/expo-router/entry.js (1 module)
+ LOG  [web] Logs will appear in the browser console
