@@ -1,4 +1,5 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
@@ -67,62 +68,77 @@ export default function LoginScreen() {
                     </Text>
                 </View>
 
-                {/* ── Input Fields ── */}
-                <View style={{ gap: 14 }}>
-                    <FormInput
-                        icon="email-outline"
-                        placeholder="Correo electrónico"
-                        value={email}
-                        onChangeText={setEmail}
-                        keyboardType="email-address"
-                        autoComplete="email"
-                        textContentType="emailAddress"
-                    />
-                    <FormInput
-                        icon="lock-outline"
-                        placeholder="Contraseña"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                        autoComplete="password"
-                        textContentType="password"
-                    />
-                </View>
+                {/* ── Form Card with Blur ── */}
+                <BlurView
+                    intensity={40}
+                    tint="dark"
+                    style={{
+                        padding: 24,
+                        borderRadius: 36,
+                        borderCurve: 'continuous',
+                        borderWidth: 1,
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                        overflow: 'hidden',
+                        gap: 24,
+                    }}
+                >
+                    {/* ── Input Fields ── */}
+                    <View style={{ gap: 14 }}>
+                        <FormInput
+                            icon="email-outline"
+                            placeholder="Correo electrónico"
+                            value={email}
+                            onChangeText={setEmail}
+                            keyboardType="email-address"
+                            autoComplete="email"
+                            textContentType="emailAddress"
+                        />
+                        <FormInput
+                            icon="lock-outline"
+                            placeholder="Contraseña"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry
+                            autoComplete="password"
+                            textContentType="password"
+                        />
+                    </View>
 
-                {/* ── CTA ── */}
-                <PrimaryButton label="Iniciar Sesión" onPress={handleLogin} />
+                    {/* ── CTA ── */}
+                    <PrimaryButton label="Iniciar Sesión" onPress={handleLogin} />
 
-                {/* ── Social Login ── */}
-                <Divider label="O entra con" />
+                    {/* ── Social Login ── */}
+                    <Divider label="O entra con" />
 
-                <View style={{ flexDirection: 'row', gap: 14 }}>
-                    <SocialButton
-                        provider="apple"
-                        onPress={() => {/* TODO: Apple Sign-In */ }}
-                        icon={
-                            <MaterialCommunityIcons
-                                name="apple"
-                                size={26}
-                                color={palette.textPrimary}
-                            />
-                        }
-                    />
-                    <SocialButton
-                        provider="google"
-                        onPress={() => {/* TODO: Google Sign-In */ }}
-                        icon={
-                            <Text
-                                style={{
-                                    fontSize: 22,
-                                    fontFamily: fonts.bold,
-                                    color: palette.primary,
-                                }}
-                            >
-                                G
-                            </Text>
-                        }
-                    />
-                </View>
+                    <View style={{ flexDirection: 'row', gap: 14 }}>
+                        <SocialButton
+                            provider="apple"
+                            onPress={() => {/* TODO: Apple Sign-In */ }}
+                            icon={
+                                <MaterialCommunityIcons
+                                    name="apple"
+                                    size={26}
+                                    color={palette.textPrimary}
+                                />
+                            }
+                        />
+                        <SocialButton
+                            provider="google"
+                            onPress={() => {/* TODO: Google Sign-In */ }}
+                            icon={
+                                <Text
+                                    style={{
+                                        fontSize: 22,
+                                        fontFamily: fonts.bold,
+                                        color: palette.primary,
+                                    }}
+                                >
+                                    G
+                                </Text>
+                            }
+                        />
+                    </View>
+                </BlurView>
 
                 {/* ── Sign-up link ── */}
                 <View
