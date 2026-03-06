@@ -109,3 +109,25 @@ Web Bundled 82ms node_modules/expo-router/entry.js (1 module)
 Web Bundled 431ms node_modules/expo-router/entry.js (1 module)
 Web Bundled 61ms node_modules/expo-router/entry.js (1 module)
  LOG  [web] Logs will appear in the browser console
+/app/node_modules/expo/node_modules/@expo/cli/build/src/utils/errors.js:130
+    throw error;
+    ^
+
+Error: ENOENT: no such file or directory, watch '/app/node_modules/.playwright-RSDCh5UZ/lib/agents'
+    at FSWatcher.<computed> (node:internal/fs/watchers:254:19)
+    at Object.watch (node:fs:2561:36)
+    at FallbackWatcher._watchdir (/app/node_modules/metro-file-map/src/watchers/FallbackWatcher.js:119:33)
+    at /app/node_modules/metro-file-map/src/watchers/FallbackWatcher.js:219:22
+    at Walker.<anonymous> (/app/node_modules/metro-file-map/src/watchers/FallbackWatcher.js:358:5)
+    at Walker.emit (node:events:519:28)
+    at /app/node_modules/walker/lib/walker.js:69:16
+    at FSReqCallback.oncomplete (node:fs:186:23)
+    at FSReqCallback.callbackTrampoline (node:internal/async_hooks:130:17) {
+  errno: -2,
+  syscall: 'watch',
+  code: 'ENOENT',
+  path: '/app/node_modules/.playwright-RSDCh5UZ/lib/agents',
+  filename: '/app/node_modules/.playwright-RSDCh5UZ/lib/agents'
+}
+
+Node.js v22.22.0
