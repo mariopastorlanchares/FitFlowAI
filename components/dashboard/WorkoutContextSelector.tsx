@@ -2,11 +2,8 @@ import { fonts, palette } from '@/constants/theme';
 import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutAnimation, Platform, StyleSheet, Text, TouchableOpacity, UIManager, View } from 'react-native';
-
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Animated, { Easing, FadeInDown, FadeOutUp, LinearTransition } from 'react-native-reanimated';
 
 const LOCATIONS = ['Gimnasio', 'Casa', 'Calle', 'Parque'];
 const DURATIONS = ['30 min', '45 min', '60 min', '90 min'];
@@ -26,12 +23,10 @@ export function WorkoutContextSelector() {
     const [isEnergyOpen, setIsEnergyOpen] = useState(false);
 
     const toggleSection = (setter: React.Dispatch<React.SetStateAction<boolean>>, value: boolean) => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setter(!value);
     };
 
     const handleSelectLocation = (loc: string) => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setSelectedLocation(loc);
         setIsLocationOpen(false);
         // Si no se ha elegido tiempo, lo abrimos automáticamente
@@ -41,7 +36,6 @@ export function WorkoutContextSelector() {
     };
 
     const handleSelectDuration = (dur: string) => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setSelectedDuration(dur);
         setIsDurationOpen(false);
         // Si no se ha elegido energía, la abrimos automáticamente
@@ -51,14 +45,13 @@ export function WorkoutContextSelector() {
     };
 
     const handleSelectEnergy = (energy: string) => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setSelectedEnergy(energy);
         // Colapsar al terminar
         setIsEnergyOpen(false);
     };
 
     return (
-        <View style={styles.container}>
+        <Animated.View layout={LinearTransition.duration(250).easing(Easing.out(Easing.quad))} style={styles.container}>
             {/* -- LUGAR -- */}
             <TouchableOpacity
                 style={styles.header}
@@ -76,7 +69,11 @@ export function WorkoutContextSelector() {
                 <Feather name={isLocationOpen ? "chevron-up" : "chevron-down"} size={16} color={palette.textSecondary} />
             </TouchableOpacity>
             {isLocationOpen && (
-                <View style={styles.chipsContainer}>
+                <Animated.View
+                    entering={FadeInDown.duration(250).easing(Easing.out(Easing.quad))}
+                    exiting={FadeOutUp.duration(150).easing(Easing.in(Easing.quad))}
+                    style={styles.chipsContainer}
+                >
                     {LOCATIONS.map(loc => {
                         const isSelected = selectedLocation === loc;
                         return (
@@ -91,7 +88,7 @@ export function WorkoutContextSelector() {
                             </TouchableOpacity>
                         );
                     })}
-                </View>
+                </Animated.View>
             )}
 
             {/* -- TIEMPO -- */}
@@ -111,7 +108,11 @@ export function WorkoutContextSelector() {
                 <Feather name={isDurationOpen ? "chevron-up" : "chevron-down"} size={16} color={palette.textSecondary} />
             </TouchableOpacity>
             {isDurationOpen && (
-                <View style={styles.chipsContainer}>
+                <Animated.View
+                    entering={FadeInDown.duration(250).easing(Easing.out(Easing.quad))}
+                    exiting={FadeOutUp.duration(150).easing(Easing.in(Easing.quad))}
+                    style={styles.chipsContainer}
+                >
                     {DURATIONS.map(dur => {
                         const isSelected = selectedDuration === dur;
                         return (
@@ -126,7 +127,7 @@ export function WorkoutContextSelector() {
                             </TouchableOpacity>
                         );
                     })}
-                </View>
+                </Animated.View>
             )}
 
             {/* -- ENERGÍA -- */}
@@ -146,7 +147,11 @@ export function WorkoutContextSelector() {
                 <Feather name={isEnergyOpen ? "chevron-up" : "chevron-down"} size={16} color={palette.textSecondary} />
             </TouchableOpacity>
             {isEnergyOpen && (
-                <View style={styles.chipsContainer}>
+                <Animated.View
+                    entering={FadeInDown.duration(250).easing(Easing.out(Easing.quad))}
+                    exiting={FadeOutUp.duration(150).easing(Easing.in(Easing.quad))}
+                    style={styles.chipsContainer}
+                >
                     {ENERGIES.map(energy => {
                         const isSelected = selectedEnergy === energy;
                         return (
@@ -161,9 +166,9 @@ export function WorkoutContextSelector() {
                             </TouchableOpacity>
                         );
                     })}
-                </View>
+                </Animated.View>
             )}
-        </View>
+        </Animated.View>
     );
 }
 
