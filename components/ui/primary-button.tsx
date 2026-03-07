@@ -2,20 +2,25 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, Text } from 'react-native';
 
 import { fonts } from '@/constants/theme';
+import { ElegantTypewriter } from './elegant-typewriter';
 
 interface PrimaryButtonProps {
     label: string;
     onPress: () => void;
+    isLoading?: boolean;
 }
 
 /**
  * Gradient CTA button with orange glow.
  * Used for main actions like "Iniciar Sesión", "Registrarse", etc.
  */
-export function PrimaryButton({ label, onPress }: PrimaryButtonProps) {
+export function PrimaryButton({ label, onPress, isLoading = false }: PrimaryButtonProps) {
+    // Si isLoading es devuelto como true, delegaremos la renderización del \`label\` en ElegantTypewriter
+
+
     return (
         <Pressable
-            onPress={onPress}
+            onPress={isLoading ? undefined : onPress}
             style={({ pressed }) => ({
                 borderRadius: 30,
                 borderCurve: 'continuous',
@@ -38,17 +43,30 @@ export function PrimaryButton({ label, onPress }: PrimaryButtonProps) {
                     justifyContent: 'center',
                 }}
             >
-                <Text
-                    style={{
-                        color: '#3A3A3A',
-                        fontSize: 18,
-                        fontFamily: fonts.extraBold,
-                        letterSpacing: 1.5,
-                        textTransform: 'uppercase',
-                    }}
-                >
-                    {label}
-                </Text>
+                {isLoading ? (
+                    <ElegantTypewriter
+                        text={label}
+                        style={{
+                            color: '#3A3A3A',
+                            fontSize: 18,
+                            fontFamily: fonts.extraBold,
+                            letterSpacing: 1.5,
+                            textTransform: 'uppercase',
+                        }}
+                    />
+                ) : (
+                    <Text
+                        style={{
+                            color: '#3A3A3A',
+                            fontSize: 18,
+                            fontFamily: fonts.extraBold,
+                            letterSpacing: 1.5,
+                            textTransform: 'uppercase',
+                        }}
+                    >
+                        {label}
+                    </Text>
+                )}
             </LinearGradient>
         </Pressable>
     );

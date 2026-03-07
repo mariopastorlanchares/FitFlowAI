@@ -46,6 +46,7 @@
 | ✅ | Configuración del Sistema de Diseño (NativeWind, `theme.ts`) | M | - |
 | ✅ | **Pantalla: Login / Registro** | L | Mockup: [`login.jpg`](docs/mockups/login.jpg) |
 | ⬜ | **Pantalla: Dashboard / Home** | XL | [🔗 P1-02 Dashboard](docs/plans/P1-02_dashboard-home.md) |
+| ⬜ | **Pantalla: Perfil / Ajustes (Logout)** | M | Pendiente de plan |
 | ⬜ | **Pantalla: Ejecución de Entrenamiento** | XL | Pendiente de plan |
 
 ---
@@ -53,6 +54,7 @@
 ## 🔧 Fase 2 — Lógica Backend e IA `EN CURSO`
 
 > Objetivo: conectar la app con Firebase y el motor de IA para funcionalidad real.
+> **NOTA ARQUITECTÓNICA:** A partir de la implementación de IA (Gemini/Genkit) y la persistencia de datos complejos, se escalará la arquitectura a un nivel "Pro" (Feature-Sliced Design, separando lógica en custom hooks y usando gestores de estado asíncrono como React Query o SWR).
 
 | Estado | Tarea | Complejidad | Plan / Referencia |
 |:---:|---|:---:|---|

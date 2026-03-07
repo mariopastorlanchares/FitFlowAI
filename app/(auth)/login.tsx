@@ -133,6 +133,7 @@ export default function LoginScreen() {
 
                     {/* ── CTA ── */}
                     <PrimaryButton
+                        isLoading={isLoading}
                         label={isLoading ? t('common.loading') : t('login.cta')}
                         onPress={handleLogin}
                     />

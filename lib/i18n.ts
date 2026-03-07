@@ -30,7 +30,10 @@ const en = {
             hasAccountText: "Already have an account?",
             hasAccountLink: "Sign In",
             errorEmptyFields: "Please fill in all fields.",
-            errorPasswordsDontMatch: "Passwords do not match."
+            errorPasswordsDontMatch: "Passwords do not match.",
+            errorPasswordWeak: "Password must be at least 8 characters long, contain one number and one uppercase letter.",
+            emailVerificationSent: "We have sent you a confirmation email. Please check your inbox.",
+            successTitle: "Registration successful!"
         },
         profile: {
             title: "My Profile",
@@ -78,7 +81,10 @@ const es = {
             hasAccountText: "¿Ya tienes cuenta?",
             hasAccountLink: "Inicia Sesión",
             errorEmptyFields: "Por favor, completa todos los campos.",
-            errorPasswordsDontMatch: "Las contraseñas no coinciden."
+            errorPasswordsDontMatch: "Las contraseñas no coinciden.",
+            errorPasswordWeak: "La contraseña debe tener al menos 8 caracteres, un número y una mayúscula.",
+            emailVerificationSent: "Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada.",
+            successTitle: "¡Registro exitoso!"
         },
         profile: {
             title: "Mi Perfil",

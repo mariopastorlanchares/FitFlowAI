@@ -28,9 +28,16 @@ export default function RegisterScreen() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     const { signUp } = useContext(AuthContext);
     const { t } = useTranslation();
+
+    // Regex nivel medio: Mínimo 8 caracteres, 1 número, 1 mayúscula
+    const validatePassword = (pass: string) => {
+        const regex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+        return regex.test(pass);
+    };
 
     const handleRegister = async () => {
         if (!email || !password || !confirmPassword) {
@@ -43,10 +50,16 @@ export default function RegisterScreen() {
             return;
         }
 
+        if (!validatePassword(password)) {
+            setError(t('register.errorPasswordWeak'));
+            return;
+        }
+
         try {
             setError('');
             setIsLoading(true);
             await signUp(email, password);
+            setSuccessMessage(t('register.emailVerificationSent'));
         } catch (err: any) {
             console.error('Register error:', err);
             setError(getFirebaseErrorMessage(err));
@@ -122,8 +135,19 @@ export default function RegisterScreen() {
                 >
                     {/* ── Input Fields ── */}
                     <View style={{ gap: 14 }}>
+                        {successMessage ? (
+                            <View style={{ padding: 12, backgroundColor: 'rgba(76, 175, 80, 0.15)', borderRadius: 12, borderWidth: 1, borderColor: palette.success }}>
+                                <Text style={{ color: palette.success, textAlign: 'center', fontFamily: fonts.semiBold }}>
+                                    {t('register.successTitle')}
+                                </Text>
+                                <Text style={{ color: palette.textSecondary, textAlign: 'center', marginTop: 4, fontSize: 13 }}>
+                                    {successMessage}
+                                </Text>
+                            </View>
+                        ) : null}
+
                         {error ? (
-                            <Text style={{ color: palette.danger, textAlign: 'center' }}>
+                            <Text style={{ color: palette.danger, textAlign: 'center', fontFamily: fonts.semiBold }}>
                                 {error}
                             </Text>
                         ) : null}
@@ -158,6 +182,7 @@ export default function RegisterScreen() {
 
                     {/* ── CTA ── */}
                     <PrimaryButton
+                        isLoading={isLoading}
                         label={isLoading ? t('common.loading') : t('register.cta')}
                         onPress={handleRegister}
                     />
