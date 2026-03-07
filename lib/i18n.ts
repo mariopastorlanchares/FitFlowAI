@@ -24,6 +24,19 @@ const en = {
             noAccountLink: "Sign Up",
             errorEmptyFields: "Please enter your email and password."
         },
+        dashboard: {
+            tabs: {
+                home: "Home",
+                workout: "Workout",
+                stats: "Stats",
+                profile: "Profile"
+            },
+            today_workout: "TODAY'S WORKOUT:",
+            time: "min",
+            focus: "Focus",
+            start_workout: "START WORKOUT",
+            weekly_streak: "Weekly Streak:"
+        },
         register: {
             title: "FitFlow AI",
             cta: "Sign Up",
@@ -74,6 +87,19 @@ const es = {
             noAccountText: "¿Nuevo en FitFlow AI?",
             noAccountLink: "Regístrate",
             errorEmptyFields: "Por favor, introduce tu email y contraseña."
+        },
+        dashboard: {
+            tabs: {
+                home: "Inicio",
+                workout: "Entrenar",
+                stats: "Analítica",
+                profile: "Perfil"
+            },
+            today_workout: "TU RUTINA DE HOY:",
+            time: "min",
+            focus: "Foco",
+            start_workout: "EMPEZAR ENTRENAMIENTO",
+            weekly_streak: "Racha Semanal:"
         },
         register: {
             title: "FitFlow AI",

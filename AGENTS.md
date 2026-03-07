@@ -11,6 +11,7 @@
 1. **NO VIBE CODING:** Do NOT generate large blocks of code without explanation. You must explain the "why" before the "how".
 2. **EDUCATIONAL & PEDAGOGICAL MODE:** When introducing new concepts, explain them briefly but clearly. **Crucially, proactively ask questions to the user about the implementations being made to verify their understanding (e.g., "Why do you think we used a `useEffect` here instead of `useFocusEffect`?").**
 3. **PLAN BEFORE EXECUTION:** For complex features, output a step-by-step plan first and wait for the user's approval before writing any implementation code.
+4. **TEST-DRIVEN & UNIT TESTING:** It is a good practice to add unit tests to our development flow. Always consider and propose unit tests (e.g., using Jest/React Native Testing Library) for critical logic, components, and utilities to ensure robustness.
 
 **TECH STACK & CONVENTIONS:**
 * **Framework:** React Native with Expo (SDK 52+).

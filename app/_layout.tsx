@@ -47,7 +47,7 @@ function RootNavigator() {
 
     if (user && inAuthGroup) {
       // Si el usuario está logueado y trata de acceder o sigue en auth, lo pasamos al dashboard.
-      router.replace('/(main)');
+      router.replace('/(tabs)');
     } else if (!user && !inAuthGroup) {
       // Si el usuario no está logueado y trata de acceder a main, a login.
       router.replace('/(auth)/login');
@@ -70,7 +70,7 @@ function RootNavigator() {
         contentStyle: { backgroundColor: 'transparent' },
       }}
     >
-      <Stack.Screen name="(main)" />
+      <Stack.Screen name="(tabs)" />
       <Stack.Screen name="(auth)" />
     </Stack>
   );

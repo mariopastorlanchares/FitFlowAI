@@ -45,7 +45,7 @@
 | ✅ | Textura de fondo global (`AppBackground`) | S | - |
 | ✅ | Configuración del Sistema de Diseño (NativeWind, `theme.ts`) | M | - |
 | ✅ | **Pantalla: Login / Registro** | L | Mockup: [`login.jpg`](docs/mockups/login.jpg) |
-| ⬜ | **Pantalla: Dashboard / Home** | XL | [🔗 P1-02 Dashboard](docs/plans/P1-02_dashboard-home.md) |
+| ✅ | **Pantalla: Dashboard / Home** | XL | [🔗 P1-02 Dashboard](docs/plans/P1-02_dashboard-home.md) |
 | ⬜ | **Pantalla: Perfil / Ajustes (Logout)** | M | Pendiente de plan |
 | ⬜ | **Pantalla: Ejecución de Entrenamiento** | XL | Pendiente de plan |
 
