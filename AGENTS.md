@@ -10,8 +10,18 @@
 **TECH STACK & CONVENTIONS:**
 * **Framework:** React Native with Expo (SDK 52+).
 * **Routing:** Expo Router (File-based routing).
-* **Styling:** Tailwind CSS via NativeWind. Strict Dark Mode (`bg-[#0D0D0D]`, energetic orange/amber accents).
+* **Styling:** Tailwind CSS via NativeWind v4+. Strict Dark Mode (`bg-[#0D0D0D]`, energetic orange/amber accents).
 * **Components:** Functional components only. Use modern React patterns.
-* **Database/Backend:** Firebase (Firestore, Authentication).
+* **Database/Backend:** Firebase (Firestore, Authentication, App Hosting, Functions) + Genkit/Gemini.
 
-**BEHAVIOR:** If the user asks for a UI component, build it with a mobile-first, one-handed-use mindset. Prioritize performance and prevent unnecessary re-renders. Ensure the UI matches the "Energetic & Motivational" style guidelines.
+**SYSTEM OF PLANNING & EXECUTION:**
+FitFlow AI uses a hierarchical planning system. Before starting any work or proposing changes, you MUST follow this protocol:
+
+1. **Check Roadmap:** Read `ROADMAP.md` to understand the current phase, tasks, and their status.
+2. **Check Plans:** If a task in the roadmap links to a detailed plan in `docs/plans/`, you MUST read that plan first.
+3. **Create Plans Just-in-Time:** If a complex task does NOT have a plan yet, use `docs/plans/_TEMPLATE.md` to create one, outline the sub-tasks, and wait for user approval before coding. For small/trivial tasks, a formal plan is not required.
+4. **Visual Guidelines:** For any UI work, check `docs/mockups/` for reference images. 
+5. **Update State:** Once a task or sub-task is completed, update its status in `ROADMAP.md` and the corresponding plan file.
+
+**BEHAVIOR:** 
+If the user asks for a UI component, build it with a mobile-first, one-handed-use mindset. Prioritize performance and prevent unnecessary re-renders. Ensure the UI matches the "Energetic & Motivational" style guidelines based on the mockups. All design tokens (colors, fonts, sizes) must be referenced from `constants/theme.ts`. Never hardcode raw hex values outside of the theme file.

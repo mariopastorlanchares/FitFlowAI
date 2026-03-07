@@ -26,17 +26,27 @@
 
 ---
 
-## 📌 Fase 1 — MVP Frontend `EN CURSO`
+## 📌 Metodología de Trabajo
+
+- **Estado visual:** `✅` Completado | `🔄` En curso | `⬜` Pendiente
+- **Complejidad:** `S` (Pequeña), `M` (Media), `L` (Grande), `XL` (Extra grande)
+- **Planes Detallados:** Las tareas complejas se desglosan en archivos dentro de `docs/plans/`.
+
+---
+
+## 📱 Fase 1 — MVP Frontend `EN CURSO`
 
 > Objetivo: maquetar las pantallas principales con el sistema de diseño y datos simulados.
 
-- [x] Inicialización del proyecto y enrutamiento base (Expo Router)
-- [x] Configuración de Firebase SDK + variables de entorno (`.env`)
-- [x] Textura de fondo global (`AppBackground`)
-- [x] Configuración del Sistema de Diseño (NativeWind, tokens en `constants/theme.ts`, layout principal)
-- [x] **Pantalla: Login / Registro** — Revisar mockup en [`docs/mockups/`](docs/mockups/)
-- [ ] **Pantalla: Dashboard / Home** — Revisar mockup modular en [`docs/mockups/`](docs/mockups/)
-- [ ] **Pantalla: Ejecución de Entrenamiento** — Revisar mockup de temporizador y tarjeta IA en [`docs/mockups/`](docs/mockups/)
+| Estado | Tarea | Complejidad | Plan / Referencia |
+|:---:|---|:---:|---|
+| ✅ | Inicialización del proyecto y enrutamiento base | S | - |
+| ✅ | Configuración de Firebase SDK + variables de entorno | S | - |
+| ✅ | Textura de fondo global (`AppBackground`) | S | - |
+| ✅ | Configuración del Sistema de Diseño (NativeWind, `theme.ts`) | M | - |
+| ✅ | **Pantalla: Login / Registro** | L | Mockup: [`login.jpg`](docs/mockups/login.jpg) |
+| ⬜ | **Pantalla: Dashboard / Home** | XL | [🔗 P1-02 Dashboard](docs/plans/P1-02_dashboard-home.md) |
+| ⬜ | **Pantalla: Ejecución de Entrenamiento** | XL | Pendiente de plan |
 
 ---
 
@@ -44,11 +54,14 @@
 
 > Objetivo: conectar la app con Firebase y el motor de IA para funcionalidad real.
 
-- [x] Integración de Firebase Auth (Email/Password) + Internacionalización (i18n)
-- [ ] Integración de Firebase Auth (Apple Sign-In + Google Sign-In) — requiere build nativo
-- [ ] Configuración de Firestore (esquemas de datos: usuarios, rutinas, historial)
-- [ ] Conexión segura con Gemini vía Genkit (generación de rutinas y alternativas)
-- [ ] Lógica de recomendaciones IA en tiempo real (peso, reps, RIR)
+| Estado | Tarea | Complejidad | Plan / Referencia |
+|:---:|---|:---:|---|
+| ✅ | Integración de Firebase Auth (Email/Password) + i18n | L | - |
+| ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
+| ⬜ | Configuración base de Firestore (reglas, índices) | M | Pendiente de plan |
+| ⬜ | Esquema de datos: Usuarios, Rutinas, Historial | L | Pendiente de plan |
+| ⬜ | Conexión segura con Gemini vía Genkit | XL | Pendiente de plan |
+| ⬜ | Lógica de recomendaciones IA en tiempo real | XL | Pendiente de plan |
 
 ---
 
@@ -56,26 +69,13 @@
 
 > Objetivo: preparar la app para su lanzamiento.
 
-- [ ] Micro-vídeos / animaciones de ejercicios
-- [ ] Soporte Offline (reglas de caché de Firestore)
-- [ ] Configuración de EAS Build y despliegue Beta (TestFlight / Google Play Internal)
-- [ ] Notificaciones push (recordatorios de entrenamiento)
-- [ ] Analíticas y métricas (Firebase Analytics)
-
----
-
-## 📐 Instrucciones Operativas para la IA
-
-> [!IMPORTANT]
-> **Estas reglas son obligatorias para cualquier agente IA que trabaje en este proyecto.**
-
-1. **Trazabilidad**: Consulta y marca con `[x]` las tareas de este `ROADMAP.md` a medida que se completen. Marca con `[/]` las que estén en progreso.
-
-2. **Regla Visual Estricta**: Antes de maquetar **cualquier pantalla** de la Fase 1, es **obligatorio** consultar el archivo de imagen correspondiente en `docs/mockups/` para replicar exactamente la jerarquía, los colores y la disposición de los elementos.
-
-3. **Diseño centralizado**: Todos los colores y tokens de diseño deben venir de `constants/theme.ts`. Nunca hardcodear valores hex fuera de ese archivo.
-
-4. **Variables sensibles**: Las credenciales van en `.env` (gitignored). Usar siempre el prefijo `EXPO_PUBLIC_` para variables accesibles en el cliente.
+| Estado | Tarea | Complejidad | Plan / Referencia |
+|:---:|---|:---:|---|
+| ⬜ | Micro-vídeos / animaciones de ejercicios | L | Pendiente de plan |
+| ⬜ | Soporte Offline (reglas de caché de Firestore) | M | Pendiente de plan |
+| ⬜ | Configuración de EAS Build y despliegue Beta | L | Pendiente de plan |
+| ⬜ | Notificaciones push (recordatorios) | M | Pendiente de plan |
+| ⬜ | Analíticas y métricas (Firebase Analytics) | S | Pendiente de plan |
 
 ---
 
