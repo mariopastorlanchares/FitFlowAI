@@ -1,10 +1,12 @@
 import { palette } from '@/constants/theme';
 import { Feather } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export function TodayWorkoutCard() {
     const { t } = useTranslation();
+    const router = useRouter();
 
     return (
         <View style={styles.card}>
@@ -33,7 +35,7 @@ export function TodayWorkoutCard() {
             <TouchableOpacity
                 style={styles.actionButton}
                 activeOpacity={0.8}
-                onPress={() => console.log('Empezar Entrenamiento context')}
+                onPress={() => router.push('/workout')}
             >
                 <Text style={styles.actionButtonText}>{t('dashboard.start_workout')}</Text>
             </TouchableOpacity>

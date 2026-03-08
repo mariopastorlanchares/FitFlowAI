@@ -31,6 +31,10 @@ export const palette = {
   danger: '#FF4444',
   /** Success */
   success: '#22C55E',
+  /** Surface Active (Highlight) */
+  surfaceActive: '#303030',
+  /** Error alias for danger */
+  error: '#FF4444',
 } as const;
 
 export const fonts = {
@@ -39,4 +43,35 @@ export const fonts = {
   bold: 'Inter_700Bold',
   semiBold: 'Inter_600SemiBold',
   regular: 'Inter_400Regular',
+} as const;
+
+export const typography = {
+  h1: {
+    fontFamily: fonts.black,
+    fontSize: 28,
+  },
+  h2: {
+    fontFamily: fonts.bold,
+    fontSize: 24,
+  },
+  h3: {
+    fontFamily: fonts.semiBold,
+    fontSize: 18,
+  },
+  title: {
+    fontFamily: fonts.semiBold,
+    fontSize: 16,
+  },
+  body: {
+    fontFamily: fonts.regular,
+    fontSize: 14,
+  },
+  caption: {
+    fontFamily: fonts.regular,
+    fontSize: 12,
+  },
+  button: {
+    fontFamily: fonts.bold,
+    fontSize: 16,
+  },
 } as const;

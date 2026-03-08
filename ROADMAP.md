@@ -47,7 +47,7 @@
 | ✅ | **Pantalla: Login / Registro** | L | Mockup: [`login.jpg`](docs/mockups/login.jpg) |
 | ✅ | **Pantalla: Dashboard / Home** | XL | [🔗 P1-02 Dashboard](docs/plans/P1-02_dashboard-home.md) |
 | ✅ | **Pantalla: Perfil / Ajustes (Logout)** | M | [🔗 P1-03 Profile / Settings](docs/plans/P1-03_profile-settings.md) |
-| ⬜ | **Pantalla: Ejecución de Entrenamiento** | XL | Pendiente de plan |
+| ✅ | **Pantalla: Ejecución de Entrenamiento** | XL | [🔗 P1-04 Workout Execution](docs/plans/P1-04_workout-execution.md) |
 
 ---
 
