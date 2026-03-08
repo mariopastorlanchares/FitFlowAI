@@ -53,7 +53,23 @@ const en = {
             loggedUser: "Logged in User",
             noEmail: "No email associated",
             logout: "Sign Out",
-            logoutError: "Could not sign out."
+            logoutConfirmTitle: "Sign Out",
+            logoutConfirmMessage: "Are you sure you want to sign out?",
+            logoutCancel: "Cancel",
+            logoutConfirm: "Yes, sign out",
+            logoutError: "Could not sign out.",
+            sections: {
+                account: "Account",
+                preferences: "Preferences",
+                support: "Support"
+            },
+            options: {
+                personalInfo: "Personal Information",
+                theme: "Theme",
+                language: "Language",
+                help: "Help Center",
+                privacy: "Privacy Policy"
+            }
         },
         firebaseErrors: {
             "auth/email-already-in-use": "Email is already in use.",
@@ -117,7 +133,23 @@ const es = {
             loggedUser: "Usuario Conectado",
             noEmail: "Sin correo asociado",
             logout: "Cerrar Sesión",
-            logoutError: "No se pudo cerrar sesión."
+            logoutConfirmTitle: "Cerrar Sesión",
+            logoutConfirmMessage: "¿Estás seguro de que deseas cerrar sesión?",
+            logoutCancel: "Cancelar",
+            logoutConfirm: "Sí, cerrar sesión",
+            logoutError: "No se pudo cerrar sesión.",
+            sections: {
+                account: "Cuenta",
+                preferences: "Preferencias",
+                support: "Soporte"
+            },
+            options: {
+                personalInfo: "Información Personal",
+                theme: "Tema",
+                language: "Idioma",
+                help: "Centro de Ayuda",
+                privacy: "Política de Privacidad"
+            }
         },
         firebaseErrors: {
             "auth/email-already-in-use": "El correo ya está en uso.",

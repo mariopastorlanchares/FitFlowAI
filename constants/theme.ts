@@ -7,10 +7,10 @@
  */
 
 export const palette = {
-  /** Pure black background */
-  background: '#0D0D0D',
-  /** Card / surface color */
-  surface: '#1A1A1A',
+  /** Deep dark gray background */
+  background: '#181818',
+  /** Card / surface color (lighter gray) */
+  surface: '#242424',
   /** Vibrant orange accent */
   primary: '#FF8C00',
   /** Darker orange for button pressed state / glow edges */

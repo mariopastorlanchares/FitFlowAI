@@ -43,7 +43,7 @@ export function TodayWorkoutCard() {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: 'rgba(26, 26, 26, 0.7)', // Semi-transparent dark
+        backgroundColor: palette.surface,
         borderRadius: 24,
         padding: 24,
         borderWidth: 1,
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         elevation: 6,
     },
     actionButtonText: {
-        color: '#1A1A1A',
+        color: palette.background,
         fontFamily: 'Inter_800ExtraBold', // Más peso tipográfico
         fontSize: 16, // Ligeramente mayor
         letterSpacing: 1,

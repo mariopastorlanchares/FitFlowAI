@@ -16,7 +16,7 @@
 **TECH STACK & CONVENTIONS:**
 * **Framework:** React Native with Expo (SDK 52+).
 * **Routing:** Expo Router (File-based routing).
-* **Styling:** Tailwind CSS via NativeWind v4+. Strict Dark Mode (`bg-[#0D0D0D]`, energetic orange/amber accents).
+* **Styling:** Tailwind CSS via NativeWind v4+. Strict Dark Mode (`bg-[#181818]`, energetic orange/amber accents).
 * **Components:** Functional components only. Use modern React patterns.
 * **Database/Backend:** Firebase (Firestore, Authentication, App Hosting, Functions) + Genkit/Gemini.
 * **i18n / Internationalization:** ALL user-facing text must be translated using `i18next`. Hardcoded strings in the UI are strictly prohibited. Always anticipate English and Spanish translations.

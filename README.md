@@ -24,9 +24,9 @@ FitFlow AI sigue una estética **"Energetic & Motivational"**, diseñada para tr
 
 | Token              | Valor       | Uso                              |
 | ------------------- | ----------- | -------------------------------- |
-| **Background**      | `#0D0D0D`   | Fondo principal — negro puro     |
+| **Background**      | `#121212`   | Fondo principal oscuro sólido     |
 | **Accent**          | `#FF8C00`   | Botones, highlights, CTAs        |
-| **Surface**         | `#1A1A1A`   | Tarjetas y contenedores          |
+| **Surface**         | `#1E1E1E`   | Tarjetas y contenedores          |
 | **Text Primary**    | `#FFFFFF`   | Texto principal                  |
 | **Text Secondary**  | `#A0A0A0`   | Texto de apoyo                   |
 

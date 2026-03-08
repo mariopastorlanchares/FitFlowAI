@@ -22,7 +22,7 @@
 | **Estilos** | NativeWind (Tailwind CSS v4) |
 | **Backend** | Firebase Auth · Cloud Firestore · Cloud Functions |
 | **IA** | Genkit + Gemini (generación de rutinas, sugerencias en vivo) |
-| **Diseño** | Dark Mode texturizado (`#0D0D0D`) · Acento naranja `#FF8C00` |
+| **Diseño** | Dark Mode sólido (`#181818` / `#242424`) · Acento naranja `#FF8C00` |
 
 ---
 
@@ -46,7 +46,7 @@
 | ✅ | Configuración del Sistema de Diseño (NativeWind, `theme.ts`) | M | - |
 | ✅ | **Pantalla: Login / Registro** | L | Mockup: [`login.jpg`](docs/mockups/login.jpg) |
 | ✅ | **Pantalla: Dashboard / Home** | XL | [🔗 P1-02 Dashboard](docs/plans/P1-02_dashboard-home.md) |
-| ⬜ | **Pantalla: Perfil / Ajustes (Logout)** | M | Pendiente de plan |
+| ✅ | **Pantalla: Perfil / Ajustes (Logout)** | M | [🔗 P1-03 Profile / Settings](docs/plans/P1-03_profile-settings.md) |
 | ⬜ | **Pantalla: Ejecución de Entrenamiento** | XL | Pendiente de plan |
 
 ---

@@ -22,14 +22,14 @@ import '@/lib/i18n';
 // Keep splash visible while fonts load
 SplashScreen.preventAutoHideAsync();
 
-// React Navigation theme — transparent so the AppBackground texture shows through.
+// React Navigation theme
 const NavigationTheme = {
   ...DarkTheme,
   colors: {
     ...DarkTheme.colors,
     primary: palette.primary,
-    background: 'transparent',
-    card: 'transparent',
+    background: palette.background,
+    card: palette.surface,
     text: palette.textPrimary,
     border: palette.border,
   },
@@ -67,7 +67,7 @@ function RootNavigator() {
     <Stack
       screenOptions={{
         headerShown: false,
-        contentStyle: { backgroundColor: 'transparent' },
+        contentStyle: { backgroundColor: palette.background },
       }}
     >
       <Stack.Screen name="(tabs)" />

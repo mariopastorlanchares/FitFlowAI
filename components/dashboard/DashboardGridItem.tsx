@@ -23,7 +23,7 @@ export function DashboardGridItem({ iconName, title, subtitle, onPress }: Dashbo
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: 'rgba(26, 26, 26, 0.5)',
+        backgroundColor: palette.surface,
         borderRadius: 20,
         padding: 20,
         borderWidth: 1,

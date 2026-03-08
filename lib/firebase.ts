@@ -1,6 +1,7 @@
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getApp, getApps, initializeApp } from 'firebase/app';
+// @ts-ignore - Export present at runtime
+import { Auth, getAuth, getReactNativePersistence, initializeAuth } from 'firebase/auth';
 import { Platform } from 'react-native';
 
 /**
@@ -24,13 +25,14 @@ if (getApps().length === 0) {
     app = getApp();
 }
 
-let auth;
+let auth: Auth;
 try {
     if (Platform.OS === 'web') {
         auth = getAuth(app);
     } else {
         // Attempt to initialize auth with persistence
         auth = initializeAuth(app, {
+            // @ts-ignore - Some Firebase declaration versions don't export this properly even though it exists.
             persistence: getReactNativePersistence(AsyncStorage)
         });
     }
@@ -40,3 +42,4 @@ try {
 }
 
 export { app, auth };
+

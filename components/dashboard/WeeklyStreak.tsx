@@ -18,7 +18,7 @@ export function WeeklyStreak() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'rgba(26, 26, 26, 0.9)',
+        backgroundColor: palette.surface,
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 20,
