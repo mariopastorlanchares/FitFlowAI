@@ -78,6 +78,28 @@ Escanea el **código QR** desde la terminal con la app **Expo Go** para ver la a
 
 ---
 
+## 📱 Compilar App (Android APK)
+
+Si deseas instalar la aplicación en tu móvil Android para usarla de forma independiente (sin depender del servidor de desarrollo local de Expo Go), puedes compilar un archivo `.apk` usando Expo Application Services (EAS):
+
+```bash
+# 1. Instala la CLI de Expo en tu sistema (si no la tienes)
+npm install -g eas-cli
+
+# 2. Inicia sesión con tu cuenta de Expo
+eas login
+
+# 3. Configura el proyecto para compilación (solo la primera vez)
+eas build:configure
+
+# 4. Inicia la compilación del APK en la nube de Expo
+eas build -p android --profile preview
+```
+
+> **Nota:** La compilación se realiza en los servidores gratuitos de Expo y puede tardar unos minutos. Al finalizar, la consola te mostrará un enlace y un código QR para descargar el archivo `.apk` e instalarlo en tu móvil.
+
+---
+
 ## 📁 Estructura de Carpetas
 
 ```
