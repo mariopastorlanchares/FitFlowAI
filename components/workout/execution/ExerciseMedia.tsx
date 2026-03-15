@@ -1,4 +1,4 @@
-import { palette, typography } from '@/constants/theme';
+import { palette, typography } from '@shared/constants/theme';
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 

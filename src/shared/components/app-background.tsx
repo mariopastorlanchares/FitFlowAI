@@ -1,4 +1,4 @@
-import { palette } from '@/constants/theme';
+import { palette } from '@shared/constants/theme';
 import { StyleSheet, View } from 'react-native';
 
 interface AppBackgroundProps {

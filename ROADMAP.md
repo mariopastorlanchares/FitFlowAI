@@ -54,33 +54,49 @@
 ## 🔧 Fase 2 — Lógica Backend e IA `EN CURSO`
 
 > Objetivo: conectar la app con Firebase y el motor de IA para funcionalidad real.
-> **NOTA ARQUITECTÓNICA:** A partir de la implementación de IA (Gemini/Genkit) y la persistencia de datos complejos, se escalará la arquitectura a un nivel "Pro" (Feature-Sliced Design, separando lógica en custom hooks y usando gestores de estado asíncrono como React Query o SWR).
+> **NOTA ARQUITECTÓNICA:** Antes de abordar esta fase, se realizará una refactorización arquitectónica (Feature-Sliced Design + React Query) para establecer una base sólida que escale con la complejidad del backend y la IA.
 
 | Estado | Tarea | Complejidad | Plan / Referencia |
 |:---:|---|:---:|---|
 | ✅ | Integración de Firebase Auth (Email/Password) + i18n | L | - |
-| ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
+| ⬜ | **Refactorización Arquitectónica** (FSD + React Query) | L | [🔗 P2-00 Refactor Arquitectónico](docs/plans/P2-00_architectural-refactor.md) |
 | ⬜ | Configuración base de Firestore (reglas, índices) | M | Pendiente de plan |
 | ⬜ | Esquema de datos: Usuarios, Rutinas, Historial | L | Pendiente de plan |
+| ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
 | ⬜ | Conexión segura con Gemini vía Genkit | XL | Pendiente de plan |
 | ⬜ | Lógica de recomendaciones IA en tiempo real | XL | Pendiente de plan |
 
 ---
 
-## 🚀 Fase 3 — Pulido y Producción `PENDIENTE`
+## 📲 Fase 3 — Widget & Experiencia Nativa `PENDIENTE`
+
+> Objetivo: permitir al usuario interactuar con el entrenamiento en segundo plano, sin tener que mantener la app abierta.
+> **Caso de uso:** El usuario está en el gym y usa WhatsApp u otras apps entre series. El widget le muestra el crono, ejercicio actual, recomendación IA, y le permite marcar pesos/reps con el móvil bloqueado o desde la pantalla de inicio.
+
+| Estado | Tarea | Complejidad | Plan / Referencia |
+|:---:|---|:---:|---|
+| ⬜ | Widget de entrenamiento Android (Jetpack Glance / AppWidget) | XL | Pendiente de plan |
+| ⬜ | Widget de entrenamiento iOS (WidgetKit + Live Activities) | XL | Pendiente de plan |
+| ⬜ | Servicio de timer en segundo plano (Background Task) | L | Pendiente de plan |
+| ⬜ | Notificaciones push (recordatorios de entrenamiento) | M | Pendiente de plan |
+| ⬜ | Soporte Offline (reglas de caché de Firestore) | M | Pendiente de plan |
+
+---
+
+## 🚀 Fase 4 — Pulido y Producción `PENDIENTE`
 
 > Objetivo: preparar la app para su lanzamiento.
 
 | Estado | Tarea | Complejidad | Plan / Referencia |
 |:---:|---|:---:|---|
 | ⬜ | Micro-vídeos / animaciones de ejercicios | L | Pendiente de plan |
-| ⬜ | Soporte Offline (reglas de caché de Firestore) | M | Pendiente de plan |
 | ⬜ | Configuración de EAS Build y despliegue Beta | L | Pendiente de plan |
-| ⬜ | Notificaciones push (recordatorios) | M | Pendiente de plan |
 | ⬜ | Analíticas y métricas (Firebase Analytics) | S | Pendiente de plan |
+| ⬜ | Pruebas de rendimiento y optimización | M | Pendiente de plan |
+| ⬜ | Publicación en App Store / Google Play | L | Pendiente de plan |
 
 ---
 
 <p align="center">
-  <sub>Última actualización: 7 de marzo de 2026</sub>
+  <sub>Última actualización: 15 de marzo de 2026</sub>
 </p>

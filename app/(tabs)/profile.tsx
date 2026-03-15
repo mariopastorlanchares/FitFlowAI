@@ -1,6 +1,6 @@
-import { ConfirmModal } from '@/components/ui/confirm-modal';
-import { palette } from '@/constants/theme';
-import { auth } from '@/lib/firebase';
+import { ConfirmModal } from '@shared/ui/confirm-modal';
+import { palette } from '@shared/constants/theme';
+import { auth } from '@shared/lib/firebase';
 import { signOut } from 'firebase/auth';
 import { ChevronRight, CircleHelp, Globe, LogOut, Settings, Shield, User as UserIcon } from 'lucide-react-native';
 import { useState } from 'react';

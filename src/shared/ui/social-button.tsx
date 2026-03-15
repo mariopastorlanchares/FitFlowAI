@@ -1,6 +1,6 @@
 import { Pressable } from 'react-native';
 
-import { palette } from '@/constants/theme';
+import { palette } from '@shared/constants/theme';
 
 interface SocialButtonProps {
     provider: 'apple' | 'google';

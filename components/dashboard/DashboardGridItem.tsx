@@ -1,4 +1,4 @@
-import { palette } from '@/constants/theme';
+import { palette } from '@shared/constants/theme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 

@@ -1,11 +1,11 @@
-import { AppBackground } from '@/components/app-background';
+import { AppBackground } from '@shared/components/app-background';
 import { ActiveSetLogger } from '@/components/workout/execution/ActiveSetLogger';
 import { AIGuidanceCard } from '@/components/workout/execution/AIGuidanceCard';
 import { ExecutionControls } from '@/components/workout/execution/ExecutionControls';
 import { ExerciseMedia } from '@/components/workout/execution/ExerciseMedia';
 import { RestTimerLarge } from '@/components/workout/execution/RestTimerLarge';
 import { WorkoutHeader } from '@/components/workout/execution/WorkoutHeader';
-import { palette, typography } from '@/constants/theme';
+import { palette, typography } from '@shared/constants/theme';
 import { useWorkoutSession } from '@/hooks/useWorkoutSession';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';

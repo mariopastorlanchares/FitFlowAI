@@ -1,4 +1,4 @@
-import { fonts, palette } from '@/constants/theme';
+import { fonts, palette } from '@shared/constants/theme';
 import { BlurView } from 'expo-blur';
 import React from 'react';
 import { Modal, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';

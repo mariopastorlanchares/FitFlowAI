@@ -1,4 +1,4 @@
-import { palette } from '@/constants/theme';
+import { palette } from '@shared/constants/theme';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';

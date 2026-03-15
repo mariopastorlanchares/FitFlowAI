@@ -14,10 +14,13 @@ import React, { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import 'react-native-reanimated';
 
-import { AppBackground } from '@/components/app-background';
-import { palette } from '@/constants/theme';
+import { QueryClientProvider } from '@tanstack/react-query';
+
+import { AppBackground } from '@shared/components/app-background';
+import { palette } from '@shared/constants/theme';
 import { AuthContext, AuthProvider } from '@/contexts/auth-context';
-import '@/lib/i18n';
+import '@shared/lib/i18n';
+import { queryClient } from '@shared/lib/query-client';
 
 // Keep splash visible while fonts load
 SplashScreen.preventAutoHideAsync();
@@ -94,13 +97,15 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <AuthProvider>
-      <ThemeProvider value={NavigationTheme}>
-        <AppBackground>
-          <RootNavigator />
-        </AppBackground>
-        <StatusBar style="light" />
-      </ThemeProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <ThemeProvider value={NavigationTheme}>
+          <AppBackground>
+            <RootNavigator />
+          </AppBackground>
+          <StatusBar style="light" />
+        </ThemeProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }

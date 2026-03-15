@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 
-import { fonts, palette } from '@/constants/theme';
+import { fonts, palette } from '@shared/constants/theme';
 
 interface DividerProps {
     label: string;

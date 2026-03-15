@@ -1,4 +1,4 @@
-import { palette, typography } from '@/constants/theme';
+import { palette, typography } from '@shared/constants/theme';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 // Consider using Expo LinearGradient here if available in the project, for now mocking with a solid+glossy style.

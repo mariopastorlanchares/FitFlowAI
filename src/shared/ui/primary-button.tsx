@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, Text } from 'react-native';
 
-import { fonts } from '@/constants/theme';
+import { fonts } from '@shared/constants/theme';
 import { ElegantTypewriter } from './elegant-typewriter';
 
 interface PrimaryButtonProps {

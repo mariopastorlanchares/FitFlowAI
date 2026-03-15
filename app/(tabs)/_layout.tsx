@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { palette } from '@/constants/theme';
+import { palette } from '@shared/constants/theme';
 
 export default function TabLayout() {
     const { t } = useTranslation();

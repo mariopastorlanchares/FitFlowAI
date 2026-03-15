@@ -1,4 +1,4 @@
-import { palette } from '@/constants/theme';
+import { palette } from '@shared/constants/theme';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 

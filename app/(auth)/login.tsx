@@ -12,13 +12,13 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Divider } from '@/components/ui/divider';
-import { FormInput } from '@/components/ui/form-input';
-import { PrimaryButton } from '@/components/ui/primary-button';
-import { SocialButton } from '@/components/ui/social-button';
-import { fonts, palette } from '@/constants/theme';
+import { Divider } from '@shared/ui/divider';
+import { FormInput } from '@shared/ui/form-input';
+import { PrimaryButton } from '@shared/ui/primary-button';
+import { SocialButton } from '@shared/ui/social-button';
+import { fonts, palette } from '@shared/constants/theme';
 import { AuthContext } from '@/contexts/auth-context';
-import { getFirebaseErrorMessage } from '@/lib/i18n';
+import { getFirebaseErrorMessage } from '@shared/lib/i18n';
 import { useTranslation } from 'react-i18next';
 
 export default function LoginScreen() {

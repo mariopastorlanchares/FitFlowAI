@@ -1,4 +1,4 @@
-import { fonts, palette } from '@/constants/theme';
+import { fonts, palette } from '@shared/constants/theme';
 import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

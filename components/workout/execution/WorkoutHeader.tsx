@@ -1,4 +1,4 @@
-import { palette, typography } from '@/constants/theme';
+import { palette, typography } from '@shared/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';

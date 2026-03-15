@@ -12,7 +12,7 @@ import {
     useState,
 } from 'react';
 
-import { auth } from '@/lib/firebase';
+import { auth } from '@shared/lib/firebase';
 
 interface AuthContextType {
     user: User | null;

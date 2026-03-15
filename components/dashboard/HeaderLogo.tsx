@@ -1,4 +1,4 @@
-import { palette } from '@/constants/theme';
+import { palette } from '@shared/constants/theme';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 export function HeaderLogo() {
