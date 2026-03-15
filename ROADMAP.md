@@ -59,7 +59,7 @@
 | Estado | Tarea | Complejidad | Plan / Referencia |
 |:---:|---|:---:|---|
 | ✅ | Integración de Firebase Auth (Email/Password) + i18n | L | - |
-| ⬜ | **Refactorización Arquitectónica** (FSD + React Query) | L | [🔗 P2-00 Refactor Arquitectónico](docs/plans/P2-00_architectural-refactor.md) |
+| 🔄 | **Refactorización Arquitectónica** (FSD + React Query) | L | [🔗 P2-00 Refactor Arquitectónico](docs/plans/P2-00_architectural-refactor.md) |
 | ⬜ | Configuración base de Firestore (reglas, índices) | M | Pendiente de plan |
 | ⬜ | Esquema de datos: Usuarios, Rutinas, Historial | L | Pendiente de plan |
 | ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
@@ -98,5 +98,5 @@
 ---
 
 <p align="center">
-  <sub>Última actualización: 15 de marzo de 2026</sub>
+  <sub>Última actualización: 15 de marzo de 2026 (Refactor FSD 40% completado)</sub>
 </p>
