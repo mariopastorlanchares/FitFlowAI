@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { palette, typography } from '@shared/constants/theme';
 
@@ -25,7 +26,7 @@ export function WorkoutHeader({ onClose, elapsedTime }: WorkoutHeaderProps) {
         <Image
           source={require('@/assets/images/fitflow_logo.png')}
           style={styles.logoImage}
-          resizeMode="contain"
+          contentFit="contain"
         />
         <Text style={styles.appName}>{t('common.appName')}</Text>
       </TouchableOpacity>

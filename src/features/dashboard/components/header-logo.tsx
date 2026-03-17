@@ -1,4 +1,5 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image } from 'expo-image';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { palette } from '@shared/constants/theme';
 
@@ -8,7 +9,7 @@ export function HeaderLogo() {
       <Image
         source={require('@/assets/images/fitflow_logo.png')}
         style={styles.logo}
-        resizeMode="contain"
+        contentFit="contain"
       />
       <Text style={styles.title}>FitFlow AI</Text>
     </View>
