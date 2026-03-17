@@ -11,22 +11,48 @@ export const palette = {
   background: '#181818',
   /** Card / surface color (lighter gray) */
   surface: '#242424',
+  /** Elevated dark surface for badges and timers */
+  surfaceElevated: '#1C1C1E',
+  /** Muted dark surface for inputs and secondary controls */
+  surfaceMuted: '#1E1E20',
+  /** Strong inset surface for nested cards */
+  surfaceInset: '#121212',
   /** Vibrant orange accent */
   primary: '#FF8C00',
   /** Darker orange for button pressed state / glow edges */
   primaryDark: '#E07800',
   /** Lighter orange for highlights */
   primaryLight: '#FFA733',
+  /** Primary tint backgrounds */
+  primaryTint: 'rgba(255, 140, 0, 0.15)',
+  /** Soft primary tint for hover and pressed states */
+  primaryTintSoft: 'rgba(255, 140, 0, 0.08)',
+  /** Faint primary tint for idle states */
+  primaryTintFaint: 'rgba(255, 140, 0, 0.04)',
+  /** Primary-tinted borders */
+  primaryBorder: 'rgba(255, 140, 0, 0.3)',
   /** Primary text */
   textPrimary: '#FFFFFF',
   /** Secondary / muted text */
   textSecondary: '#A0A0A0',
+  /** Text shown on top of primary CTAs */
+  textOnPrimary: '#3A3A3A',
   /** Border / divider */
   border: '#2A2A2A',
+  /** Subtle border for quiet cards */
+  borderSubtle: 'rgba(255, 255, 255, 0.05)',
+  /** Soft border for pills and chips */
+  borderSoft: 'rgba(255, 255, 255, 0.1)',
+  /** Neutral translucent fill */
+  neutralTint: 'rgba(255, 255, 255, 0.08)',
+  /** Faint neutral translucent fill */
+  neutralTintFaint: 'rgba(255, 255, 255, 0.03)',
   /** Input field background (translucent) */
   inputBackground: 'rgba(255, 255, 255, 0.06)',
   /** Input field border */
   inputBorder: 'rgba(255, 255, 255, 0.15)',
+  /** Modal and screen backdrop */
+  backdrop: 'rgba(0, 0, 0, 0.6)',
   /** Danger / destructive actions */
   danger: '#FF4444',
   /** Success */
@@ -35,6 +61,17 @@ export const palette = {
   surfaceActive: '#303030',
   /** Error alias for danger */
   error: '#FF4444',
+} as const;
+
+export const gradients = {
+  primaryButton: ['#FFB800', '#FF9500', '#EE7700'] as const,
+} as const;
+
+export const effects = {
+  primaryGlow: '0 4px 28px rgba(255, 140, 0, 0.55), 0 0 12px rgba(255, 180, 0, 0.3)',
+  primaryButton: '0 10px 24px rgba(255, 140, 0, 0.28)',
+  modal: '0 18px 48px rgba(0, 0, 0, 0.32)',
+  card: '0 10px 24px rgba(0, 0, 0, 0.18)',
 } as const;
 
 export const fonts = {

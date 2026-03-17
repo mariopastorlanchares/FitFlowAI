@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, Text } from 'react-native';
 
-import { fonts } from '@shared/constants/theme';
+import { effects, fonts, gradients, palette } from '@shared/constants/theme';
 import { ElegantTypewriter } from './elegant-typewriter';
 
 interface PrimaryButtonProps {
@@ -27,14 +27,13 @@ export function PrimaryButton({ label, onPress, isLoading = false }: PrimaryButt
                 overflow: 'hidden',
                 height: 56,
                 borderWidth: 1.5,
-                borderColor: '#3D2200',
+                borderColor: palette.primaryDark,
                 opacity: pressed ? 0.85 : 1,
-                boxShadow:
-                    '0 4px 28px rgba(255, 140, 0, 0.55), 0 0 12px rgba(255, 180, 0, 0.3)',
+                boxShadow: effects.primaryGlow,
             })}
         >
             <LinearGradient
-                colors={['#FFB800', '#FF9500', '#EE7700']}
+                colors={gradients.primaryButton}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 0.5 }}
                 style={{
@@ -47,7 +46,7 @@ export function PrimaryButton({ label, onPress, isLoading = false }: PrimaryButt
                     <ElegantTypewriter
                         text={label}
                         style={{
-                            color: '#3A3A3A',
+                            color: palette.textOnPrimary,
                             fontSize: 18,
                             fontFamily: fonts.extraBold,
                             letterSpacing: 1.5,
@@ -57,7 +56,7 @@ export function PrimaryButton({ label, onPress, isLoading = false }: PrimaryButt
                 ) : (
                     <Text
                         style={{
-                            color: '#3A3A3A',
+                            color: palette.textOnPrimary,
                             fontSize: 18,
                             fontFamily: fonts.extraBold,
                             letterSpacing: 1.5,

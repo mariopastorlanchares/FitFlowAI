@@ -27,14 +27,14 @@ export function SocialButton({ provider, onPress, icon }: SocialButtonProps) {
                 borderRadius: 28,
                 borderCurve: 'continuous',
                 borderWidth: 2,
-                borderColor: isGoogle ? palette.primary : '#FFFFFF',
+                borderColor: isGoogle ? palette.primary : palette.textPrimary,
                 backgroundColor: pressed
                     ? isGoogle
-                        ? 'rgba(255, 140, 0, 0.1)'
-                        : 'rgba(255, 255, 255, 0.08)'
+                        ? palette.primaryTintSoft
+                        : palette.neutralTint
                     : isGoogle
-                        ? 'rgba(255, 140, 0, 0.04)'
-                        : 'rgba(255, 255, 255, 0.03)',
+                        ? palette.primaryTintFaint
+                        : palette.neutralTintFaint,
             })}
         >
             {icon}

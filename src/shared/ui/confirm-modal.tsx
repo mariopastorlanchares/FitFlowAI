@@ -36,7 +36,7 @@ export function ConfirmModal({
                 {Platform.OS !== 'web' ? (
                     <BlurView intensity={20} tint="dark" style={StyleSheet.absoluteFill} />
                 ) : (
-                    <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.6)' }]} />
+                    <View style={[StyleSheet.absoluteFill, { backgroundColor: palette.backdrop }]} />
                 )}
 
                 {/* Dismiss when tapping outside */}
@@ -86,14 +86,7 @@ const styles = StyleSheet.create({
         padding: 24,
         borderWidth: 1,
         borderColor: palette.border,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 10,
-        elevation: 8,
+        boxShadow: '0 18px 48px rgba(0, 0, 0, 0.32)',
     },
     title: {
         color: palette.textPrimary,

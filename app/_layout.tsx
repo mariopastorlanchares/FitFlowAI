@@ -16,9 +16,9 @@ import 'react-native-reanimated';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 
+import { AuthProvider, useAuth } from '@features/auth/hooks/use-auth';
 import { AppBackground } from '@shared/components/app-background';
 import { palette } from '@shared/constants/theme';
-import { AuthContext, AuthProvider } from '@/contexts/auth-context';
 import '@shared/lib/i18n';
 import { queryClient } from '@shared/lib/query-client';
 
@@ -39,7 +39,7 @@ const NavigationTheme = {
 };
 
 function RootNavigator() {
-  const { user, isLoading } = React.use(AuthContext);
+  const { user, isLoading } = useAuth();
   const router = useRouter();
   const segments = useSegments();
 
@@ -55,7 +55,7 @@ function RootNavigator() {
       // Si el usuario no está logueado y trata de acceder a main, a login.
       router.replace('/(auth)/login');
     }
-  }, [user, isLoading, segments]);
+  }, [user, isLoading, segments, router]);
 
   // Show a loading spinner while Firebase checks auth state
   if (isLoading) {

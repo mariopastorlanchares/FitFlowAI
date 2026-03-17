@@ -9,19 +9,25 @@ import { Platform } from 'react-native';
  * Values come from .env (EXPO_PUBLIC_ prefix required by Expo).
  * To find them again: Firebase Console → ⚙️ Settings → General → Your apps.
  */
-const requiredFirebaseEnvVars = [
-    'EXPO_PUBLIC_FIREBASE_API_KEY',
-    'EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN',
-    'EXPO_PUBLIC_FIREBASE_PROJECT_ID',
-    'EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET',
-    'EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID',
-    'EXPO_PUBLIC_FIREBASE_APP_ID',
-] as const;
+const firebaseEnv = {
+    apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+};
 
-const missingFirebaseEnvVars = requiredFirebaseEnvVars.filter((envVar) => {
-    const value = process.env[envVar];
-    return typeof value !== 'string' || value.trim().length === 0;
-});
+const missingFirebaseEnvVars = Object.entries({
+    EXPO_PUBLIC_FIREBASE_API_KEY: firebaseEnv.apiKey,
+    EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN: firebaseEnv.authDomain,
+    EXPO_PUBLIC_FIREBASE_PROJECT_ID: firebaseEnv.projectId,
+    EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET: firebaseEnv.storageBucket,
+    EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: firebaseEnv.messagingSenderId,
+    EXPO_PUBLIC_FIREBASE_APP_ID: firebaseEnv.appId,
+}).flatMap(([envVar, value]) =>
+    typeof value === 'string' && value.trim().length > 0 ? [] : [envVar]
+);
 
 if (missingFirebaseEnvVars.length > 0) {
     throw new Error(
@@ -31,12 +37,12 @@ if (missingFirebaseEnvVars.length > 0) {
 }
 
 const firebaseConfig = {
-    apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+    apiKey: firebaseEnv.apiKey,
+    authDomain: firebaseEnv.authDomain,
+    projectId: firebaseEnv.projectId,
+    storageBucket: firebaseEnv.storageBucket,
+    messagingSenderId: firebaseEnv.messagingSenderId,
+    appId: firebaseEnv.appId,
 };
 
 let app;
@@ -57,7 +63,7 @@ try {
             persistence: getReactNativePersistence(AsyncStorage)
         });
     }
-} catch (error) {
+} catch {
     // If it's already initialized (e.g. in hot reload), use getAuth
     auth = getAuth(app);
 }

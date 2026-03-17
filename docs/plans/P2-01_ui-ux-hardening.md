@@ -1,6 +1,6 @@
 # P2-01 Endurecimiento UI/UX de Superficies Actuales
 
-> **Fase:** 2 | **Complejidad:** L | **Estado:** ⬜
+> **Fase:** 2 | **Complejidad:** L | **Estado:** 🔄
 
 ## 🎯 Objetivo
 Convertir los hallazgos de la auditoría visual en un backlog ejecutable que reduzca deuda de interfaz antes de seguir expandiendo backend e IA. El foco no es "embellecer" la app, sino hacerla más coherente, más utilitaria y menos dependiente de patrones visuales genéricos.
@@ -25,24 +25,24 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 
 ## 📋 Requisitos Previos
 - [x] Pantallas principales del MVP ya maquetadas
-- [ ] P2-00 Refactorización Arquitectónica completada al menos hasta la migración de `auth`, `dashboard`, `workout` y `profile`
-- [ ] Entorno Expo estable y verificable en local
-- [ ] Catálogo de traducciones e i18n listo para ampliación
+- [x] P2-00 Refactorización Arquitectónica completada al menos hasta la migración de `auth`, `dashboard`, `workout` y `profile`
+- [x] Entorno Expo estable y verificable en local
+- [x] Catálogo de traducciones e i18n listo para ampliación
 
 ## 🛠️ Plan de Implementación
 
 ### Paso 1: Cerrar deuda transversal visible (Ola A)
-- [ ] **Acción:** Eliminar strings hardcodeados de UI y moverlos a `i18next`
+- [x] **Acción:** Eliminar strings hardcodeados de UI y moverlos a `i18next`
 - [ ] **Archivos afectados:** `app/(tabs)/workout.tsx`, `app/(tabs)/stats.tsx`, `components/dashboard/*`, `components/workout/execution/*`, `src/shared/ui/*`
 - [ ] **Detalles:** Esta tarea debe hacerse antes de seguir creando nuevas pantallas, porque ahora mismo propaga deuda de copy e inconsistencia de tono.
 
 ### Paso 2: Reforzar `theme.ts` como única fuente de verdad (Ola A)
-- [ ] **Acción:** Auditar colores, radios, superficies, sombras y estados fuera de tokens
+- [x] **Acción:** Auditar colores, radios, superficies, sombras y estados fuera de tokens
 - [ ] **Archivos afectados:** `src/shared/constants/theme.ts`, `src/shared/ui/*`, `components/dashboard/*`, `components/workout/execution/*`, `app/(tabs)/*`
 - [ ] **Detalles:** Normalizar superficies oscuras, CTA, inputs, bordes y estados destructivos. El objetivo es cortar la deriva visual antes de la siguiente ronda de features.
 
 ### Paso 3: Limpiar placeholders y señales de prototipo (Ola A)
-- [ ] **Acción:** Retirar textos provisionales, datos falsos visibles y affordances poco creíbles
+- [x] **Acción:** Retirar textos provisionales, datos falsos visibles y affordances poco creíbles
 - [ ] **Archivos afectados:** `components/dashboard/WeeklyStreak.tsx`, `app/(tabs)/stats.tsx`, `components/workout/execution/ExerciseMedia.tsx`, `components/workout/execution/RestTimerLarge.tsx`
 - [ ] **Detalles:** Incluye eliminar `[cite: ...]`, unificar idioma de placeholders, y decidir si `stats` permanece como placeholder digno o se oculta hasta tener contenido útil.
 
@@ -94,3 +94,4 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 ---
 **Historial:**
 - `2026-03-17`: Creado el plan a partir de la auditoría UI/UX global.
+- `2026-03-17`: Ola A ejecutada en `dashboard`, `workout`, `stats` y `shared/ui`; validado con `npm run lint`, `npx tsc --noEmit` y `npx expo export --platform web`.

@@ -44,7 +44,7 @@ export function ElegantTypewriter({
             // Cleanup: detenemos todas las animaciones nativas si el componente muere
             animations.forEach(anim => anim.stop());
         };
-    }, [text, fadeDuration, typingSpeed]); // opacities.current no muta el array en longitud
+    }, [text, fadeDuration, typingSpeed, opacities]); // opacities.current no muta el array en longitud
 
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>

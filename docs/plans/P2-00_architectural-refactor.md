@@ -122,6 +122,7 @@ src/
 - [x] **Detalles:** Todos los imports actualizados a `@shared/*`. Fixed legacy `useThemeColor` hook (eliminada referencia a `Colors` inexistente). TypeScript compila sin errores.
 
 ### Paso 5: Migrar feature `auth`
+- [x] Paso 5 completado: feature `auth` migrada a `src/features/auth` con `auth-service` y `useAuth`.
 - [ ] **Acción:** Crear la feature de auth con service layer
 - [ ] **Archivos afectados:**
   - `contexts/auth-context.tsx` → Refactorizar en `src/features/auth/hooks/useAuth.ts` + `src/features/auth/services/auth-service.ts`
@@ -130,12 +131,14 @@ src/
   - `useAuth.ts`: hook que consume el servicio y mantiene el estado del usuario (puede seguir siendo un Context por ahora, pero la lógica de Firebase sale del contexto)
 
 ### Paso 6: Migrar feature `dashboard`
+- [x] Paso 6 completado: componentes movidos a `src/features/dashboard` y `app/(tabs)/index.tsx` reducido a wrapper.
 - [ ] **Acción:** Mover componentes del dashboard a su feature
 - [ ] **Archivos afectados:**
   - `components/dashboard/*` → `src/features/dashboard/components/`
 - [ ] **Detalles:** Crear barrel export `src/features/dashboard/index.ts`
 
 ### Paso 7: Migrar feature `workout`
+- [x] Paso 7 completado: hook, tipos, servicio placeholder y pantalla de `workout` migrados a `src/features/workout`.
 - [ ] **Acción:** Mover componentes y hooks de workout a su feature
 - [ ] **Archivos afectados:**
   - `components/workout/execution/*` → `src/features/workout/components/execution/`
@@ -144,21 +147,27 @@ src/
 - [ ] **Detalles:** Crear `workout-service.ts` vacío (placeholder para Firestore). Crear barrel export.
 
 ### Paso 8: Migrar feature `profile`
+- [x] Paso 8 completado: `profile` extraido a `src/features/profile` y `app/(tabs)/profile.tsx` reducido a wrapper.
 - [ ] **Acción:** Extraer la lógica del perfil a su feature
 - [ ] **Archivos afectados:** Extraer componentes de `app/(tabs)/profile.tsx` a `src/features/profile/components/`
 - [ ] **Detalles:** El screen actual tiene mucha lógica inline que debería separarse.
 
 ### Paso 9: Crear feature `analytics` (placeholder)
+- [x] Paso 9 completado: placeholder de `analytics` creado en `src/features/analytics` y `app/(tabs)/stats.tsx` reducido a wrapper.
 - [ ] **Acción:** Crear la estructura base para analytics
 - [ ] **Archivos afectados:** `src/features/analytics/` con archivos placeholder
 - [ ] **Detalles:** Solo estructura, sin implementación real aún. Se conectará con Firestore en tareas posteriores.
 
 ### Paso 10: Actualizar imports y aliases
+- [x] Paso 10 completado: imports actualizados a `@features/*` y aliases operativos validados con TypeScript.
 - [ ] **Acción:** Actualizar `tsconfig.json` con nuevos path aliases y corregir todos los imports
 - [ ] **Archivos afectados:** `tsconfig.json`, todos los archivos que importan los módulos movidos
 - [ ] **Detalles:** Posibles aliases: `@/` → `src/`, `@shared/` → `src/shared/`, `@features/` → `src/features/`
 
 ### Paso 11: Verificar que todo compila y funciona
+- [x] Bundling verificado con `npx expo export --platform web`.
+- [x] Tooling verificado con `npx tsc --noEmit`, `npm run lint` y `npx jest __tests__/auth-service.test.ts __tests__/profile.test.tsx --runInBand`.
+- [ ] VerificaciÃ³n parcial: `npx tsc --noEmit` pasa, pero falta comprobaciÃ³n runtime con Expo y Jest sigue bloqueado por `jest-expo`.
 - [ ] **Acción:** Ejecutar `npx expo start`, verificar que no hay errores de TypeScript ni runtime
 - [ ] **Archivos afectados:** Ninguno nuevo
 - [ ] **Detalles:** Probar: Login, Dashboard, Workout, Profile, navegación entre tabs.
@@ -174,7 +183,7 @@ src/
 - [ ] La app funciona igual que antes (Login, Dashboard, Workout, Profile)
 - [ ] Los archivos siguen la nueva estructura FSD bajo `src/`
 - [ ] React Query provider está configurado y funcional
-- [ ] Feature `auth` tiene su service layer separado del contexto
+- [x] Feature `auth` tiene su service layer separado del contexto
 - [ ] Cada feature tiene su barrel export (`index.ts`)
 - [ ] Los screens en `app/` son delgados (importan de features, no tienen lógica)
 - [ ] Los path aliases (`@/`, `@shared/`, `@features/`) funcionan correctamente
@@ -206,3 +215,12 @@ El mayor riesgo de este refactor es romper imports. Mitigación:
 **Historial:**
 - `2026-03-15`: Creado el plan.
 - `2026-03-15`: ✅ Completados Pasos 1, 2, 3 y 4 (React Query + estructura + aliases + Provider + migración shared).
+- `2026-03-17`: âœ… Completado Paso 5 (feature `auth` con service layer, provider dedicado y screens de `app/(auth)` reducidas a wrappers).
+- `2026-03-17`: Paso 5 verificado con `npx tsc --noEmit`; Jest sigue bloqueado por un problema del runtime `jest-expo`.
+- `2026-03-17`: Paso 6 completado y verificado con `npx tsc --noEmit` (feature `dashboard` migrada y screen Home reducida a wrapper).
+- `2026-03-17`: Paso 7 completado y verificado con `npx tsc --noEmit` (feature `workout` migrada con hook, tipos y servicio placeholder).
+- `2026-03-17`: Paso 8 completado y verificado con `npx tsc --noEmit` (feature `profile` migrada y screen reducida a wrapper).
+- `2026-03-17`: Paso 9 completado y verificado con `npx tsc --noEmit` (feature `analytics` creada como placeholder).
+- `2026-03-17`: Bundling adicional verificado con `npx expo export --platform web`.
+- `2026-03-17`: Tooling alineado para SDK 54 (`jest-expo` 54 + Jest 29), tests pasando y script de lint adaptado a FSD.
+- `2026-03-17`: Warnings de lint resueltos en `i18n.ts` y `elegant-typewriter.tsx`; `npm run lint`, `npx tsc --noEmit` y Jest quedan en verde.

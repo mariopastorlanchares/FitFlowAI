@@ -24,18 +24,13 @@ jest.mock('react-i18next', () => ({
     }),
 }));
 
-// Mock Firebase Auth
-jest.mock('@/lib/firebase', () => ({
-    auth: {
-        currentUser: {
+jest.mock('@features/auth/hooks/use-auth', () => ({
+    useAuth: () => ({
+        user: {
             email: 'test@example.com',
         },
-    },
-}));
-
-// Mock Firebase signOut
-jest.mock('firebase/auth', () => ({
-    signOut: jest.fn(),
+        signOut: jest.fn(),
+    }),
 }));
 
 describe('ProfileScreen', () => {
