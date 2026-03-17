@@ -32,3 +32,8 @@ FitFlow AI uses a hierarchical planning system. Before starting any work or prop
 
 **BEHAVIOR:** 
 If the user asks for a UI component, build it with a mobile-first, one-handed-use mindset. Prioritize performance and prevent unnecessary re-renders. Ensure the UI matches the "Energetic & Motivational" style guidelines based on the mockups. All design tokens (colors, fonts, sizes) must be referenced from `constants/theme.ts`. Never hardcode raw hex values outside of the theme file.
+
+**COMMITS & GRANULARITY:**
+- Avoid oversized mixed commits. Commit after each coherent development slice, ideally every 1-3 completed sub-tasks or when a vertical slice is verified.
+- Do not mix architectural refactors, tooling fixes, tests, and UI polish in the same commit unless the change is inseparable.
+- Before committing, prefer a quick verification pass (`lint`, `tsc`, and the most relevant tests) so each commit remains bisectable and easier to review.
