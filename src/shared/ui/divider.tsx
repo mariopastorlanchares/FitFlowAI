@@ -29,8 +29,9 @@ export function Divider({ label }: DividerProps) {
             <Text
                 style={{
                     color: palette.textSecondary,
-                    fontSize: 14,
-                    fontFamily: fonts.regular,
+                    fontSize: 13,
+                    fontFamily: fonts.semiBold,
+                    letterSpacing: 0.2,
                 }}
             >
                 {label}

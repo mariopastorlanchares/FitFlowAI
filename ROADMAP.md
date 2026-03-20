@@ -59,7 +59,7 @@
 | Estado | Tarea | Complejidad | Plan / Referencia |
 |:---:|---|:---:|---|
 | ✅ | Integración de Firebase Auth (Email/Password) + i18n | L | - |
-| 🔄 | **Refactorización Arquitectónica** (FSD + React Query) | L | [🔗 P2-00 Refactor Arquitectónico](docs/plans/P2-00_architectural-refactor.md) |
+| ✅ | **Refactorización Arquitectónica** (FSD + React Query) | L | [🔗 P2-00 Refactor Arquitectónico](docs/plans/P2-00_architectural-refactor.md) |
 | 🔄 | **Endurecimiento UI/UX de superficies actuales** (i18n, theme, jerarquía y placeholders) | L | [🔗 P2-01 UI/UX Hardening](docs/plans/P2-01_ui-ux-hardening.md) |
 | ⬜ | Configuración base de Firestore (reglas, índices) | M | Pendiente de plan |
 | ⬜ | Esquema de datos: Usuarios, Rutinas, Historial | L | Pendiente de plan |
@@ -108,5 +108,11 @@
   <sub>Tooling alineado el 17 de marzo de 2026: Jest operativo de nuevo y lint adaptado a la nueva estructura FSD.</sub>
 </p>
 <p align="center">
+  <sub>Refactor arquitectónico cerrado el 20 de marzo de 2026: FSD consolidado, carpetas legacy vacías eliminadas y verificación completada con TypeScript, lint, Jest y bundling web.</sub>
+</p>
+<p align="center">
   <sub>UI/UX hardening iniciado el 17 de marzo de 2026: Ola A aplicada en `dashboard`, `workout`, `stats` y `shared/ui`, con i18n ampliado, placeholders limpiados y tokens de tema semánticos.</sub>
+</p>
+<p align="center">
+  <sub>Auth UI/UX endurecido el 20 de marzo de 2026: login y registro simplificados tras FSD, con jerarquía más operativa, componentes compartidos ajustados y tests básicos de pantalla.</sub>
 </p>

@@ -46,10 +46,10 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 - [ ] **Archivos afectados:** `components/dashboard/WeeklyStreak.tsx`, `app/(tabs)/stats.tsx`, `components/workout/execution/ExerciseMedia.tsx`, `components/workout/execution/RestTimerLarge.tsx`
 - [ ] **Detalles:** Incluye eliminar `[cite: ...]`, unificar idioma de placeholders, y decidir si `stats` permanece como placeholder digno o se oculta hasta tener contenido útil.
 
-### Paso 4: Refactor visual de Auth tras migración FSD (Ola B)
-- [ ] **Acción:** Simplificar Login/Registro para que se apoyen más en jerarquía, espaciado y contraste que en blur, glow y pills
-- [ ] **Archivos afectados:** futura `src/features/auth/components/*`, `src/shared/ui/form-input.tsx`, `src/shared/ui/primary-button.tsx`, `src/shared/ui/social-button.tsx`
-- [ ] **Detalles:** Esta tarea debe hacerse después de mover `auth` a `src/features/auth/`, para evitar rehacer la misma pantalla dos veces.
+### Paso 4: Refactor visual de Auth tras migración FSD (Ola B) ✅
+- [x] **Acción:** Simplificar Login/Registro para que se apoyen más en jerarquía, espaciado y contraste que en blur, glow y pills
+- [x] **Archivos afectados:** `src/features/auth/components/*`, `src/features/auth/screens/*`, `src/shared/ui/form-input.tsx`, `src/shared/ui/primary-button.tsx`, `src/shared/ui/social-button.tsx`, `src/shared/lib/i18n.ts`, `__tests__/auth-screens.test.tsx`
+- [x] **Detalles:** `auth` se reorganizó con un shell reutilizable, feedback de estado explícito, CTA más funcional y tests básicos de login/registro para fijar el nuevo comportamiento.
 
 ### Paso 5: Refactor visual de Dashboard/Home tras migración FSD (Ola B)
 - [ ] **Acción:** Reforzar la jerarquía de tarea en Home
@@ -95,3 +95,4 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 **Historial:**
 - `2026-03-17`: Creado el plan a partir de la auditoría UI/UX global.
 - `2026-03-17`: Ola A ejecutada en `dashboard`, `workout`, `stats` y `shared/ui`; validado con `npm run lint`, `npx tsc --noEmit` y `npx expo export --platform web`.
+- `2026-03-20`: ✅ Paso 4 completado en `auth`: login/registro simplificados, `BlurView` retirado, inputs/CTA/social actions rebalanceados y cobertura básica añadida con `__tests__/auth-screens.test.tsx`. Verificado con `npx tsc --noEmit`, `npm run lint`, `npx jest __tests__/auth-screens.test.tsx __tests__/auth-service.test.ts __tests__/profile.test.tsx --runInBand` y `npx expo export --platform web`.

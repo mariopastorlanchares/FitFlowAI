@@ -9,17 +9,27 @@ const en = {
     common: {
       appName: 'FitFlow AI',
       createAccount: 'Create your account',
+      emailLabel: 'Email',
       emailPlaceholder: 'Email address',
+      passwordLabel: 'Password',
       passwordPlaceholder: 'Password',
+      confirmPasswordLabel: 'Confirm password',
       confirmPasswordPlaceholder: 'Confirm password',
       orConnectWith: 'Or connect with',
       orRegisterWith: 'Or sign up with',
+      apple: 'Apple',
+      google: 'Google',
       loading: 'Loading...',
       error: 'Error',
       unexpectedError: 'An unexpected error occurred.',
     },
     login: {
       title: 'FitFlow AI',
+      eyebrow: 'Quick access',
+      subtitle:
+        'Get back to today’s workout, your latest logs and the execution flow without losing context.',
+      helper:
+        'Use the account linked to your training history so the app can recover your progress and recommendations.',
       cta: 'Sign In',
       noAccountText: 'New to FitFlow AI?',
       noAccountLink: 'Sign Up',
@@ -27,6 +37,11 @@ const en = {
     },
     register: {
       title: 'FitFlow AI',
+      eyebrow: 'New account',
+      subtitle:
+        'Create a focused training account before we connect routines, recovery data and AI suggestions.',
+      helper:
+        'We will send a verification email before enabling the rest of the flow.',
       cta: 'Sign Up',
       hasAccountText: 'Already have an account?',
       hasAccountLink: 'Sign In',
@@ -168,17 +183,27 @@ const es = {
     common: {
       appName: 'FitFlow AI',
       createAccount: 'Crea tu cuenta',
+      emailLabel: 'Correo',
       emailPlaceholder: 'Correo electrónico',
+      passwordLabel: 'Contraseña',
       passwordPlaceholder: 'Contraseña',
+      confirmPasswordLabel: 'Confirmar contraseña',
       confirmPasswordPlaceholder: 'Confirmar contraseña',
       orConnectWith: 'O entra con',
       orRegisterWith: 'O regístrate con',
+      apple: 'Apple',
+      google: 'Google',
       loading: 'Cargando...',
       error: 'Error',
       unexpectedError: 'Ocurrió un error inesperado.',
     },
     login: {
       title: 'FitFlow AI',
+      eyebrow: 'Acceso rápido',
+      subtitle:
+        'Vuelve a tu rutina de hoy, a tus últimos registros y al flujo de ejecución sin perder contexto.',
+      helper:
+        'Usa la cuenta ligada a tu historial para recuperar progreso y recomendaciones.',
       cta: 'Iniciar sesión',
       noAccountText: 'Nuevo en FitFlow AI?',
       noAccountLink: 'Regístrate',
@@ -186,6 +211,11 @@ const es = {
     },
     register: {
       title: 'FitFlow AI',
+      eyebrow: 'Nueva cuenta',
+      subtitle:
+        'Crea una cuenta enfocada en entrenamiento antes de conectar rutinas, recuperación y sugerencias de IA.',
+      helper:
+        'Te enviaremos un correo de verificación antes de habilitar el resto del flujo.',
       cta: 'Registrarse',
       hasAccountText: 'Ya tienes cuenta?',
       hasAccountLink: 'Inicia sesión',

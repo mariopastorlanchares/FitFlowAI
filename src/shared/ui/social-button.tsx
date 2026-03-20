@@ -1,43 +1,53 @@
-import { Pressable } from 'react-native';
+import { Pressable, Text } from 'react-native';
 
-import { palette } from '@shared/constants/theme';
+import { fonts, palette } from '@shared/constants/theme';
 
 interface SocialButtonProps {
     provider: 'apple' | 'google';
     onPress: () => void;
     icon: React.ReactNode;
+    label: string;
+    disabled?: boolean;
 }
 
-/**
- * Social login button (Apple / Google).
- * Apple → white border, Google → orange border.
- */
-export function SocialButton({ provider, onPress, icon }: SocialButtonProps) {
+export function SocialButton({
+    provider,
+    onPress,
+    icon,
+    label,
+    disabled = false,
+}: SocialButtonProps) {
     const isGoogle = provider === 'google';
 
     return (
         <Pressable
-            onPress={onPress}
+            accessibilityRole="button"
+            onPress={disabled ? undefined : onPress}
             style={({ pressed }) => ({
                 flex: 1,
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: 52,
-                borderRadius: 28,
+                borderRadius: 18,
                 borderCurve: 'continuous',
-                borderWidth: 2,
-                borderColor: isGoogle ? palette.primary : palette.textPrimary,
-                backgroundColor: pressed
-                    ? isGoogle
-                        ? palette.primaryTintSoft
-                        : palette.neutralTint
-                    : isGoogle
-                        ? palette.primaryTintFaint
-                        : palette.neutralTintFaint,
+                borderWidth: 1,
+                borderColor: isGoogle ? palette.primaryBorder : palette.borderSoft,
+                backgroundColor: pressed ? palette.surfaceActive : palette.surfaceMuted,
+                gap: 10,
+                opacity: disabled ? 0.7 : 1,
             })}
         >
             {icon}
+            <Text
+                style={{
+                    color: palette.textPrimary,
+                    fontFamily: fonts.semiBold,
+                    fontSize: 15,
+                }}
+            >
+                {label}
+            </Text>
         </Pressable>
     );
 }

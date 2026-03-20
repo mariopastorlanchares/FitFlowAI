@@ -51,12 +51,22 @@ export const palette = {
   inputBackground: 'rgba(255, 255, 255, 0.06)',
   /** Input field border */
   inputBorder: 'rgba(255, 255, 255, 0.15)',
+  /** Active input border */
+  inputBorderActive: 'rgba(255, 140, 0, 0.52)',
   /** Modal and screen backdrop */
   backdrop: 'rgba(0, 0, 0, 0.6)',
   /** Danger / destructive actions */
   danger: '#FF4444',
+  /** Danger tinted background */
+  dangerTint: 'rgba(255, 68, 68, 0.1)',
+  /** Danger tinted border */
+  dangerBorder: 'rgba(255, 68, 68, 0.32)',
   /** Success */
   success: '#22C55E',
+  /** Success tinted background */
+  successTint: 'rgba(34, 197, 94, 0.12)',
+  /** Success tinted border */
+  successBorder: 'rgba(34, 197, 94, 0.34)',
   /** Surface Active (Highlight) */
   surfaceActive: '#303030',
   /** Error alias for danger */
@@ -69,9 +79,10 @@ export const gradients = {
 
 export const effects = {
   primaryGlow: '0 4px 28px rgba(255, 140, 0, 0.55), 0 0 12px rgba(255, 180, 0, 0.3)',
-  primaryButton: '0 10px 24px rgba(255, 140, 0, 0.28)',
+  primaryButton: '0 10px 20px rgba(255, 140, 0, 0.18)',
   modal: '0 18px 48px rgba(0, 0, 0, 0.32)',
   card: '0 10px 24px rgba(0, 0, 0, 0.18)',
+  authPanel: '0 18px 42px rgba(0, 0, 0, 0.24)',
 } as const;
 
 export const fonts = {
