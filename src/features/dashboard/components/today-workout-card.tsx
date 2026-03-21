@@ -1,9 +1,10 @@
-import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { StyleSheet, Text, View } from 'react-native';
 
-import { effects, palette } from '@shared/constants/theme';
+import { fonts, palette } from '@shared/constants/theme';
+import { PrimaryButton } from '@shared/ui/primary-button';
 
 export function TodayWorkoutCard() {
   const { t } = useTranslation();
@@ -11,100 +12,95 @@ export function TodayWorkoutCard() {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.subtitle}>{t('dashboard.today_workout')}</Text>
-      <Text style={styles.title}>{t('dashboard.card.title')}</Text>
-      <Text style={styles.description}>{t('dashboard.card.description')}</Text>
+      <View style={styles.titleBlock}>
+        <Text style={styles.kicker}>{t('dashboard.today_workout')}</Text>
+        <Text style={styles.title}>{t('dashboard.card.title')}</Text>
+        <Text style={styles.description}>{t('dashboard.card.description')}</Text>
+      </View>
 
-      <View style={styles.footer}>
-        <View style={styles.metaItem}>
-          <Feather name="clock" size={16} color={palette.textSecondary} />
-          <Text style={styles.metaText}>{t('dashboard.card.duration')}</Text>
+      <Text style={styles.summary}>{t('dashboard.card.summary')}</Text>
+
+      <View style={styles.metaGrid}>
+        <View style={styles.metaCard}>
+          <Feather name="clock" size={16} color={palette.primaryLight} />
+          <Text style={styles.metaLabel}>{t('dashboard.time')}</Text>
+          <Text style={styles.metaValue}>{t('dashboard.card.duration')}</Text>
         </View>
-        <View style={styles.metaItem}>
-          <Feather name="target" size={16} color={palette.textSecondary} />
-          <Text style={styles.metaText}>
-            {t('dashboard.focus')}: {t('dashboard.card.focusValue')}
-          </Text>
+        <View style={styles.metaCard}>
+          <Feather name="target" size={16} color={palette.primaryLight} />
+          <Text style={styles.metaLabel}>{t('dashboard.focus')}</Text>
+          <Text style={styles.metaValue}>{t('dashboard.card.focusValue')}</Text>
         </View>
       </View>
 
-      <TouchableOpacity
-        style={styles.actionButton}
-        activeOpacity={0.8}
+      <PrimaryButton
+        label={t('dashboard.start_workout')}
         onPress={() => router.push('/workout')}
-      >
-        <Text style={styles.actionButtonText}>{t('dashboard.start_workout')}</Text>
-      </TouchableOpacity>
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: palette.surface,
-    borderRadius: 24,
-    padding: 24,
-    borderWidth: 1,
-    borderColor: palette.borderSubtle,
-    alignItems: 'center',
-    marginTop: 16,
-    marginBottom: 12,
     width: '100%',
-    boxShadow: effects.card,
+    backgroundColor: palette.surface,
+    borderRadius: 28,
+    borderCurve: 'continuous',
+    borderWidth: 1,
+    borderColor: palette.borderSoft,
+    padding: 22,
+    gap: 18,
   },
-  subtitle: {
-    color: palette.textSecondary,
-    fontFamily: 'Inter_600SemiBold',
-    fontSize: 14,
-    letterSpacing: 1,
-    marginBottom: 16,
+  titleBlock: {
+    gap: 6,
+  },
+  kicker: {
+    color: palette.primaryLight,
+    fontFamily: fonts.semiBold,
+    fontSize: 12,
+    letterSpacing: 0.7,
   },
   title: {
     color: palette.textPrimary,
-    fontFamily: 'Inter_800ExtraBold',
-    fontSize: 32,
-    textAlign: 'center',
-    marginBottom: 8,
+    fontFamily: fonts.extraBold,
+    fontSize: 28,
+    lineHeight: 32,
   },
   description: {
     color: palette.textSecondary,
-    fontFamily: 'Inter_400Regular',
-    fontSize: 16,
-    marginBottom: 32,
+    fontFamily: fonts.regular,
+    fontSize: 15,
+    lineHeight: 20,
   },
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 24,
+  summary: {
+    color: palette.textSecondary,
+    fontFamily: fonts.regular,
+    fontSize: 14,
+    lineHeight: 20,
   },
-  metaItem: {
+  metaGrid: {
     flexDirection: 'row',
-    alignItems: 'center',
+    gap: 12,
+  },
+  metaCard: {
+    flex: 1,
+    backgroundColor: palette.surfaceMuted,
+    borderWidth: 1,
+    borderColor: palette.borderSoft,
+    borderRadius: 20,
+    borderCurve: 'continuous',
+    padding: 14,
     gap: 6,
   },
-  metaText: {
+  metaLabel: {
+    color: palette.textSecondary,
+    fontFamily: fonts.regular,
+    fontSize: 12,
+  },
+  metaValue: {
     color: palette.textPrimary,
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-  },
-  actionButton: {
-    marginTop: 24,
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    backgroundColor: palette.primary,
-    borderRadius: 30,
-    width: '85%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: effects.primaryButton,
-  },
-  actionButtonText: {
-    color: palette.textOnPrimary,
-    fontFamily: 'Inter_800ExtraBold',
-    fontSize: 16,
-    letterSpacing: 1,
-    textAlign: 'center',
-    textTransform: 'uppercase',
+    fontFamily: fonts.semiBold,
+    fontSize: 15,
   },
 });

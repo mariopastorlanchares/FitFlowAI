@@ -51,10 +51,10 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 - [x] **Archivos afectados:** `src/features/auth/components/*`, `src/features/auth/screens/*`, `src/shared/ui/form-input.tsx`, `src/shared/ui/primary-button.tsx`, `src/shared/ui/social-button.tsx`, `src/shared/lib/i18n.ts`, `__tests__/auth-screens.test.tsx`
 - [x] **Detalles:** `auth` se reorganizó con un shell reutilizable, feedback de estado explícito, CTA más funcional y tests básicos de login/registro para fijar el nuevo comportamiento.
 
-### Paso 5: Refactor visual de Dashboard/Home tras migración FSD (Ola B)
-- [ ] **Acción:** Reforzar la jerarquía de tarea en Home
-- [ ] **Archivos afectados:** futura `src/features/dashboard/components/*`, `app/(tabs)/index.tsx`
-- [ ] **Detalles:** Reducir sensación de "hero card", revisar centrado excesivo, limpiar badge de racha y priorizar "qué hago ahora" frente a branding.
+### Paso 5: Refactor visual de Dashboard/Home tras migración FSD (Ola B) ✅
+- [x] **Acción:** Reforzar la jerarquía de tarea en Home
+- [x] **Archivos afectados:** `src/features/dashboard/components/*`, `src/features/dashboard/screens/home-screen.tsx`, `src/shared/lib/i18n.ts`, `__tests__/dashboard-home.test.tsx`
+- [x] **Detalles:** Home se reorganizó como panel operativo: branding comprimido, tarjeta principal orientada a la siguiente acción, progreso semanal como soporte y selector contextual rebajado a preparación de sesión.
 
 ### Paso 6: Refactor visual de Workout Execution tras migración FSD (Ola B)
 - [ ] **Acción:** Reordenar la pantalla para que ejercicio actual, set logging, descanso y CTA dominen sobre branding e IA
@@ -96,3 +96,4 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 - `2026-03-17`: Creado el plan a partir de la auditoría UI/UX global.
 - `2026-03-17`: Ola A ejecutada en `dashboard`, `workout`, `stats` y `shared/ui`; validado con `npm run lint`, `npx tsc --noEmit` y `npx expo export --platform web`.
 - `2026-03-20`: ✅ Paso 4 completado en `auth`: login/registro simplificados, `BlurView` retirado, inputs/CTA/social actions rebalanceados y cobertura básica añadida con `__tests__/auth-screens.test.tsx`. Verificado con `npx tsc --noEmit`, `npm run lint`, `npx jest __tests__/auth-screens.test.tsx __tests__/auth-service.test.ts __tests__/profile.test.tsx --runInBand` y `npx expo export --platform web`.
+- `2026-03-21`: ✅ Paso 5 completado en `dashboard`: Home prioriza la acción principal del día, reduce la hero card ornamental y añade tests básicos en `__tests__/dashboard-home.test.tsx`. Verificado con `npx tsc --noEmit`, `npm run lint`, `npx jest __tests__/dashboard-home.test.tsx __tests__/auth-screens.test.tsx __tests__/auth-service.test.ts __tests__/profile.test.tsx --runInBand` y `npx expo export --platform web`.
