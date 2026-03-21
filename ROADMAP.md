@@ -55,6 +55,7 @@
 
 > Objetivo: conectar la app con Firebase y el motor de IA para funcionalidad real.
 > **NOTA ARQUITECTÓNICA:** Antes de abordar esta fase, se realizará una refactorización arquitectónica (Feature-Sliced Design + React Query) para establecer una base sólida que escale con la complejidad del backend y la IA.
+> **RESTRICCIÓN FUNCIONAL:** `location` y el equipamiento disponible del usuario actuarán como constraints duros del generador; la IA no deberá sugerir ejercicios incompatibles con el material real.
 
 | Estado | Tarea | Complejidad | Plan / Referencia |
 |:---:|---|:---:|---|
@@ -62,7 +63,7 @@
 | ✅ | **Refactorización Arquitectónica** (FSD + React Query) | L | [🔗 P2-00 Refactor Arquitectónico](docs/plans/P2-00_architectural-refactor.md) |
 | 🔄 | **Endurecimiento UI/UX de superficies actuales** (i18n, theme, jerarquía y placeholders) | L | [🔗 P2-01 UI/UX Hardening](docs/plans/P2-01_ui-ux-hardening.md) |
 | ⬜ | Configuración base de Firestore (reglas, índices) | M | Pendiente de plan |
-| ⬜ | Esquema de datos: Usuarios, Rutinas, Historial | L | Pendiente de plan |
+| ⬜ | Esquema de datos: Usuarios, Rutinas, Historial y Perfil de Equipamiento | L | [🔗 P2-02 Data Schema + Equipment Profile](docs/plans/P2-02_data-schema-equipment-profile.md) |
 | ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
 | ⬜ | Conexión segura con Gemini vía Genkit | XL | Pendiente de plan |
 | ⬜ | Lógica de recomendaciones IA en tiempo real | XL | Pendiente de plan |
@@ -115,4 +116,10 @@
 </p>
 <p align="center">
   <sub>Auth UI/UX endurecido el 20 de marzo de 2026: login y registro simplificados tras FSD, con jerarquía más operativa, componentes compartidos ajustados y tests básicos de pantalla.</sub>
+</p>
+<p align="center">
+  <sub>Dashboard UI/UX endurecido el 21 de marzo de 2026: Home reordenado para priorizar la rutina del día, con branding más discreto, progreso semanal como soporte y tests básicos del dashboard.</sub>
+</p>
+<p align="center">
+  <sub>Modelado futuro aclarado el 21 de marzo de 2026: `location` y `homeEquipment` entrarán como restricciones duras del generador de sesiones; el esquema de datos ya tiene plan dedicado.</sub>
 </p>
