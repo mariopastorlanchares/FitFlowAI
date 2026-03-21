@@ -56,10 +56,10 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 - [x] **Archivos afectados:** `src/features/dashboard/components/*`, `src/features/dashboard/screens/home-screen.tsx`, `src/shared/lib/i18n.ts`, `__tests__/dashboard-home.test.tsx`
 - [x] **Detalles:** Home se reorganizó como panel operativo: branding comprimido, tarjeta principal orientada a la siguiente acción, progreso semanal como soporte y selector contextual rebajado a preparación de sesión.
 
-### Paso 6: Refactor visual de Workout Execution tras migración FSD (Ola B)
-- [ ] **Acción:** Reordenar la pantalla para que ejercicio actual, set logging, descanso y CTA dominen sobre branding e IA
-- [ ] **Archivos afectados:** futura `src/features/workout/components/execution/*`, `app/(tabs)/workout.tsx`
-- [ ] **Detalles:** La IA debe pasar a ser soporte contextual, no la primera capa de lectura. Revisar también controles inferiores, rest timer y formularios de comentario.
+### Paso 6: Refactor visual de Workout Execution tras migración FSD (Ola B) ✅
+- [x] **Acción:** Reordenar la pantalla para que ejercicio actual, set logging, descanso y CTA dominen sobre branding e IA
+- [x] **Archivos afectados:** `src/features/workout/components/execution/*`, `src/features/workout/screens/workout-execution-screen.tsx`, `src/features/workout/hooks/use-workout-session.ts`, `src/shared/lib/i18n.ts`, `__tests__/workout-execution.test.tsx`
+- [x] **Detalles:** Workout Execution pasa a una jerarquía operativa: header más funcional, ejercicio actual arriba, logger de set con objetivo explícito, temporizador con acción de salto integrada y soporte IA relegado al final con feedback contextual. La CTA inferior ahora cambia según el estado real del ejercicio.
 
 ### Paso 7: Refactor visual de Profile y placeholder de Stats (Ola B)
 - [ ] **Acción:** Bajar ruido visual en perfil y dar un tratamiento intencional a `stats`
@@ -81,7 +81,7 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 - [ ] Los colores y superficies visibles salen de `src/shared/constants/theme.ts`
 - [ ] La app reduce blur/glow/radios excesivos y gana consistencia visual
 - [ ] Home deja clara la acción principal del día sin depender de una hero card decorativa
-- [ ] Workout Execution prioriza la tarea operativa sobre branding e IA
+- [x] Workout Execution prioriza la tarea operativa sobre branding e IA
 - [ ] `Stats` y otros placeholders visibles tienen tratamiento digno o se retiran temporalmente
 - [ ] Los componentes críticos tienen al menos cobertura básica de tests
 
@@ -97,3 +97,4 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 - `2026-03-17`: Ola A ejecutada en `dashboard`, `workout`, `stats` y `shared/ui`; validado con `npm run lint`, `npx tsc --noEmit` y `npx expo export --platform web`.
 - `2026-03-20`: ✅ Paso 4 completado en `auth`: login/registro simplificados, `BlurView` retirado, inputs/CTA/social actions rebalanceados y cobertura básica añadida con `__tests__/auth-screens.test.tsx`. Verificado con `npx tsc --noEmit`, `npm run lint`, `npx jest __tests__/auth-screens.test.tsx __tests__/auth-service.test.ts __tests__/profile.test.tsx --runInBand` y `npx expo export --platform web`.
 - `2026-03-21`: ✅ Paso 5 completado en `dashboard`: Home prioriza la acción principal del día, reduce la hero card ornamental y añade tests básicos en `__tests__/dashboard-home.test.tsx`. Verificado con `npx tsc --noEmit`, `npm run lint`, `npx jest __tests__/dashboard-home.test.tsx __tests__/auth-screens.test.tsx __tests__/auth-service.test.ts __tests__/profile.test.tsx --runInBand` y `npx expo export --platform web`.
+- `2026-03-21`: ✅ Paso 6 completado en `workout`: la pantalla de ejecución se reordena para priorizar ejercicio actual, registro de set, descanso y CTA principal; la IA pasa a soporte contextual y se añade cobertura básica en `__tests__/workout-execution.test.tsx`. Verificado con `npx tsc --noEmit`, `npm run lint`, `npx jest workout-execution --runInBand` y `npx expo export --platform web`.

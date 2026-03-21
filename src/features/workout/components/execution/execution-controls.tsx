@@ -7,28 +7,29 @@ import { effects, palette, typography } from '@shared/constants/theme';
 interface ExecutionControlsProps {
   isExerciseFinished: boolean;
   isLastExercise: boolean;
-  onRequestAlternative: () => void;
+  isEditingSet: boolean;
+  restActive: boolean;
   onNextAction: () => void;
 }
 
 export function ExecutionControls({
   isExerciseFinished,
   isLastExercise,
-  onRequestAlternative,
+  isEditingSet,
+  restActive,
   onNextAction,
 }: ExecutionControlsProps) {
   const { t } = useTranslation();
-  const primaryActionText =
-    isExerciseFinished && isLastExercise
+  const primaryActionText = isEditingSet
+    ? t('workout.controls.saveChanges')
+    : isExerciseFinished && isLastExercise
       ? t('workout.controls.finish')
-      : t('workout.controls.nextSet');
+      : isExerciseFinished
+        ? t('workout.controls.nextExercise')
+        : t('workout.controls.logSet');
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.secondaryButton} onPress={onRequestAlternative}>
-        <Text style={styles.secondaryButtonText}>{t('workout.controls.alternative')}</Text>
-      </TouchableOpacity>
-
       <TouchableOpacity style={styles.primaryButton} onPress={onNextAction}>
         <Text style={styles.primaryButtonText}>{primaryActionText}</Text>
       </TouchableOpacity>
@@ -40,29 +41,15 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     paddingHorizontal: 20,
-    paddingBottom: 32,
-    paddingTop: 16,
+    paddingBottom: 18,
+    paddingTop: 8,
     backgroundColor: palette.surfaceInset,
-  },
-  secondaryButton: {
-    width: '100%',
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: palette.border,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginBottom: 12,
-    backgroundColor: palette.surfaceMuted,
-  },
-  secondaryButtonText: {
-    ...typography.button,
-    color: palette.textPrimary,
-    fontSize: 14,
-    letterSpacing: 0.5,
+    borderTopWidth: 1,
+    borderTopColor: palette.borderSubtle,
   },
   primaryButton: {
     width: '100%',
-    borderRadius: 24,
+    borderRadius: 18,
     backgroundColor: palette.primary,
     paddingVertical: 16,
     alignItems: 'center',
@@ -72,7 +59,6 @@ const styles = StyleSheet.create({
     ...typography.button,
     color: palette.textOnPrimary,
     fontSize: 15,
-    letterSpacing: 1,
-    fontWeight: 'bold',
+    fontWeight: '700',
   },
 });

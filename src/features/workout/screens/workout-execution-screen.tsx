@@ -1,17 +1,26 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ActiveSetLogger } from '../components/execution/active-set-logger';
 import { AIGuidanceCard } from '../components/execution/ai-guidance-card';
 import { ExecutionControls } from '../components/execution/execution-controls';
 import { ExerciseMedia } from '../components/execution/exercise-media';
 import { RestTimerLarge } from '../components/execution/rest-timer-large';
+import { SetProgressStrip } from '../components/execution/set-progress-strip';
 import { WorkoutHeader } from '../components/execution/workout-header';
 import { useWorkoutSession } from '../hooks/use-workout-session';
 import { AppBackground } from '@shared/components/app-background';
 import { palette, typography } from '@shared/constants/theme';
+
+function formatTime(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
 
 export function WorkoutExecutionScreen() {
   const { t } = useTranslation();
@@ -22,9 +31,17 @@ export function WorkoutExecutionScreen() {
     currentExercise,
     isLastExercise,
     currentExerciseIndex,
+    selectedSet,
+    selectedSetIndex,
+    nextPendingSetIndex,
+    isEditingSet,
     restActive,
     restTimeLeft,
-    toggleSet,
+    selectSet,
+    completeSet,
+    updateSet,
+    addSet,
+    removeLastSet,
     nextExercise,
     skipRest,
     requestAlternative,
@@ -32,55 +49,53 @@ export function WorkoutExecutionScreen() {
     finishWorkout,
   } = useWorkoutSession('1');
 
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [sessionElapsedSeconds, setSessionElapsedSeconds] = useState(0);
+  const [exerciseElapsedSeconds, setExerciseElapsedSeconds] = useState(0);
+  const [setStripExpanded, setSetStripExpanded] = useState(false);
+  const [activeReps, setActiveReps] = useState('0');
+  const [activeWeight, setActiveWeight] = useState('0');
+  const [aiComment, setAiComment] = useState('');
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setElapsedSeconds((previousTime) => previousTime + 1);
+      setSessionElapsedSeconds((previousTime) => previousTime + 1);
+      setExerciseElapsedSeconds((previousTime) => previousTime + 1);
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const formatTime = (totalSeconds: number) => {
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-
-    return `${minutes.toString().padStart(2, '0')}:${seconds
-      .toString()
-      .padStart(2, '0')}`;
-  };
-
-  const activeSetIndex = currentExercise
-    ? currentExercise.sets.findIndex((set) => !set.completed)
-    : -1;
-  const hasNextSet = activeSetIndex !== -1;
-  const isExerciseFinished = activeSetIndex === -1;
-  const displaySetIndex = hasNextSet
-    ? activeSetIndex
-    : Math.max(0, (currentExercise?.sets.length || 1) - 1);
-  const activeSet = currentExercise ? currentExercise.sets[displaySetIndex] : null;
-
-  const [activeReps, setActiveReps] = useState(
-    (activeSet?.actualReps || activeSet?.targetReps || '0').toString()
-  );
-  const [activeWeight, setActiveWeight] = useState(
-    (activeSet?.actualWeight ?? activeSet?.targetWeight ?? '0').toString()
-  );
-  const [aiComment, setAiComment] = useState('');
+  useEffect(() => {
+    setExerciseElapsedSeconds(0);
+  }, [currentExerciseIndex]);
 
   useEffect(() => {
-    if (!activeSet) {
+    if (!selectedSet) {
       return;
     }
 
-    setActiveReps((activeSet.actualReps || activeSet.targetReps || '0').toString());
-    setActiveWeight((activeSet.actualWeight ?? activeSet.targetWeight ?? '0').toString());
+    setActiveReps((selectedSet.actualReps || selectedSet.targetReps || '0').toString());
+    setActiveWeight((selectedSet.actualWeight ?? selectedSet.targetWeight ?? '0').toString());
     setAiComment('');
-  }, [activeSet]);
+  }, [selectedSet]);
 
-  const handleLogSet = () => {
-    if (!hasNextSet) {
+  const isExerciseFinished = nextPendingSetIndex === -1;
+  const hasPendingSet = nextPendingSetIndex !== -1;
+
+  const handlePrimaryAction = () => {
+    if (!selectedSet) {
+      return;
+    }
+
+    const finalReps = parseInt(activeReps, 10) || 0;
+    const finalWeight = parseFloat(activeWeight) || 0;
+
+    if (isEditingSet) {
+      updateSet(currentExerciseIndex, selectedSet.id, finalReps, finalWeight);
+      return;
+    }
+
+    if (!hasPendingSet) {
       if (isLastExercise) {
         finishWorkout();
         router.replace('/(tabs)');
@@ -91,22 +106,25 @@ export function WorkoutExecutionScreen() {
       return;
     }
 
-    if (!activeSet) {
-      return;
-    }
-
-    const finalReps = parseInt(activeReps, 10) || 0;
-    const finalWeight = parseFloat(activeWeight) || 0;
-
-    toggleSet(currentExerciseIndex, activeSet.id, finalReps, finalWeight);
+    completeSet(currentExerciseIndex, selectedSet.id, finalReps, finalWeight);
   };
 
   const handleAiCommentChange = (comment: string) => {
     setAiComment(comment);
-    sendAIFeedback(comment);
   };
 
-  if (isLoading || !currentExercise || !session || !activeSet) {
+  const handleAiFeedbackSubmit = () => {
+    const trimmedComment = aiComment.trim();
+
+    if (!trimmedComment) {
+      return;
+    }
+
+    sendAIFeedback(trimmedComment);
+    setAiComment('');
+  };
+
+  if (isLoading || !currentExercise || !session || !selectedSet) {
     return <View style={styles.container} />;
   }
 
@@ -115,7 +133,12 @@ export function WorkoutExecutionScreen() {
       <AppBackground>
         <WorkoutHeader
           onClose={() => router.navigate('/')}
-          elapsedTime={formatTime(elapsedSeconds)}
+          sessionElapsedTime={formatTime(sessionElapsedSeconds)}
+          exerciseElapsedTime={formatTime(exerciseElapsedSeconds)}
+          restElapsedTime={restActive ? formatTime(restTimeLeft) : null}
+          workoutName={session.workoutName}
+          currentExerciseIndex={currentExerciseIndex}
+          totalExercises={session.exercises.length}
         />
 
         <ScrollView
@@ -123,35 +146,36 @@ export function WorkoutExecutionScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <AIGuidanceCard
-            targetWeight={activeSet.targetWeight || 0}
-            targetReps={activeSet.targetReps}
-          />
-
           <ExerciseMedia
             name={currentExercise.name}
+            description={currentExercise.description}
             imageUrl={currentExercise.imageUrl}
+            onRequestAlternative={requestAlternative}
           />
 
           <ActiveSetLogger
-            currentSetNumber={displaySetIndex + 1}
-            totalSets={currentExercise.sets.length}
+            currentSetNumber={selectedSetIndex + 1}
+            targetReps={selectedSet.targetReps}
+            targetWeight={selectedSet.targetWeight}
             reps={activeReps}
             weight={activeWeight}
+            isEditing={isEditingSet}
+            isLocked={isExerciseFinished && !isEditingSet}
             onRepsChange={setActiveReps}
             onWeightChange={setActiveWeight}
-          />
-
-          <View style={styles.commentContainer}>
-            <TextInput
-              style={styles.commentInput}
-              placeholder={t('workout.screen.aiCommentPlaceholder')}
-              placeholderTextColor={palette.textSecondary}
-              value={aiComment}
-              onChangeText={handleAiCommentChange}
-              multiline
+          >
+            <SetProgressStrip
+              sets={currentExercise.sets}
+              selectedSetIndex={selectedSetIndex}
+              nextPendingSetIndex={nextPendingSetIndex}
+              isEditingSet={isEditingSet}
+              expanded={setStripExpanded}
+              onToggleExpanded={() => setSetStripExpanded((previousState) => !previousState)}
+              onSelectSet={selectSet}
+              onAddSet={() => addSet(currentExerciseIndex)}
+              onRemoveLastSet={() => removeLastSet(currentExerciseIndex)}
             />
-          </View>
+          </ActiveSetLogger>
 
           {restActive ? (
             <View style={styles.timerSection}>
@@ -163,13 +187,22 @@ export function WorkoutExecutionScreen() {
               />
             </View>
           ) : null}
+
+          <AIGuidanceCard
+            targetWeight={selectedSet.targetWeight || 0}
+            targetReps={selectedSet.targetReps}
+            feedback={aiComment}
+            onFeedbackChange={handleAiCommentChange}
+            onSubmitFeedback={handleAiFeedbackSubmit}
+          />
         </ScrollView>
 
         <ExecutionControls
           isExerciseFinished={isExerciseFinished}
           isLastExercise={isLastExercise}
-          onRequestAlternative={requestAlternative}
-          onNextAction={handleLogSet}
+          isEditingSet={isEditingSet}
+          restActive={restActive}
+          onNextAction={handlePrimaryAction}
         />
       </AppBackground>
     </SafeAreaView>
@@ -186,37 +219,23 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 40,
-    alignItems: 'center',
+    paddingTop: 8,
+    paddingBottom: 32,
   },
   timerSection: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 24,
+    backgroundColor: palette.surfaceElevated,
+    borderWidth: 1,
+    borderColor: palette.border,
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    marginBottom: 16,
   },
   timerTitle: {
-    ...typography.h3,
-    color: palette.primary,
-    textTransform: 'uppercase',
-    marginBottom: 16,
-    letterSpacing: 1,
-  },
-  commentContainer: {
-    width: '100%',
-    marginTop: 16,
-  },
-  commentInput: {
-    backgroundColor: palette.surfaceMuted,
-    borderColor: palette.border,
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 12,
+    ...typography.title,
     color: palette.textPrimary,
-    minHeight: 80,
-    ...typography.body,
-    textAlignVertical: 'top',
+    marginBottom: 16,
   },
 });

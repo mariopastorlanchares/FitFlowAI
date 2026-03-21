@@ -121,5 +121,8 @@
   <sub>Dashboard UI/UX endurecido el 21 de marzo de 2026: Home reordenado para priorizar la rutina del día, con branding más discreto, progreso semanal como soporte y tests básicos del dashboard.</sub>
 </p>
 <p align="center">
+  <sub>Workout UI/UX endurecido el 21 de marzo de 2026: Execution prioriza ejercicio actual, logging del set, descanso y CTA principal, con IA relegada a soporte contextual y tests básicos de pantalla.</sub>
+</p>
+<p align="center">
   <sub>Modelado futuro aclarado el 21 de marzo de 2026: `location` y `homeEquipment` entrarán como restricciones duras del generador de sesiones; el esquema de datos ya tiene plan dedicado.</sub>
 </p>

@@ -4,6 +4,7 @@ export { AIGuidanceCard } from './components/execution/ai-guidance-card';
 export { ExecutionControls } from './components/execution/execution-controls';
 export { ExerciseMedia } from './components/execution/exercise-media';
 export { RestTimerLarge } from './components/execution/rest-timer-large';
+export { SetProgressStrip } from './components/execution/set-progress-strip';
 export { WorkoutHeader } from './components/execution/workout-header';
 export { useWorkoutSession } from './hooks/use-workout-session';
 export { WorkoutExecutionScreen } from './screens/workout-execution-screen';

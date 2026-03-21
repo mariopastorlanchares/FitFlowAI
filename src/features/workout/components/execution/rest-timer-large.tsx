@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { effects, palette, typography } from '@shared/constants/theme';
 
@@ -10,7 +10,7 @@ interface RestTimerLargeProps {
   onSkip: () => void;
 }
 
-export function RestTimerLarge({ timeLeft, totalTime }: RestTimerLargeProps) {
+export function RestTimerLarge({ timeLeft, totalTime, onSkip }: RestTimerLargeProps) {
   const { t } = useTranslation();
   const progress = totalTime > 0 ? timeLeft / totalTime : 0;
   const minutes = Math.floor(timeLeft / 60);
@@ -44,6 +44,10 @@ export function RestTimerLarge({ timeLeft, totalTime }: RestTimerLargeProps) {
           ]}
         />
       </View>
+
+      <TouchableOpacity style={styles.skipButton} onPress={onSkip}>
+        <Text style={styles.skipButtonText}>{t('workout.rest.skip')}</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -52,7 +56,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 10,
+    marginVertical: 4,
   },
   outerCircle: {
     width: 140,
@@ -91,5 +95,18 @@ const styles = StyleSheet.create({
     borderWidth: 8,
     borderColor: 'transparent',
     zIndex: 1,
+  },
+  skipButton: {
+    marginTop: 16,
+    backgroundColor: palette.surfaceMuted,
+    borderWidth: 1,
+    borderColor: palette.border,
+    borderRadius: 14,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+  },
+  skipButtonText: {
+    ...typography.body,
+    color: palette.textPrimary,
   },
 });
