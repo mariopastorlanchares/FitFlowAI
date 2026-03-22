@@ -44,7 +44,6 @@ export function LoginScreen() {
 
   return (
     <AuthShell
-      eyebrow={t('login.eyebrow')}
       title={t('login.title')}
       subtitle={t('login.subtitle')}
       footerPrompt={t('login.noAccountText')}

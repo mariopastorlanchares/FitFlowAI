@@ -15,7 +15,7 @@ import type { Href } from 'expo-router';
 import { effects, fonts, palette } from '@shared/constants/theme';
 
 interface AuthShellProps {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   subtitle: string;
   footerPrompt: string;
@@ -59,29 +59,31 @@ export function AuthShell({
           }}
         >
           <View style={{ gap: 18, alignItems: 'center' }}>
-            <View
-              style={{
-                paddingHorizontal: 12,
-                paddingVertical: 7,
-                borderRadius: 999,
-                borderCurve: 'continuous',
-                borderWidth: 1,
-                borderColor: palette.primaryBorder,
-                backgroundColor: palette.primaryTintSoft,
-              }}
-            >
-              <Text
+            {eyebrow ? (
+              <View
                 style={{
-                  color: palette.primaryLight,
-                  fontFamily: fonts.semiBold,
-                  fontSize: 12,
-                  letterSpacing: 0.6,
-                  textTransform: 'uppercase',
+                  paddingHorizontal: 12,
+                  paddingVertical: 7,
+                  borderRadius: 999,
+                  borderCurve: 'continuous',
+                  borderWidth: 1,
+                  borderColor: palette.primaryBorder,
+                  backgroundColor: palette.primaryTintSoft,
                 }}
               >
-                {eyebrow}
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    color: palette.primaryLight,
+                    fontFamily: fonts.semiBold,
+                    fontSize: 12,
+                    letterSpacing: 0.6,
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {eyebrow}
+                </Text>
+              </View>
+            ) : null}
 
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
               <View
