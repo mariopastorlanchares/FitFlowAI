@@ -1,0 +1,178 @@
+# P2-03 Configuración Base de Firestore
+
+> **Fase:** 2 | **Complejidad:** M | **Estado:** ⬜
+
+## 🎯 Objetivo
+Preparar la base de Firestore para soportar el perfil operativo del usuario y las futuras capas de generación, sin introducir todavía persistencia de rutinas ni de sesiones activas. El foco de esta tarea es dejar clara la estructura inicial, las reglas de acceso, los índices necesarios y la estrategia de validación local.
+
+Esta tarea depende directamente del trabajo de dominio ya definido en:
+- [`docs/plans/P2-02_data-schema-equipment-profile.md`](./P2-02_data-schema-equipment-profile.md)
+
+## 🎨 Referencias de Diseño
+- Contrato de dominio: `docs/plans/P2-02_data-schema-equipment-profile.md`
+- Configuración Firebase actual: `src/shared/lib/firebase.ts`
+- Routing y bootstrap actual: `app/_layout.tsx`
+
+## 📋 Requisitos Previos
+- [x] Firebase Auth Email/Password funcionando
+- [x] Refactor FSD completado
+- [x] Borrador de `userProfiles/{authUid}` definido en `P2-02`
+- [ ] Congelar taxonomía V1 de equipamiento
+- [ ] Congelar contrato `userProfile` para V1
+
+## 🛠️ Plan de Implementación
+
+### Paso 1: Confirmar el documento raíz de perfil
+- [ ] **Acción:** Validar que `userProfiles/{authUid}` será el documento canónico inicial de Firestore
+- [ ] **Archivos afectados:** `docs/plans/P2-02_data-schema-equipment-profile.md`, futura documentación Firestore
+- [ ] **Detalles:** Esta tarea no debe reabrir el dominio. Solo confirmar qué campos del borrador de `P2-02` entran realmente en la primera versión persistida.
+- [ ] **Decisión propuesta:** En V1, `userProfiles/{authUid}` contendrá:
+  - `authUid`
+  - `experienceLevel`
+  - `preferredLocations`
+  - `defaultLocation`
+  - `homeEquipment`
+  - `contextProfiles`
+  - `createdAt`
+  - `updatedAt`
+- [ ] **Fuera de este documento en V1:**
+  - rutinas generadas
+  - historial de entrenamientos
+  - sesión activa
+  - objetivos/retos
+
+### Paso 2: Definir estrategia de lectura y escritura
+- [ ] **Acción:** Establecer qué operaciones necesitará la app sobre `userProfiles`
+- [ ] **Archivos afectados:** futura documentación técnica, futuros servicios y hooks
+- [ ] **Detalles:** Al menos contemplar:
+  - lectura del perfil al iniciar sesión
+  - creación del perfil tras registro
+  - actualización de `preferredLocations` / `defaultLocation`
+  - actualización de `homeEquipment`
+  - actualización de `contextProfiles`
+- [ ] **Operaciones V1 propuestas:**
+  - `getUserProfile(authUid)`
+  - `createUserProfile(input)`
+  - `updateUserProfilePreferences(authUid, payload)`
+  - `updateHomeEquipment(authUid, payload)`
+  - `updateContextProfile(authUid, location, payload)`
+- [ ] **Criterio de escritura:** preferir escrituras parciales y semánticas por bloque en vez de sobrescribir el documento completo desde la UI.
+
+### Paso 3: Diseñar reglas de seguridad V1
+- [ ] **Acción:** Preparar reglas Firestore para que cada usuario solo pueda leer y escribir su propio `userProfile`
+- [ ] **Archivos afectados:** futuro `firestore.rules`
+- [ ] **Detalles:** En V1 conviene mantener reglas simples y estrictas:
+  - usuario autenticado obligatorio
+  - acceso solo a `userProfiles/{request.auth.uid}`
+  - negar lecturas/escrituras cruzadas
+  - dejar futuras colecciones fuera hasta modelarlas
+- [ ] **Borrador de criterio de reglas:**
+  - `read`: permitido solo si `request.auth != null` y `request.auth.uid == userId`
+  - `create`: permitido solo si `request.auth != null`, `request.auth.uid == userId` y `request.resource.data.authUid == request.auth.uid`
+  - `update`: permitido solo si `request.auth != null`, `request.auth.uid == userId` y `resource.data.authUid == request.auth.uid`
+  - `delete`: denegado en V1 salvo caso explícito futuro
+- [ ] **Nota:** En V1 no hace falta intentar validar toda la forma profunda del documento en reglas si eso complica en exceso; primero importa cerrar bien ownership y límites de acceso.
+
+#### Borrador inicial de reglas (referencia de plan)
+
+```txt
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /userProfiles/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.authUid == request.auth.uid;
+      allow update: if request.auth != null
+        && request.auth.uid == userId
+        && resource.data.authUid == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+```
+
+### Paso 4: Evaluar índices necesarios
+- [ ] **Acción:** Determinar si la primera versión necesita índices compuestos o si basta con el acceso directo por documento
+- [ ] **Archivos afectados:** futuro `firestore.indexes.json`
+- [ ] **Detalles:** La expectativa inicial es que no hagan falta índices compuestos para `userProfiles`, porque el acceso principal será por id de documento.
+- [ ] **Decisión propuesta:** No crear índices compuestos en V1 para `userProfiles`.
+- [ ] **Motivo:** el patrón principal será `doc(userProfiles/{authUid})`; no hay consultas multi-campo que justifiquen índices todavía.
+- [ ] **Condición de reapertura:** si más adelante se introducen listados administrativos, búsquedas por campos internos o analítica operativa, se revisa esta decisión.
+
+### Paso 5: Preparar configuración local de Firestore
+- [ ] **Acción:** Definir qué archivos base del proyecto deben existir para soportar Firestore
+- [ ] **Archivos afectados:** futuro `firebase.json`, futuro `firestore.rules`, futuro `firestore.indexes.json`, posible `.firebaserc`
+- [ ] **Detalles:** Este paso deja la base preparada para iterar con reglas y validación local sin depender todavía de UI terminada.
+- [ ] **Archivos previstos en V1:**
+  - `firebase.json`
+  - `firestore.rules`
+  - `firestore.indexes.json`
+  - `.firebaserc` si se trabaja con varios proyectos o emuladores locales
+- [ ] **Resultado esperado:** la base del proyecto podrá arrancar Firestore con configuración explícita y versionada en repo.
+
+### Paso 6: Planificar la integración en la app
+- [ ] **Acción:** Definir por dónde entrará Firestore en la arquitectura actual
+- [ ] **Archivos afectados:** futuros `src/shared/lib/firebase.ts`, `src/features/profile/services/*`, futuros hooks de datos
+- [ ] **Detalles:** Toda interacción con Firestore debe quedar detrás de service layer y hooks, respetando FSD y React Query.
+- [ ] **Ruta propuesta de integración:**
+  - `src/shared/lib/firebase.ts`
+    - añadir inicialización de Firestore junto a `app` y `auth`
+  - `src/features/profile/services/profile-service.ts`
+    - lecturas/escrituras del documento `userProfiles/{authUid}`
+  - `src/features/profile/hooks/use-user-profile.ts`
+    - encapsular carga y mutaciones con React Query
+  - `src/features/profile/screens/profile-screen.tsx`
+    - consumir solo hooks, nunca SDK directo
+- [ ] **Motivo arquitectónico:** `profile` es el primer owner natural del dato, aunque el generador y Home acaben reutilizándolo después.
+
+### Paso 7: Definir validación y verificación
+- [ ] **Acción:** Dejar claro cómo se validará la configuración base sin esperar a la funcionalidad completa
+- [ ] **Archivos afectados:** futura documentación técnica, posibles tests y scripts
+- [ ] **Detalles:** La verificación mínima debería contemplar:
+  - reglas coherentes con Auth
+  - lectura/escritura del propio perfil
+  - denegación de acceso a perfiles ajenos
+  - consistencia con el contrato de `P2-02`
+- [ ] **Secuencia mínima de verificación propuesta:**
+  - verificar que la app compila tras introducir Firestore en `src/shared/lib/firebase.ts`
+  - validar reglas sobre `userProfiles/{authUid}` con emulador o entorno controlado
+  - comprobar creación y lectura del propio documento
+  - comprobar denegación de lectura/escritura cruzada
+  - comprobar que el documento persistido respeta el contrato acordado en `P2-02`
+
+## 🔀 Paralelización segura sugerida
+- **Pista A:** archivos de infraestructura Firebase/Firestore (`firebase.json`, `firestore.rules`, `firestore.indexes.json`)
+- **Pista B:** service layer y hooks de `profile`
+- **Pista C:** validación de reglas y pruebas mínimas
+
+### Restricciones de paralelización
+- La Pista B no debe empezar a consumir Firestore real hasta que la forma de `userProfiles/{authUid}` esté cerrada.
+- La Pista C necesita el borrador de reglas de la Pista A para arrancar.
+- `src/shared/lib/firebase.ts` debe tener un único owner mientras se añade Firestore para evitar conflictos con Auth.
+
+## ✅ Criterios de Aceptación
+- [ ] Existe una decisión explícita de usar `userProfiles/{authUid}` como documento raíz V1
+- [ ] Las reglas de seguridad V1 están definidas a nivel de plan
+- [ ] Se sabe si hacen falta índices o si no son necesarios todavía
+- [ ] Quedan identificados los archivos base de Firestore que habrá que crear
+- [ ] La integración futura respeta service layer + hooks y no filtra Firestore directamente a pantallas
+- [ ] La validación mínima de seguridad y consistencia está descrita
+
+## 📝 Notas Técnicas / Aprendizajes
+- No conviene introducir colecciones adicionales hasta que `userProfiles` deje de cubrir bien el caso de uso.
+- La seguridad de Firestore debe nacer alineada con Auth; no se debe posponer "para luego".
+- Si el acceso principal es por documento, conviene resistirse a crear índices por inercia.
+- Esta tarea debe preparar la base, no mezclar todavía sesiones, rutinas, historial ni retos.
+- En V1 compensa más una regla simple y estricta que una validación exhaustiva y frágil del shape completo del documento.
+- La primera integración debería entrar por `profile`, porque es donde el usuario podrá inspeccionar y editar más claramente parte de este dato.
+
+---
+**Historial:**
+- `2026-03-22`: Creado el plan a partir del contrato de dominio y persistencia definido en `P2-02`.
+- `2026-03-22`: Ampliado con borrador de reglas V1, decisión de no usar índices compuestos todavía, archivos base previstos y ruta de integración en FSD.

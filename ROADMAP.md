@@ -62,7 +62,7 @@
 | ✅ | Integración de Firebase Auth (Email/Password) + i18n | L | - |
 | ✅ | **Refactorización Arquitectónica** (FSD + React Query) | L | [🔗 P2-00 Refactor Arquitectónico](docs/plans/P2-00_architectural-refactor.md) |
 | 🔄 | **Endurecimiento UI/UX de superficies actuales** (i18n, theme, jerarquía y placeholders) | L | [🔗 P2-01 UI/UX Hardening](docs/plans/P2-01_ui-ux-hardening.md) |
-| ⬜ | Configuración base de Firestore (reglas, índices) | M | Pendiente de plan |
+| ⬜ | Configuración base de Firestore (reglas, índices) | M | [🔗 P2-03 Firestore Foundation](docs/plans/P2-03_firestore-foundation.md) |
 | ⬜ | Esquema de datos: Usuarios, Rutinas, Historial y Perfil de Equipamiento | L | [🔗 P2-02 Data Schema + Equipment Profile](docs/plans/P2-02_data-schema-equipment-profile.md) |
 | ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
 | ⬜ | Conexión segura con Gemini vía Genkit | XL | Pendiente de plan |
@@ -99,6 +99,19 @@
 
 ---
 
+## 🧠 Fase 5 — Coaching Adaptativo y Retos `PENDIENTE`
+
+> Objetivo: hacer que FitFlow AI no solo reactive sesiones, sino que ayude al usuario a progresar hacia objetivos de habilidad y rendimiento concretos.
+
+| Estado | Tarea | Complejidad | Plan / Referencia |
+|:---:|---|:---:|---|
+| ⬜ | Sistema de retos y objetivos de rendimiento (`pull-up`, `muscle-up`, etc.) | XL | Pendiente de plan |
+| ⬜ | Recomendación de retos sugeridos según nivel, material y contexto | L | Pendiente de plan |
+| ⬜ | Adaptación de sesiones para progresar hacia un reto activo | XL | Pendiente de plan |
+| ⬜ | Seguimiento de progreso por reto (hitos, regresiones, test periódicos) | L | Pendiente de plan |
+
+---
+
 <p align="center">
   <sub>Última actualización: 15 de marzo de 2026 (Refactor FSD 40% completado)</sub>
 </p>
@@ -125,4 +138,10 @@
 </p>
 <p align="center">
   <sub>Modelado futuro aclarado el 21 de marzo de 2026: `location` y `homeEquipment` entrarán como restricciones duras del generador de sesiones; el esquema de datos ya tiene plan dedicado.</sub>
+</p>
+<p align="center">
+  <sub>Dirección de producto ampliada el 22 de marzo de 2026: se añade una futura fase de coaching adaptativo y retos para contemplar objetivos como dominada, muscle-up y progresiones orientadas a habilidad.</sub>
+</p>
+<p align="center">
+  <sub>Planificación JIT ampliada el 22 de marzo de 2026: Firestore base ya tiene plan dedicado, alineado con el contrato de dominio definido en `P2-02`.</sub>
 </p>
