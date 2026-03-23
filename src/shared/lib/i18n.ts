@@ -169,6 +169,40 @@ const en = {
           contextProfilesCount_other: '{{count}} contexts saved',
         },
       },
+      operational: {
+        eyebrow: 'Operational profile',
+        title: 'Training setup you can actually use',
+        description:
+          'Adjust the training baseline before we wire context capture and AI generation to real constraints.',
+        summary_one: '{{count}} item in home setup',
+        summary_other: '{{count}} items in home setup',
+        save: 'Save profile',
+        saveError: 'We could not save your operational profile.',
+        preferredLocationsHelper:
+          'These locations shape defaults and shortcuts in product, but they do not block other contexts.',
+        defaultLocationHelper:
+          'Choose the location the app should preselect when preparing a new session.',
+        homeEquipmentHelper:
+          'Mark only the equipment you really have at home. Context-specific capabilities stay outside this block.',
+        contextProfilesSummary_one:
+          '{{count}} saved external context. Context-specific capture will be expanded in the next slice.',
+        contextProfilesSummary_other:
+          '{{count}} saved external contexts. Context-specific capture will be expanded in the next slice.',
+        groups: {
+          experience: 'Experience level',
+          preferredLocations: 'Preferred locations',
+          defaultLocation: 'Default location',
+          homeEquipment: 'Home equipment',
+        },
+        homeEquipmentOptions: {
+          dumbbells: 'Dumbbells',
+          barbell: 'Barbell',
+          bench: 'Bench',
+          bands: 'Bands',
+          pullup_bar: 'Pull-up bar',
+          kettlebell: 'Kettlebell',
+        },
+      },
       options: {
         personalInfo: 'Personal Information',
         theme: 'Theme',
@@ -434,6 +468,40 @@ const es = {
           homeEquipmentCount_other: '{{count}} elementos configurados',
           contextProfilesCount_one: '{{count}} contexto guardado',
           contextProfilesCount_other: '{{count}} contextos guardados',
+        },
+      },
+      operational: {
+        eyebrow: 'Perfil operativo',
+        title: 'Configuración de entrenamiento utilizable',
+        description:
+          'Ajusta la base de entrenamiento antes de conectar la captura de contextos y la generación IA a restricciones reales.',
+        summary_one: '{{count}} elemento en la configuración de casa',
+        summary_other: '{{count}} elementos en la configuración de casa',
+        save: 'Guardar perfil',
+        saveError: 'No hemos podido guardar tu perfil operativo.',
+        preferredLocationsHelper:
+          'Estas ubicaciones dan defaults y atajos en producto, pero no bloquean otros contextos.',
+        defaultLocationHelper:
+          'Elige la ubicación que la app debe preseleccionar al preparar una nueva sesión.',
+        homeEquipmentHelper:
+          'Marca solo el equipamiento que realmente tienes en casa. Las capabilities específicas del contexto van fuera de este bloque.',
+        contextProfilesSummary_one:
+          '{{count}} contexto externo guardado. La captura específica por contexto se ampliará en el siguiente slice.',
+        contextProfilesSummary_other:
+          '{{count}} contextos externos guardados. La captura específica por contexto se ampliará en el siguiente slice.',
+        groups: {
+          experience: 'Nivel de experiencia',
+          preferredLocations: 'Ubicaciones preferidas',
+          defaultLocation: 'Ubicación por defecto',
+          homeEquipment: 'Equipamiento en casa',
+        },
+        homeEquipmentOptions: {
+          dumbbells: 'Mancuernas',
+          barbell: 'Barra',
+          bench: 'Banco',
+          bands: 'Bandas',
+          pullup_bar: 'Barra de dominadas',
+          kettlebell: 'Kettlebell',
         },
       },
       options: {

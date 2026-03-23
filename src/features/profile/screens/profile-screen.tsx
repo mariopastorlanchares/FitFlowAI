@@ -14,10 +14,23 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@features/auth/hooks/use-auth';
 import { useUserProfile } from '../hooks/use-user-profile';
 import { ProfileOptionRow } from '../components/profile-option-row';
+import { ProfileOperationalSettingsCard } from '../components/profile-operational-settings-card';
 import { ProfileTrainingStatusCard } from '../components/profile-training-status-card';
 import { palette } from '@shared/constants/theme';
 import { ConfirmModal } from '@shared/ui/confirm-modal';
 import { getDefaultUserProfileInput } from '../utils/profile-defaults';
+import {
+  ExperienceLevel,
+  HomeEquipment,
+  HomeEquipmentId,
+  TrainingLocation,
+} from '@shared/types/user-profile';
+
+function cloneHomeEquipment(homeEquipment: HomeEquipment): HomeEquipment {
+  return Object.fromEntries(
+    Object.entries(homeEquipment).map(([key, value]) => [key, value ? { ...value } : value])
+  ) as HomeEquipment;
+}
 
 export function ProfileScreen() {
   const { t } = useTranslation();
@@ -28,15 +41,37 @@ export function ProfileScreen() {
     error: userProfileError,
     createUserProfile,
     isCreatingProfile,
+    updateUserProfilePreferences,
+    updateHomeEquipment,
+    isUpdatingPreferences,
+    isUpdatingHomeEquipment,
   } = useUserProfile();
   const userEmail = user?.email || t('profile.noEmail');
 
   const [isLogoutVisible, setIsLogoutVisible] = useState(false);
+  const [draftExperienceLevel, setDraftExperienceLevel] = useState<ExperienceLevel>('beginner');
+  const [draftPreferredLocations, setDraftPreferredLocations] = useState<TrainingLocation[]>([
+    'gym',
+    'home',
+  ]);
+  const [draftDefaultLocation, setDraftDefaultLocation] = useState<TrainingLocation>('gym');
+  const [draftHomeEquipment, setDraftHomeEquipment] = useState<HomeEquipment>({});
   const hasAttemptedBootstrap = useRef(false);
 
   useEffect(() => {
     hasAttemptedBootstrap.current = false;
   }, [user?.uid]);
+
+  useEffect(() => {
+    if (!userProfile) {
+      return;
+    }
+
+    setDraftExperienceLevel(userProfile.experienceLevel);
+    setDraftPreferredLocations(userProfile.preferredLocations);
+    setDraftDefaultLocation(userProfile.defaultLocation);
+    setDraftHomeEquipment(cloneHomeEquipment(userProfile.homeEquipment));
+  }, [userProfile]);
 
   useEffect(() => {
     if (!user?.uid) {
@@ -91,6 +126,60 @@ export function ProfileScreen() {
       ? 'error'
       : 'loading';
 
+  const isSavingOperationalProfile = isUpdatingPreferences || isUpdatingHomeEquipment;
+
+  const handleTogglePreferredLocation = (location: TrainingLocation) => {
+    setDraftPreferredLocations((current) => {
+      const isSelected = current.includes(location);
+
+      if (isSelected && current.length === 1) {
+        return current;
+      }
+
+      const nextLocations = isSelected
+        ? current.filter((item) => item !== location)
+        : [...current, location];
+
+      if (!nextLocations.includes(draftDefaultLocation)) {
+        setDraftDefaultLocation(nextLocations[0] ?? 'gym');
+      }
+
+      return nextLocations;
+    });
+  };
+
+  const handleToggleHomeEquipment = (equipmentId: HomeEquipmentId) => {
+    setDraftHomeEquipment((current) => {
+      const nextEquipment = { ...current };
+
+      if (equipmentId in nextEquipment) {
+        delete nextEquipment[equipmentId];
+      } else {
+        nextEquipment[equipmentId] = {};
+      }
+
+      return nextEquipment;
+    });
+  };
+
+  const handleSaveOperationalProfile = async () => {
+    if (!userProfile) {
+      return;
+    }
+
+    try {
+      await Promise.all([
+        updateUserProfilePreferences({
+          preferredLocations: draftPreferredLocations,
+          defaultLocation: draftDefaultLocation,
+        }),
+        updateHomeEquipment(draftHomeEquipment),
+      ]);
+    } catch {
+      Alert.alert(t('common.error'), t('profile.operational.saveError'));
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <ScrollView
@@ -114,6 +203,24 @@ export function ProfileScreen() {
             isRetrying={isCreatingProfile}
           />
         </View>
+
+        {profileStatus === 'ready' && userProfile ? (
+          <View style={styles.section}>
+            <ProfileOperationalSettingsCard
+              userProfile={userProfile}
+              draftExperienceLevel={draftExperienceLevel}
+              draftPreferredLocations={draftPreferredLocations}
+              draftDefaultLocation={draftDefaultLocation}
+              draftHomeEquipment={draftHomeEquipment}
+              isSaving={isSavingOperationalProfile}
+              onSelectExperienceLevel={setDraftExperienceLevel}
+              onTogglePreferredLocation={handleTogglePreferredLocation}
+              onSelectDefaultLocation={setDraftDefaultLocation}
+              onToggleHomeEquipment={handleToggleHomeEquipment}
+              onSave={handleSaveOperationalProfile}
+            />
+          </View>
+        ) : null}
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('profile.sections.account')}</Text>

@@ -63,7 +63,7 @@
 | ✅ | **Refactorización Arquitectónica** (FSD + React Query) | L | [🔗 P2-00 Refactor Arquitectónico](docs/plans/P2-00_architectural-refactor.md) |
 | 🔄 | **Endurecimiento UI/UX de superficies actuales** (i18n, theme, jerarquía y placeholders) | L | [🔗 P2-01 UI/UX Hardening](docs/plans/P2-01_ui-ux-hardening.md) |
 | 🔄 | Configuración base de Firestore (infraestructura lista, validación operativa pendiente) | M | [🔗 P2-03 Firestore Foundation](docs/plans/P2-03_firestore-foundation.md) |
-| ⬜ | Esquema de datos: Usuarios, Rutinas, Historial y Perfil de Equipamiento | L | [🔗 P2-02 Data Schema + Equipment Profile](docs/plans/P2-02_data-schema-equipment-profile.md) |
+| 🔄 | Esquema de datos: Usuarios, Rutinas, Historial y Perfil de Equipamiento | L | [🔗 P2-02 Data Schema + Equipment Profile](docs/plans/P2-02_data-schema-equipment-profile.md) |
 | ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
 | ⬜ | Conexión segura con Gemini vía Genkit | XL | Pendiente de plan |
 | ⬜ | Lógica de recomendaciones IA en tiempo real | XL | Pendiente de plan |
@@ -158,8 +158,11 @@
   <sub>Sincronización de estado el 23 de marzo de 2026: `P2-01` sigue en curso; `stats` ya tiene placeholder digno y `profile` ya muestra el bootstrap de Firestore con test básico, pero quedan restos de theme hardcodeado y contenido mock en `workout`.</sub>
 </p>
 <p align="center">
-  <sub>Sincronización de estado el 23 de marzo de 2026: `P2-03` mantiene estado en curso solo por dos bloqueos reales, congelar el contrato de `P2-02` y validar reglas con emulador o proyecto autenticado.</sub>
+  <sub>Sincronización de estado el 23 de marzo de 2026: `P2-03` mantiene estado en curso solo por el bloqueo operativo restante, validar reglas con emulador o proyecto autenticado.</sub>
 </p>
 <p align="center">
-  <sub>Sincronización de estado el 23 de marzo de 2026: `P2-02` sigue pendiente a nivel de roadmap; existe borrador de dominio y tipos compartidos parciales, pero la taxonomía V1 y el contrato canónico de `userProfile` aún no están congelados.</sub>
+  <sub>Modelo de datos congelado el 23 de marzo de 2026: `P2-02` fija catálogo V1 en `snake_case`, separa `homeEquipment` de `enabledCapabilities` y alinea el contrato tipado de `userProfile` para evitar texto libre en capabilities.</sub>
+</p>
+<p align="center">
+  <sub>Perfil operativo ampliado el 23 de marzo de 2026: `profile` ya edita `experienceLevel`, ubicaciones preferidas, ubicación por defecto y equipamiento doméstico con persistencia real y test básico; `contextProfiles` queda diferido a un slice específico.</sub>
 </p>

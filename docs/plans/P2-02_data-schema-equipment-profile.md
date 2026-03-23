@@ -1,6 +1,6 @@
 # P2-02 Esquema de Datos + Perfil de Equipamiento
 
-> **Fase:** 2 | **Complejidad:** L | **Estado:** ⬜
+> **Fase:** 2 | **Complejidad:** L | **Estado:** 🔄
 
 ## 🎯 Objetivo
 Definir el modelo de datos base de FitFlow AI para usuarios, rutinas, historial y restricciones de equipamiento, de forma que la generación de sesiones pueda invalidar ejercicios incompatibles con el material real disponible por el usuario.
@@ -26,27 +26,45 @@ El punto clave no es solo guardar preferencias, sino formalizar restricciones op
 ## 📋 Requisitos Previos
 - [x] Firebase Auth Email/Password funcionando
 - [x] Refactor FSD completado
-- [ ] Configuración base de Firestore (reglas, índices)
-- [ ] Decidir taxonomía inicial de equipamiento soportado
+- [x] Configuración base de Firestore (reglas, índices)
+- [x] Decidir taxonomía inicial de equipamiento soportado
 
 ## 🔒 Decisiones que hay que congelar primero
-- [ ] Lista canónica de claves de equipamiento V1
-- [ ] Estructura mínima de `userProfile.homeEquipment`
-- [ ] Regla de negocio para `location` como hard constraint
-- [ ] Nivel de detalle permitido en V1 para atributos opcionales de equipamiento
-- [ ] Qué se modela como "acceso agregado" y qué se modela como equipamiento específico
+- [x] Lista canónica de claves de equipamiento V1
+- [x] Estructura mínima de `userProfile.homeEquipment`
+- [x] Regla de negocio para `location` como hard constraint
+- [x] Nivel de detalle permitido en V1 para atributos opcionales de equipamiento
+- [x] Qué se modela como "acceso agregado" y qué se modela como equipamiento específico
 
-## 🧱 Taxonomía V1 propuesta (borrador)
+## 🧱 Taxonomía V1 congelada
 
-### Claves canónicas
-- `bodyweight`
+### Convención
+- Todos los ids canónicos de dominio usan `snake_case`.
+- La ampliación futura se hace añadiendo nuevos ids canónicos al catálogo, no aceptando texto libre en persistencia.
+
+### `homeEquipment` ids canónicos V1
 - `dumbbells`
 - `barbell`
 - `bench`
 - `bands`
 - `pullup_bar`
 - `kettlebell`
+
+### `enabledCapabilities` ids canónicos V1
+- `dumbbells`
+- `barbell`
+- `bench`
+- `bands`
+- `pullup_bar`
+- `kettlebell`
+- `parallel_bars`
+- `rings_anchor`
 - `machine_access`
+
+### Capacidades implícitas fuera de persistencia
+- `bodyweight`
+  - Existe en dominio y validación, pero no se persiste en `homeEquipment` ni en `enabledCapabilities`.
+  - El sistema la trata como capacidad implícita del usuario salvo excepción futura explícita.
 
 ### Atributos opcionales con valor real
 - `dumbbells`
@@ -62,8 +80,6 @@ El punto clave no es solo guardar preferencias, sino formalizar restricciones op
   - `hasMultipleTensions`
 - `kettlebell`
   - `availableWeightsKg`
-- `machine_access`
-  - `scope` (`basic_gym` | `full_gym`)
 
 ### Fuera de V1
 - Inventario completo de discos, racks, poleas, multipower, landmine o variantes avanzadas de barras
@@ -72,7 +88,7 @@ El punto clave no es solo guardar preferencias, sino formalizar restricciones op
 - Catálogo detallado de máquinas por nombre
 - Combinaciones derivadas tipo `home_gym_complete`
 
-## 🪪 Contrato `userProfile` (borrador)
+## 🪪 Contrato `userProfile` congelado
 
 ### Principio
 - `userProfile` debe expresar contexto de entrenamiento y restricciones operativas del usuario.
@@ -99,7 +115,7 @@ El punto clave no es solo guardar preferencias, sino formalizar restricciones op
   - Debe guardar presencia real y, solo cuando aporte valor real, atributos opcionales.
 - `contextProfiles`
   - Perfiles persistidos por contexto no doméstico cuando el entorno real importa para generar y validar sesiones.
-  - V1 candidato: `park` y, si hace falta, `gym`.
+  - V1 usa la misma forma para `park`, `gym` y `street`, aunque no todos los contextos tengan UI completa todavía.
 - `updatedAt`
   - Campo técnico para detectar cambios relevantes del perfil.
 
@@ -128,6 +144,8 @@ homeEquipment: {
 ### Semántica propuesta
 - Los atributos opcionales solo aparecen cuando cambian compatibilidad o calidad de recomendación.
 - La ausencia de una clave implica "no disponible" en V1.
+- `homeEquipment` y `contextProfiles.<location>.enabledCapabilities` no son intercambiables: el primero modela inventario doméstico persistente y el segundo capacidades efectivas del contexto concreto.
+- `enabledCapabilities` solo admite ids canónicos del catálogo V1; no acepta texto libre.
 
 ### Decisiones de diseño importantes
 - `bench` y `barbell` deben seguir separados; uno no implica el otro.
@@ -139,11 +157,12 @@ homeEquipment: {
 - Conviene usar un solo paradigma de datos para contextos variables: lista explícita de capacidades efectivas por contexto, aunque la UI pueda partir de plantillas distintas según `location`.
 - `gym` y `park` deben usar la misma mecánica de captura: partir de una plantilla del contexto y permitir desmarcar capacidades no disponibles. La plantilla base sí debe ser distinta según la ubicación.
 - El dato final persistido debe tener la misma forma en ambos casos: capacidades efectivas finales del contexto.
+- La forma del contrato queda congelada; ampliar catálogo en el futuro requerirá añadir nuevos ids canónicos, no reinterpretar los existentes.
 
-### Open Questions que siguen abiertas
-- Si hace falta distinguir entre mancuernas "presentes" y "útiles" cuando el peso máximo es muy bajo.
+### Open Questions no bloqueantes
+- Si hará falta distinguir entre mancuernas "presentes" y "útiles" cuando el peso máximo sea muy bajo. Esto no bloquea la congelación V1.
 
-## 🗃️ Estructura persistible V1 en Firestore (borrador)
+## 🗃️ Estructura persistible V1 en Firestore
 
 ### Principio de persistencia
 - En V1 conviene persistir el perfil operativo del usuario en un único documento canónico.
@@ -187,17 +206,47 @@ homeEquipment: {
 
   contextProfiles: {
     gym?: {
-      enabledCapabilities: string[],
+      enabledCapabilities: Array<
+        'dumbbells'
+        | 'barbell'
+        | 'bench'
+        | 'bands'
+        | 'pullup_bar'
+        | 'kettlebell'
+        | 'parallel_bars'
+        | 'rings_anchor'
+        | 'machine_access'
+      >,
       templateId: 'gym_v1',
       updatedAt: Timestamp,
     },
     park?: {
-      enabledCapabilities: string[],
+      enabledCapabilities: Array<
+        'dumbbells'
+        | 'barbell'
+        | 'bench'
+        | 'bands'
+        | 'pullup_bar'
+        | 'kettlebell'
+        | 'parallel_bars'
+        | 'rings_anchor'
+        | 'machine_access'
+      >,
       templateId: 'park_v1',
       updatedAt: Timestamp,
     },
     street?: {
-      enabledCapabilities: string[],
+      enabledCapabilities: Array<
+        'dumbbells'
+        | 'barbell'
+        | 'bench'
+        | 'bands'
+        | 'pullup_bar'
+        | 'kettlebell'
+        | 'parallel_bars'
+        | 'rings_anchor'
+        | 'machine_access'
+      >,
       templateId: 'street_v1',
       updatedAt: Timestamp,
     },
@@ -211,6 +260,7 @@ homeEquipment: {
 ### Semántica de persistencia
 - La existencia de una clave en `homeEquipment` significa disponibilidad real en casa.
 - `contextProfiles.<location>.enabledCapabilities` representa el resultado final persistido del contexto, no la interacción concreta usada para capturarlo.
+- `enabledCapabilities` persiste solo ids canónicos de capability; no se almacenan alias, copy de UI ni valores arbitrarios.
 - `templateId` permite saber desde qué plantilla de contexto se construyó el perfil, sin acoplar el dato persistido a la UI exacta del momento.
 - `createdAt` y `updatedAt` sirven para trazabilidad básica y sincronización defensiva.
 
@@ -241,19 +291,19 @@ homeEquipment: {
 ## 🛠️ Plan Maestro de Implementación
 
 ### Paso 1: Congelar invariantes de dominio
-- [ ] **Acción:** Acordar qué decisiones pertenecen al dominio y no a la capa de persistencia ni a la UI
-- [ ] **Archivos afectados:** este plan, futura documentación técnica de dominio
-- [ ] **Detalles:** Aquí se fija que `location` y `homeEquipment` son restricciones funcionales del generador, no simples preferencias visuales.
+- [x] **Acción:** Acordar qué decisiones pertenecen al dominio y no a la capa de persistencia ni a la UI
+- [x] **Archivos afectados:** este plan, `src/shared/types/user-profile.ts`
+- [x] **Detalles:** Queda fijado que `location`, `homeEquipment` y `enabledCapabilities` son restricciones funcionales del generador, no simples preferencias visuales.
 
 ### Paso 2: Cerrar la taxonomía V1 de equipamiento
-- [ ] **Acción:** Validar y congelar la lista canónica de claves soportadas por el sistema
-- [ ] **Archivos afectados:** futuros tipos compartidos, catálogos y validadores
-- [ ] **Detalles:** Evitar texto libre como fuente primaria. La IA y los validadores deben operar con claves canónicas (`dumbbells`, `bench`, `bands`, `pullup_bar`, etc.) para filtrar ejercicios con fiabilidad.
+- [x] **Acción:** Validar y congelar la lista canónica de claves soportadas por el sistema
+- [x] **Archivos afectados:** este plan, `src/shared/types/user-profile.ts`
+- [x] **Detalles:** Se congela un catálogo V1 en `snake_case` y se separa explícitamente entre inventario doméstico (`homeEquipment`) y capacidades efectivas del contexto (`enabledCapabilities`). La IA y los validadores deben operar con estas claves canónicas, nunca con texto libre.
 
 ### Paso 3: Definir el contrato `userProfile`
-- [ ] **Acción:** Diseñar el documento `userProfile` con campos de contexto de entrenamiento y equipamiento
-- [ ] **Archivos afectados:** futuro plan de esquema Firestore, tipos compartidos y documentación técnica
-- [ ] **Detalles:** Incluir al menos `preferredLocations`, `homeEquipment`, `experienceLevel`, y una estructura clara para distinguir entre presencia real, atributos opcionales y futuros metadatos. `preferredLocations` y `defaultLocation` deben quedar explícitamente como datos de UX/producto; `location` sigue siendo el input operativo del generador. Evaluar también `contextProfiles` para `park` y posibles overrides de `gym`.
+- [x] **Acción:** Diseñar el documento `userProfile` con campos de contexto de entrenamiento y equipamiento
+- [x] **Archivos afectados:** este plan, `src/shared/types/user-profile.ts`, `docs/plans/P2-03_firestore-foundation.md`
+- [x] **Detalles:** Queda congelado un contrato V1 con `preferredLocations`, `defaultLocation`, `experienceLevel`, `homeEquipment` y `contextProfiles`, dejando claro que `preferredLocations`/`defaultLocation` son datos de UX y que `location` sigue siendo el input operativo del generador.
 
 ### Paso 4: Conectar equipamiento con el dominio de ejercicios
 - [ ] **Acción:** Añadir compatibilidad requerida por ejercicio o patrón de ejercicio
@@ -266,9 +316,9 @@ homeEquipment: {
 - [ ] **Detalles:** Si `location === home`, el sistema no debe sugerir ejercicios incompatibles con `homeEquipment`. Si `location` usa un contexto persistido (`park`, futuro `gym` con overrides), el generador debe consumir sus capacidades efectivas. Si no hay cobertura suficiente, debe degradar a alternativas válidas o informar falta de material.
 
 ### Paso 6: Diseñar la captura y edición en producto
-- [ ] **Acción:** Definir en qué momento de onboarding o perfil se recopila el material disponible en casa
-- [ ] **Archivos afectados:** futuras features `profile` y/o onboarding
-- [ ] **Detalles:** La captura debe poder editarse con facilidad, porque el equipamiento del usuario cambia con el tiempo. La UI no debe inventar nuevas claves fuera de la taxonomía cerrada.
+- [x] **Acción:** Definir en qué momento de onboarding o perfil se recopila el material disponible en casa
+- [x] **Archivos afectados:** `src/features/profile/screens/profile-screen.tsx`, `src/features/profile/components/profile-operational-settings-card.tsx`, `src/shared/lib/i18n.ts`, `__tests__/profile.test.tsx`
+- [x] **Detalles:** En V1, la captura y edición del material doméstico vive en `profile`. Onboarding y `contextProfiles` podrán ampliar esta estrategia después, pero ya no bloquean la definición del flujo base.
 
 ### Paso 7: Bajar el contrato a Firestore
 - [ ] **Acción:** Traducir el modelo de dominio a documentos, reglas e índices de Firestore
@@ -389,13 +439,13 @@ homeEquipment: {
 - Firestore debe reflejar el contrato final, no conducirlo.
 
 ## ✅ Criterios de Aceptación
-- [ ] Existe una estructura de datos definida para `homeEquipment` dentro del perfil de usuario
-- [ ] `location` queda documentado como hard constraint del sistema de generación
+- [x] Existe una estructura de datos definida para `homeEquipment` dentro del perfil de usuario
+- [x] `location` queda documentado como hard constraint del sistema de generación
 - [ ] Cada ejercicio o familia de ejercicios puede mapearse a requisitos mínimos de equipamiento
-- [ ] La futura IA no depende de texto libre del usuario para inferir material disponible
-- [ ] Queda previsto dónde se captura y edita el material doméstico dentro del producto
-- [ ] La taxonomía V1 está congelada antes de modelar persistencia e integración con Genkit
-- [ ] Existe un borrador claro del documento Firestore `userProfiles/{authUid}` antes de definir reglas e índices
+- [x] La futura IA no depende de texto libre del usuario para inferir material disponible
+- [x] Queda previsto dónde se captura y edita el material doméstico dentro del producto
+- [x] La taxonomía V1 está congelada antes de modelar persistencia e integración con Genkit
+- [x] Existe un borrador claro del documento Firestore `userProfiles/{authUid}` antes de definir reglas e índices
 
 ## 📝 Notas Técnicas / Aprendizajes
 - Si el equipamiento se modela demasiado abierto, la generación será inconsistente y difícil de validar.
@@ -423,3 +473,5 @@ homeEquipment: {
 - `2026-03-22`: Cerrado que `gym` y `park` compartirán la misma mecánica de captura basada en plantillas del contexto; cambia la plantilla base, no el modelo persistido.
 - `2026-03-22`: Añadido borrador de persistencia Firestore V1 con documento canónico `userProfiles/{authUid}` y límites explícitos de lo que no entra todavía en el perfil.
 - `2026-03-22`: Cerrado que `contextProfiles` permanece embebido en `userProfiles` durante V1 para priorizar simplicidad de lectura y escritura.
+- `2026-03-23`: Congelada la taxonomía V1 con ids canónicos en `snake_case`; `homeEquipment` y `enabledCapabilities` quedan separados como conceptos distintos y `enabledCapabilities` deja de admitirse como texto libre.
+- `2026-03-23`: Primera edición de producto aplicada en `profile`: el usuario ya puede ajustar `experienceLevel`, ubicaciones preferidas, ubicación por defecto y `homeEquipment` sin salir del catálogo V1; `contextProfiles` se mantiene fuera de este slice para no mezclar dos UX distintas.

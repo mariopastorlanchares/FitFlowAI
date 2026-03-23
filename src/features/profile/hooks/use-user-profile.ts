@@ -80,7 +80,13 @@ export function useUserProfile() {
     userProfile: profileQuery.data ?? null,
     isLoading: profileQuery.isLoading,
     isFetching: profileQuery.isFetching,
-    error: profileQuery.error ?? createProfileMutation.error ?? null,
+    error:
+      profileQuery.error ??
+      createProfileMutation.error ??
+      updatePreferencesMutation.error ??
+      updateHomeEquipmentMutation.error ??
+      updateContextProfileMutation.error ??
+      null,
     refetch: profileQuery.refetch,
     createUserProfile: createProfileMutation.mutateAsync,
     updateUserProfilePreferences: updatePreferencesMutation.mutateAsync,

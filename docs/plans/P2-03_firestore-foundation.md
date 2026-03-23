@@ -17,8 +17,8 @@ Esta tarea depende directamente del trabajo de dominio ya definido en:
 - [x] Firebase Auth Email/Password funcionando
 - [x] Refactor FSD completado
 - [x] Borrador de `userProfiles/{authUid}` definido en `P2-02`
-- [ ] Congelar taxonomía V1 de equipamiento
-- [ ] Congelar contrato `userProfile` para V1
+- [x] Congelar taxonomía V1 de equipamiento
+- [x] Congelar contrato `userProfile` para V1
 
 ## 🛠️ Plan de Implementación
 
@@ -184,3 +184,4 @@ service cloud.firestore {
 - `2026-03-23`: `profile` ya bootstrappea `userProfiles/{authUid}` con defaults de V1, muestra el estado persistido en UI y queda verificado con `npx tsc --noEmit`, `npm run lint` y `npx jest --runInBand`.
 - `2026-03-23`: CLI de Firebase preparado en repo con `.firebaserc`, `firebase-tools` en `devDependencies` y scripts de login/deploy/emulador; el siguiente bloqueo operativo es autenticar la máquina con `firebase login`.
 - `2026-03-23`: Sincronización documental del estado real: la infraestructura base y la primera integración en `profile` quedan reflejadas como implementadas; el plan permanece en curso solo por dos bloqueos reales, congelar `P2-02` y validar reglas con emulador o proyecto autenticado.
+- `2026-03-23`: `P2-02` queda congelado para V1 con catálogo canónico en `snake_case`; `P2-03` deja de depender de un borrador de dominio y pasa a quedar bloqueado solo por la validación material de reglas.

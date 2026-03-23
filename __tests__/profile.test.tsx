@@ -1,15 +1,18 @@
-import { render, waitFor } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import React from 'react';
 
 import ProfileScreen from '../app/(tabs)/profile';
 
 const createUserProfileMock = jest.fn();
+const updateUserProfilePreferencesMock = jest.fn();
+const updateHomeEquipmentMock = jest.fn();
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, options?: { count?: number }) => {
       const translations: Record<string, string> = {
         'common.loading': 'Loading...',
+        'common.error': 'Error',
         'profile.title': 'My Profile',
         'profile.noEmail': 'No email associated',
         'profile.logout': 'Sign Out',
@@ -40,6 +43,28 @@ jest.mock('react-i18next', () => ({
         'profile.training.experienceLevels.advanced': 'Advanced',
         'profile.training.values.empty': 'Not defined yet',
         'profile.training.actions.retry': 'Retry setup',
+        'profile.operational.eyebrow': 'Operational profile',
+        'profile.operational.title': 'Training setup you can actually use',
+        'profile.operational.description':
+          'Adjust the training baseline before we wire context capture and AI generation to real constraints.',
+        'profile.operational.save': 'Save profile',
+        'profile.operational.saveError': 'We could not save your operational profile.',
+        'profile.operational.preferredLocationsHelper':
+          'These locations shape defaults and shortcuts in product, but they do not block other contexts.',
+        'profile.operational.defaultLocationHelper':
+          'Choose the location the app should preselect when preparing a new session.',
+        'profile.operational.homeEquipmentHelper':
+          'Mark only the equipment you really have at home. Context-specific capabilities stay outside this block.',
+        'profile.operational.groups.experience': 'Experience level',
+        'profile.operational.groups.preferredLocations': 'Preferred locations',
+        'profile.operational.groups.defaultLocation': 'Default location',
+        'profile.operational.groups.homeEquipment': 'Home equipment',
+        'profile.operational.homeEquipmentOptions.dumbbells': 'Dumbbells',
+        'profile.operational.homeEquipmentOptions.barbell': 'Barbell',
+        'profile.operational.homeEquipmentOptions.bench': 'Bench',
+        'profile.operational.homeEquipmentOptions.bands': 'Bands',
+        'profile.operational.homeEquipmentOptions.pullup_bar': 'Pull-up bar',
+        'profile.operational.homeEquipmentOptions.kettlebell': 'Kettlebell',
         'profile.options.personalInfo': 'Personal Information',
         'profile.options.theme': 'Theme',
         'profile.options.language': 'Language',
@@ -57,6 +82,14 @@ jest.mock('react-i18next', () => ({
 
       if (key === 'profile.training.values.contextProfilesCount') {
         return `${options?.count ?? 0} contexts saved`;
+      }
+
+      if (key === 'profile.operational.summary') {
+        return `${options?.count ?? 0} items in home setup`;
+      }
+
+      if (key === 'profile.operational.contextProfilesSummary') {
+        return `${options?.count ?? 0} saved external contexts. Context-specific capture will be expanded in the next slice.`;
       }
 
       return translations[key] ?? key;
@@ -82,63 +115,116 @@ const useUserProfileMock = jest.requireMock(
   '@features/profile/hooks/use-user-profile'
 ).useUserProfile as jest.Mock;
 
+function buildHookValue(overrides?: Record<string, unknown>) {
+  return {
+    userProfile: {
+      authUid: 'user-123',
+      experienceLevel: 'beginner',
+      preferredLocations: ['gym', 'home'],
+      defaultLocation: 'gym',
+      homeEquipment: {
+        dumbbells: { isPair: true },
+        bench: {},
+      },
+      contextProfiles: {
+        park: {
+          enabledCapabilities: ['pullup_bar'],
+          templateId: 'park_v1',
+          updatedAt: null,
+        },
+      },
+      createdAt: null,
+      updatedAt: null,
+    },
+    isLoading: false,
+    error: null,
+    createUserProfile: createUserProfileMock,
+    updateUserProfilePreferences: updateUserProfilePreferencesMock,
+    updateHomeEquipment: updateHomeEquipmentMock,
+    isCreatingProfile: false,
+    isUpdatingPreferences: false,
+    isUpdatingHomeEquipment: false,
+    ...overrides,
+  };
+}
+
 describe('ProfileScreen', () => {
   beforeEach(() => {
     createUserProfileMock.mockReset();
+    updateUserProfilePreferencesMock.mockReset();
+    updateHomeEquipmentMock.mockReset();
     useUserProfileMock.mockReset();
   });
 
   it('renders the Firestore profile summary when the user profile exists', () => {
-    useUserProfileMock.mockReturnValue({
-      userProfile: {
-        authUid: 'user-123',
-        experienceLevel: 'beginner',
-        preferredLocations: ['gym', 'home'],
-        defaultLocation: 'gym',
-        homeEquipment: {
-          dumbbells: { isPair: true },
-          bench: {},
-        },
-        contextProfiles: {
-          park: {
-            enabledCapabilities: ['pullup_bar'],
-            templateId: 'park_v1',
-            updatedAt: null,
-          },
-        },
-        createdAt: null,
-        updatedAt: null,
-      },
-      isLoading: false,
-      error: null,
-      createUserProfile: createUserProfileMock,
-      isCreatingProfile: false,
-    });
+    useUserProfileMock.mockReturnValue(buildHookValue());
 
-    const { getByText } = render(<ProfileScreen />);
+    const { getAllByText, getByText } = render(<ProfileScreen />);
 
     expect(getByText('My Profile')).toBeTruthy();
     expect(getByText('test@example.com')).toBeTruthy();
     expect(getByText('Training profile')).toBeTruthy();
     expect(getByText('Base profile ready')).toBeTruthy();
-    expect(getByText('Beginner')).toBeTruthy();
-    expect(getByText('Gym')).toBeTruthy();
-    expect(getByText('Gym · Home')).toBeTruthy();
+    expect(getAllByText('Beginner').length).toBeGreaterThan(0);
+    expect(getAllByText('Gym').length).toBeGreaterThan(0);
     expect(getByText('2 items configured')).toBeTruthy();
     expect(getByText('1 contexts saved')).toBeTruthy();
+    expect(getByText('Training setup you can actually use')).toBeTruthy();
+    expect(getByText('2 items in home setup')).toBeTruthy();
     expect(createUserProfileMock).not.toHaveBeenCalled();
+  });
+
+  it('saves updated operational preferences and home equipment', async () => {
+    updateUserProfilePreferencesMock.mockResolvedValue(undefined);
+    updateHomeEquipmentMock.mockResolvedValue(undefined);
+    useUserProfileMock.mockReturnValue(
+      buildHookValue({
+        userProfile: {
+          authUid: 'user-123',
+          experienceLevel: 'beginner',
+          preferredLocations: ['gym', 'home'],
+          defaultLocation: 'gym',
+          homeEquipment: {
+            dumbbells: { isPair: true },
+          },
+          contextProfiles: {},
+          createdAt: null,
+          updatedAt: null,
+        },
+      })
+    );
+
+    const { getAllByText, getByText } = render(<ProfileScreen />);
+
+    fireEvent.press(getAllByText('Advanced')[0]);
+    fireEvent.press(getAllByText('Street')[0]);
+    fireEvent.press(getAllByText('Street')[1]);
+    fireEvent.press(getByText('Bands'));
+    fireEvent.press(getByText('Save profile'));
+
+    await waitFor(() => {
+      expect(updateUserProfilePreferencesMock).toHaveBeenCalledWith({
+        preferredLocations: ['gym', 'home', 'street'],
+        defaultLocation: 'street',
+      });
+    });
+
+    await waitFor(() => {
+      expect(updateHomeEquipmentMock).toHaveBeenCalledWith({
+        dumbbells: { isPair: true },
+        bands: {},
+      });
+    });
   });
 
   it('bootstraps the Firestore profile when the document does not exist yet', async () => {
     createUserProfileMock.mockResolvedValue(undefined);
 
-    useUserProfileMock.mockReturnValue({
-      userProfile: null,
-      isLoading: false,
-      error: null,
-      createUserProfile: createUserProfileMock,
-      isCreatingProfile: false,
-    });
+    useUserProfileMock.mockReturnValue(
+      buildHookValue({
+        userProfile: null,
+      })
+    );
 
     const { getByText } = render(<ProfileScreen />);
 
