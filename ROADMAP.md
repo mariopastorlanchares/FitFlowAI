@@ -62,7 +62,7 @@
 | ✅ | Integración de Firebase Auth (Email/Password) + i18n | L | - |
 | ✅ | **Refactorización Arquitectónica** (FSD + React Query) | L | [🔗 P2-00 Refactor Arquitectónico](docs/plans/P2-00_architectural-refactor.md) |
 | 🔄 | **Endurecimiento UI/UX de superficies actuales** (i18n, theme, jerarquía y placeholders) | L | [🔗 P2-01 UI/UX Hardening](docs/plans/P2-01_ui-ux-hardening.md) |
-| 🔄 | Configuración base de Firestore (reglas, índices) | M | [🔗 P2-03 Firestore Foundation](docs/plans/P2-03_firestore-foundation.md) |
+| 🔄 | Configuración base de Firestore (infraestructura lista, validación operativa pendiente) | M | [🔗 P2-03 Firestore Foundation](docs/plans/P2-03_firestore-foundation.md) |
 | ⬜ | Esquema de datos: Usuarios, Rutinas, Historial y Perfil de Equipamiento | L | [🔗 P2-02 Data Schema + Equipment Profile](docs/plans/P2-02_data-schema-equipment-profile.md) |
 | ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
 | ⬜ | Conexión segura con Gemini vía Genkit | XL | Pendiente de plan |
@@ -153,4 +153,13 @@
 </p>
 <p align="center">
   <sub>Firebase CLI preparado el 23 de marzo de 2026: `firebase-tools` queda versionado, `.firebaserc` apunta a `fitflowai-6d4fc` y el despliegue de reglas/índices queda pendiente solo de autenticar la máquina.</sub>
+</p>
+<p align="center">
+  <sub>Sincronización de estado el 23 de marzo de 2026: `P2-01` sigue en curso; `stats` ya tiene placeholder digno y `profile` ya muestra el bootstrap de Firestore con test básico, pero quedan restos de theme hardcodeado y contenido mock en `workout`.</sub>
+</p>
+<p align="center">
+  <sub>Sincronización de estado el 23 de marzo de 2026: `P2-03` mantiene estado en curso solo por dos bloqueos reales, congelar el contrato de `P2-02` y validar reglas con emulador o proyecto autenticado.</sub>
+</p>
+<p align="center">
+  <sub>Sincronización de estado el 23 de marzo de 2026: `P2-02` sigue pendiente a nivel de roadmap; existe borrador de dominio y tipos compartidos parciales, pero la taxonomía V1 y el contrato canónico de `userProfile` aún no están congelados.</sub>
 </p>

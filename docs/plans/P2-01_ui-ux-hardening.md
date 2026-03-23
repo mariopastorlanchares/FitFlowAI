@@ -33,18 +33,18 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 
 ### Paso 1: Cerrar deuda transversal visible (Ola A)
 - [x] **Acción:** Eliminar strings hardcodeados de UI y moverlos a `i18next`
-- [ ] **Archivos afectados:** `app/(tabs)/workout.tsx`, `app/(tabs)/stats.tsx`, `components/dashboard/*`, `components/workout/execution/*`, `src/shared/ui/*`
-- [ ] **Detalles:** Esta tarea debe hacerse antes de seguir creando nuevas pantallas, porque ahora mismo propaga deuda de copy e inconsistencia de tono.
+- [x] **Archivos afectados:** `src/features/auth/*`, `src/features/dashboard/*`, `src/features/workout/*`, `src/features/analytics/screens/stats-screen.tsx`, `src/features/profile/*`, `src/shared/ui/*`, `src/shared/lib/i18n.ts`
+- [ ] **Detalles pendientes:** Las superficies principales ya usan `i18next` y `stats`/`profile` muestran copy traducida, pero siguen quedando textos mock y `defaultValue` ligados al flujo de `workout` mientras no entren datos reales.
 
 ### Paso 2: Reforzar `theme.ts` como única fuente de verdad (Ola A)
 - [x] **Acción:** Auditar colores, radios, superficies, sombras y estados fuera de tokens
-- [ ] **Archivos afectados:** `src/shared/constants/theme.ts`, `src/shared/ui/*`, `components/dashboard/*`, `components/workout/execution/*`, `app/(tabs)/*`
-- [ ] **Detalles:** Normalizar superficies oscuras, CTA, inputs, bordes y estados destructivos. El objetivo es cortar la deriva visual antes de la siguiente ronda de features.
+- [x] **Archivos afectados:** `src/shared/constants/theme.ts`, `src/shared/ui/*`, `src/features/auth/*`, `src/features/dashboard/*`, `src/features/workout/screens/*`, `src/features/profile/*`, `src/features/analytics/*`
+- [ ] **Detalles pendientes:** La mayoría de superficies visibles ya consumen tokens, pero siguen quedando colores hardcodeados fuera de `theme.ts` en `src/features/workout/components/execution/active-exercise-display.tsx` y `src/shared/components/themed-text.tsx`.
 
 ### Paso 3: Limpiar placeholders y señales de prototipo (Ola A)
 - [x] **Acción:** Retirar textos provisionales, datos falsos visibles y affordances poco creíbles
-- [ ] **Archivos afectados:** `components/dashboard/WeeklyStreak.tsx`, `app/(tabs)/stats.tsx`, `components/workout/execution/ExerciseMedia.tsx`, `components/workout/execution/RestTimerLarge.tsx`
-- [ ] **Detalles:** Incluye eliminar `[cite: ...]`, unificar idioma de placeholders, y decidir si `stats` permanece como placeholder digno o se oculta hasta tener contenido útil.
+- [x] **Archivos afectados:** `src/features/dashboard/*`, `src/features/analytics/screens/stats-screen.tsx`, `src/features/workout/components/execution/*`, `src/features/profile/components/profile-training-status-card.tsx`
+- [ ] **Detalles pendientes:** `stats` ya tiene un placeholder digno y `profile` ya expone el bootstrap real de Firestore, pero `workout` sigue dependiendo de contenido mock y placeholders de media/IA hasta la Ola C.
 
 ### Paso 4: Refactor visual de Auth tras migración FSD (Ola B) ✅
 - [x] **Acción:** Simplificar Login/Registro para que se apoyen más en jerarquía, espaciado y contraste que en blur, glow y pills
@@ -63,8 +63,8 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 
 ### Paso 7: Refactor visual de Profile y placeholder de Stats (Ola B)
 - [ ] **Acción:** Bajar ruido visual en perfil y dar un tratamiento intencional a `stats`
-- [ ] **Archivos afectados:** futura `src/features/profile/components/*`, futura `src/features/analytics/*`, `app/(tabs)/profile.tsx`, `app/(tabs)/stats.tsx`
-- [ ] **Detalles:** Perfil debe sentirse más como ajustes nativos que como lista ornamental. `Stats` no puede quedarse como pantalla vacía sin criterio.
+- [x] **Archivos afectados parcialmente:** `src/features/profile/components/*`, `src/features/profile/screens/profile-screen.tsx`, `src/features/analytics/screens/stats-screen.tsx`, `app/(tabs)/profile.tsx`, `app/(tabs)/stats.tsx`, `__tests__/profile.test.tsx`
+- [ ] **Detalles pendientes:** `stats` ya tiene tratamiento intencional y `profile` ya muestra estado operativo de Firestore con test básico, pero falta convertir perfil en ajustes nativos reales y reducir más ruido visual en sus superficies.
 
 ### Paso 8: Sustituir contenido fake por estados reales (Ola C)
 - [ ] **Acción:** Reemplazar datos hardcodeados del dashboard, workout e IA por estados conectados a Firestore/Genkit o placeholders de carga vacíos pero honestos
@@ -80,7 +80,7 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 - [ ] No quedan strings hardcodeados en pantallas principales ni en componentes UI reutilizables
 - [ ] Los colores y superficies visibles salen de `src/shared/constants/theme.ts`
 - [ ] La app reduce blur/glow/radios excesivos y gana consistencia visual
-- [ ] Home deja clara la acción principal del día sin depender de una hero card decorativa
+- [x] Home deja clara la acción principal del día sin depender de una hero card decorativa
 - [x] Workout Execution prioriza la tarea operativa sobre branding e IA
 - [ ] `Stats` y otros placeholders visibles tienen tratamiento digno o se retiran temporalmente
 - [ ] Los componentes críticos tienen al menos cobertura básica de tests
@@ -98,3 +98,4 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 - `2026-03-20`: ✅ Paso 4 completado en `auth`: login/registro simplificados, `BlurView` retirado, inputs/CTA/social actions rebalanceados y cobertura básica añadida con `__tests__/auth-screens.test.tsx`. Verificado con `npx tsc --noEmit`, `npm run lint`, `npx jest __tests__/auth-screens.test.tsx __tests__/auth-service.test.ts __tests__/profile.test.tsx --runInBand` y `npx expo export --platform web`.
 - `2026-03-21`: ✅ Paso 5 completado en `dashboard`: Home prioriza la acción principal del día, reduce la hero card ornamental y añade tests básicos en `__tests__/dashboard-home.test.tsx`. Verificado con `npx tsc --noEmit`, `npm run lint`, `npx jest __tests__/dashboard-home.test.tsx __tests__/auth-screens.test.tsx __tests__/auth-service.test.ts __tests__/profile.test.tsx --runInBand` y `npx expo export --platform web`.
 - `2026-03-21`: ✅ Paso 6 completado en `workout`: la pantalla de ejecución se reordena para priorizar ejercicio actual, registro de set, descanso y CTA principal; la IA pasa a soporte contextual y se añade cobertura básica en `__tests__/workout-execution.test.tsx`. Verificado con `npx tsc --noEmit`, `npm run lint`, `npx jest workout-execution --runInBand` y `npx expo export --platform web`.
+- `2026-03-23`: Sincronización de estado del plan: `stats` ya cuenta con placeholder digno y `profile` ya resume el bootstrap de Firestore con test básico, pero la tarea sigue abierta por deuda residual de theme hardcodeado y por contenido mock aún visible en `workout`.
