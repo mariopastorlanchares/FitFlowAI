@@ -6,22 +6,64 @@ import {
   Shield,
   User as UserIcon,
 } from 'lucide-react-native';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAuth } from '@features/auth/hooks/use-auth';
+import { useUserProfile } from '../hooks/use-user-profile';
 import { ProfileOptionRow } from '../components/profile-option-row';
+import { ProfileTrainingStatusCard } from '../components/profile-training-status-card';
 import { palette } from '@shared/constants/theme';
 import { ConfirmModal } from '@shared/ui/confirm-modal';
+import { getDefaultUserProfileInput } from '../utils/profile-defaults';
 
 export function ProfileScreen() {
   const { t } = useTranslation();
   const { signOut, user } = useAuth();
+  const {
+    userProfile,
+    isLoading: isUserProfileLoading,
+    error: userProfileError,
+    createUserProfile,
+    isCreatingProfile,
+  } = useUserProfile();
   const userEmail = user?.email || t('profile.noEmail');
 
   const [isLogoutVisible, setIsLogoutVisible] = useState(false);
+  const hasAttemptedBootstrap = useRef(false);
+
+  useEffect(() => {
+    hasAttemptedBootstrap.current = false;
+  }, [user?.uid]);
+
+  useEffect(() => {
+    if (!user?.uid) {
+      return;
+    }
+
+    if (isUserProfileLoading || isCreatingProfile || userProfile || userProfileError) {
+      return;
+    }
+
+    if (hasAttemptedBootstrap.current) {
+      return;
+    }
+
+    hasAttemptedBootstrap.current = true;
+
+    createUserProfile(getDefaultUserProfileInput()).catch(() => {
+      // Error state is surfaced by the hook and rendered by the screen.
+    });
+  }, [
+    createUserProfile,
+    isCreatingProfile,
+    isUserProfileLoading,
+    user?.uid,
+    userProfile,
+    userProfileError,
+  ]);
 
   const confirmLogout = async () => {
     setIsLogoutVisible(false);
@@ -32,6 +74,22 @@ export function ProfileScreen() {
       Alert.alert(t('common.error'), t('profile.logoutError'));
     }
   };
+
+  const handleRetryProfileBootstrap = async () => {
+    hasAttemptedBootstrap.current = true;
+
+    try {
+      await createUserProfile(getDefaultUserProfileInput());
+    } catch {
+      // Error banner/card state is enough for this V1 slice.
+    }
+  };
+
+  const profileStatus = userProfile
+    ? 'ready'
+    : userProfileError
+      ? 'error'
+      : 'loading';
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -45,6 +103,16 @@ export function ProfileScreen() {
           </View>
           <Text style={styles.title}>{t('profile.title')}</Text>
           <Text style={styles.emailText}>{userEmail}</Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('profile.sections.training')}</Text>
+          <ProfileTrainingStatusCard
+            status={profileStatus}
+            userProfile={userProfile}
+            onRetry={handleRetryProfileBootstrap}
+            isRetrying={isCreatingProfile}
+          />
         </View>
 
         <View style={styles.section}>

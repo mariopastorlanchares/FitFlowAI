@@ -62,7 +62,7 @@
 | ✅ | Integración de Firebase Auth (Email/Password) + i18n | L | - |
 | ✅ | **Refactorización Arquitectónica** (FSD + React Query) | L | [🔗 P2-00 Refactor Arquitectónico](docs/plans/P2-00_architectural-refactor.md) |
 | 🔄 | **Endurecimiento UI/UX de superficies actuales** (i18n, theme, jerarquía y placeholders) | L | [🔗 P2-01 UI/UX Hardening](docs/plans/P2-01_ui-ux-hardening.md) |
-| ⬜ | Configuración base de Firestore (reglas, índices) | M | [🔗 P2-03 Firestore Foundation](docs/plans/P2-03_firestore-foundation.md) |
+| 🔄 | Configuración base de Firestore (reglas, índices) | M | [🔗 P2-03 Firestore Foundation](docs/plans/P2-03_firestore-foundation.md) |
 | ⬜ | Esquema de datos: Usuarios, Rutinas, Historial y Perfil de Equipamiento | L | [🔗 P2-02 Data Schema + Equipment Profile](docs/plans/P2-02_data-schema-equipment-profile.md) |
 | ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
 | ⬜ | Conexión segura con Gemini vía Genkit | XL | Pendiente de plan |
@@ -144,4 +144,13 @@
 </p>
 <p align="center">
   <sub>Planificación JIT ampliada el 22 de marzo de 2026: Firestore base ya tiene plan dedicado, alineado con el contrato de dominio definido en `P2-02`.</sub>
+</p>
+<p align="center">
+  <sub>Firestore foundation iniciada el 22 de marzo de 2026: archivos base creados, `db` expuesto en `shared/lib/firebase.ts` y primer service/hook de `profile` verificados con TypeScript y lint.</sub>
+</p>
+<p align="center">
+  <sub>Firestore foundation ampliada el 23 de marzo de 2026: `profile` ya crea el documento base `userProfiles/{authUid}` cuando falta, expone su estado en UI y queda cubierto por TypeScript, lint y Jest.</sub>
+</p>
+<p align="center">
+  <sub>Firebase CLI preparado el 23 de marzo de 2026: `firebase-tools` queda versionado, `.firebaserc` apunta a `fitflowai-6d4fc` y el despliegue de reglas/índices queda pendiente solo de autenticar la máquina.</sub>
 </p>

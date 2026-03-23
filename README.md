@@ -78,6 +78,42 @@ Escanea el **código QR** desde la terminal con la app **Expo Go** para ver la a
 
 ---
 
+## Firebase CLI
+
+El proyecto ya deja versionados los artefactos base de Firestore:
+
+- `firebase.json`
+- `firestore.rules`
+- `firestore.indexes.json`
+- `.firebaserc`
+
+El proyecto por defecto queda fijado a `fitflowai-6d4fc`, así que no necesitas pasar `--project` en cada comando.
+
+### Flujo mínimo
+
+```bash
+# 1. Autenticar esta máquina con Firebase
+npm run firebase:login
+
+# 2. Verificar qué sesión ve el CLI
+npm run firebase:whoami
+
+# 3. Desplegar reglas e índices de Firestore
+npm run firebase:deploy:firestore
+
+# 4. Levantar el emulador local de Firestore cuando quieras validar reglas
+npm run firebase:emulators:firestore
+```
+
+### Qué automatiza y qué no
+
+- La app crea automáticamente el documento `userProfiles/{authUid}` cuando falta.
+- Firestore no usa un esquema rígido tipo SQL; aquí versionamos contrato de documento, reglas e índices.
+- El primer despliegue remoto de reglas e índices sigue requiriendo autenticación del CLI.
+- Si el proyecto Firebase todavía no tiene Firestore habilitado, tendrás que activarlo una vez antes del primer deploy.
+
+---
+
 ## 📱 Compilar App (Android APK)
 
 Si deseas instalar la aplicación en tu móvil Android para usarla de forma independiente (sin depender del servidor de desarrollo local de Expo Go), puedes compilar un archivo `.apk` usando Expo Application Services (EAS):

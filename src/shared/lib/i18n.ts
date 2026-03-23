@@ -125,9 +125,49 @@ const en = {
       logoutConfirm: 'Yes, sign out',
       logoutError: 'Could not sign out.',
       sections: {
+        training: 'Training profile',
         account: 'Account',
         preferences: 'Preferences',
         support: 'Support',
+      },
+      training: {
+        eyebrow: 'Firestore',
+        loadingTitle: 'Preparing your base profile',
+        loadingBody:
+          'We are checking whether your training profile exists in Firestore and creating the initial document if needed.',
+        readyTitle: 'Base profile ready',
+        readyBody:
+          'This document is the first persisted contract for training context, preferred locations and future equipment constraints.',
+        errorTitle: 'Profile setup needs attention',
+        errorBody:
+          'We could not load or create your Firestore profile. Retry before editing equipment or training contexts.',
+        status: {
+          loading: 'Checking',
+          ready: 'Ready',
+          error: 'Retry needed',
+        },
+        actions: {
+          retry: 'Retry setup',
+        },
+        fields: {
+          experienceLevel: 'Experience level',
+          defaultLocation: 'Default location',
+          preferredLocations: 'Preferred locations',
+          homeEquipment: 'Home equipment',
+          contextProfiles: 'Saved contexts',
+        },
+        experienceLevels: {
+          beginner: 'Beginner',
+          intermediate: 'Intermediate',
+          advanced: 'Advanced',
+        },
+        values: {
+          empty: 'Not defined yet',
+          homeEquipmentCount_one: '{{count}} item configured',
+          homeEquipmentCount_other: '{{count}} items configured',
+          contextProfilesCount_one: '{{count}} context saved',
+          contextProfilesCount_other: '{{count}} contexts saved',
+        },
       },
       options: {
         personalInfo: 'Personal Information',
@@ -352,9 +392,49 @@ const es = {
       logoutConfirm: 'Sí, cerrar sesión',
       logoutError: 'No se pudo cerrar sesión.',
       sections: {
+        training: 'Perfil de entrenamiento',
         account: 'Cuenta',
         preferences: 'Preferencias',
         support: 'Soporte',
+      },
+      training: {
+        eyebrow: 'Firestore',
+        loadingTitle: 'Preparando tu perfil base',
+        loadingBody:
+          'Estamos comprobando si tu perfil de entrenamiento existe en Firestore y creando el documento inicial si hace falta.',
+        readyTitle: 'Perfil base listo',
+        readyBody:
+          'Este documento es el primer contrato persistido para el contexto de entrenamiento, ubicaciones preferidas y futuras restricciones de equipamiento.',
+        errorTitle: 'La configuración del perfil requiere atención',
+        errorBody:
+          'No hemos podido cargar o crear tu perfil en Firestore. Reinténtalo antes de editar equipamiento o contextos de entrenamiento.',
+        status: {
+          loading: 'Comprobando',
+          ready: 'Listo',
+          error: 'Reintento necesario',
+        },
+        actions: {
+          retry: 'Reintentar configuración',
+        },
+        fields: {
+          experienceLevel: 'Nivel de experiencia',
+          defaultLocation: 'Ubicación por defecto',
+          preferredLocations: 'Ubicaciones preferidas',
+          homeEquipment: 'Equipamiento en casa',
+          contextProfiles: 'Contextos guardados',
+        },
+        experienceLevels: {
+          beginner: 'Principiante',
+          intermediate: 'Intermedio',
+          advanced: 'Avanzado',
+        },
+        values: {
+          empty: 'Aún sin definir',
+          homeEquipmentCount_one: '{{count}} elemento configurado',
+          homeEquipmentCount_other: '{{count}} elementos configurados',
+          contextProfilesCount_one: '{{count}} contexto guardado',
+          contextProfilesCount_other: '{{count}} contextos guardados',
+        },
       },
       options: {
         personalInfo: 'Información personal',

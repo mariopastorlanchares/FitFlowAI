@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getApp, getApps, initializeApp } from 'firebase/app';
 // @ts-ignore - Export present at runtime
 import { Auth, getAuth, getReactNativePersistence, initializeAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 import { Platform } from 'react-native';
 
 /**
@@ -68,5 +69,7 @@ try {
     auth = getAuth(app);
 }
 
-export { app, auth };
+const db = getFirestore(app);
+
+export { app, auth, db };
 

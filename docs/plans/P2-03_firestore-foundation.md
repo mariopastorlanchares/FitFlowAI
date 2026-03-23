@@ -1,6 +1,6 @@
 # P2-03 Configuración Base de Firestore
 
-> **Fase:** 2 | **Complejidad:** M | **Estado:** ⬜
+> **Fase:** 2 | **Complejidad:** M | **Estado:** 🔄
 
 ## 🎯 Objetivo
 Preparar la base de Firestore para soportar el perfil operativo del usuario y las futuras capas de generación, sin introducir todavía persistencia de rutinas ni de sesiones activas. El foco de esta tarea es dejar clara la estructura inicial, las reglas de acceso, los índices necesarios y la estrategia de validación local.
@@ -176,3 +176,6 @@ service cloud.firestore {
 **Historial:**
 - `2026-03-22`: Creado el plan a partir del contrato de dominio y persistencia definido en `P2-02`.
 - `2026-03-22`: Ampliado con borrador de reglas V1, decisión de no usar índices compuestos todavía, archivos base previstos y ruta de integración en FSD.
+- `2026-03-22`: Base inicial implementada con `firebase.json`, `firestore.rules`, `firestore.indexes.json`, export de Firestore en `src/shared/lib/firebase.ts` y primer service/hook de perfil. Verificado con `npx tsc --noEmit` y `npm run lint`.
+- `2026-03-23`: `profile` ya bootstrappea `userProfiles/{authUid}` con defaults de V1, muestra el estado persistido en UI y queda verificado con `npx tsc --noEmit`, `npm run lint` y `npx jest --runInBand`.
+- `2026-03-23`: CLI de Firebase preparado en repo con `.firebaserc`, `firebase-tools` en `devDependencies` y scripts de login/deploy/emulador; el siguiente bloqueo operativo es autenticar la máquina con `firebase login`.
