@@ -64,7 +64,7 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 ### Paso 7: Refactor visual de Profile y placeholder de Stats (Ola B)
 - [x] **Acción:** Bajar ruido visual en perfil y dar un tratamiento intencional a `stats`
 - [x] **Archivos afectados:** `src/features/profile/components/*`, `src/features/profile/screens/profile-screen.tsx`, `src/features/analytics/screens/stats-screen.tsx`, `src/shared/lib/i18n.ts`, `app/(tabs)/profile.tsx`, `app/(tabs)/stats.tsx`, `__tests__/profile.test.tsx`
-- [x] **Detalles:** `stats` ya tiene tratamiento intencional y `profile` ya permite editar nivel, ubicaciones y equipamiento doméstico con guardado real. La captura de `contextProfiles` se tratará como slice posterior de dominio y producto, no como parte pendiente de este paso.
+- [x] **Detalles:** `stats` ya tiene tratamiento intencional y `profile` ya permite editar nivel, ubicaciones, equipamiento doméstico y `contextProfiles` de `park`/`gym` con guardado real. El paso queda cerrado; la deuda visual restante de la fase vive en theme hardcodeado y contenido mock de `workout`, no en `profile`.
 
 ### Paso 8: Sustituir contenido fake por estados reales (Ola C)
 - [ ] **Acción:** Reemplazar datos hardcodeados del dashboard, workout e IA por estados conectados a Firestore/Genkit o placeholders de carga vacíos pero honestos
@@ -100,3 +100,4 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 - `2026-03-21`: ✅ Paso 6 completado en `workout`: la pantalla de ejecución se reordena para priorizar ejercicio actual, registro de set, descanso y CTA principal; la IA pasa a soporte contextual y se añade cobertura básica en `__tests__/workout-execution.test.tsx`. Verificado con `npx tsc --noEmit`, `npm run lint`, `npx jest workout-execution --runInBand` y `npx expo export --platform web`.
 - `2026-03-23`: Sincronización de estado del plan: `stats` ya cuenta con placeholder digno y `profile` ya resume el bootstrap de Firestore con test básico, pero la tarea sigue abierta por deuda residual de theme hardcodeado y por contenido mock aún visible en `workout`.
 - `2026-03-23`: `profile` añade la primera edición real del perfil operativo: `experienceLevel`, `preferredLocations`, `defaultLocation` y `homeEquipment` ya se guardan desde producto con cobertura básica en `__tests__/profile.test.tsx`; `contextProfiles` sigue pendiente para un slice específico.
+- `2026-03-23`: `profile` completa el siguiente tramo de producto con edición de `contextProfiles` para `park` y `gym`, usando plantillas amplias recortables y persistencia real validada por tests.

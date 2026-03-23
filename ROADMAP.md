@@ -164,5 +164,5 @@
   <sub>Modelo de datos congelado el 23 de marzo de 2026: `P2-02` fija catálogo V1 en `snake_case`, separa `homeEquipment` de `enabledCapabilities` y alinea el contrato tipado de `userProfile` para evitar texto libre en capabilities.</sub>
 </p>
 <p align="center">
-  <sub>Perfil operativo ampliado el 23 de marzo de 2026: `profile` ya edita `experienceLevel`, ubicaciones preferidas, ubicación por defecto y equipamiento doméstico con persistencia real y test básico; `contextProfiles` queda diferido a un slice específico.</sub>
+  <sub>Perfil operativo ampliado el 23 de marzo de 2026: `profile` ya edita `experienceLevel`, ubicaciones preferidas, ubicación por defecto, equipamiento doméstico y `contextProfiles` de `park`/`gym` con persistencia real y cobertura básica en tests.</sub>
 </p>

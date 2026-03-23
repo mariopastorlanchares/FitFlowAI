@@ -25,7 +25,7 @@ Esta tarea depende directamente del trabajo de dominio ya definido en:
 ### Paso 1: Confirmar el documento raíz de perfil
 - [x] **Acción:** Validar que `userProfiles/{authUid}` será el documento canónico inicial de Firestore
 - [x] **Archivos afectados:** `docs/plans/P2-02_data-schema-equipment-profile.md`, `src/shared/types/user-profile.ts`, `src/features/profile/services/profile-service.ts`, `src/features/profile/utils/profile-defaults.ts`
-- [x] **Detalles:** La integración actual ya persiste y bootstrappea el perfil sobre `userProfiles/{authUid}`. Esta decisión queda implementada para la base V1, aunque `P2-02` siga pendiente de congelar formalmente la taxonomía y el contrato final.
+- [x] **Detalles:** La integración actual ya persiste y bootstrappea el perfil sobre `userProfiles/{authUid}`. Esta decisión queda implementada para la base V1 y ya está alineada con el contrato V1 congelado en `P2-02`.
 - [x] **Decisión aplicada en V1:** `userProfiles/{authUid}` contendrá:
   - `authUid`
   - `experienceLevel`
@@ -143,7 +143,7 @@ service cloud.firestore {
 - [ ] **Secuencia mínima de verificación pendiente:**
   - verificar materialmente reglas sobre `userProfiles/{authUid}` con emulador o entorno controlado
   - comprobar denegación de lectura/escritura cruzada
-  - comprobar que el documento persistido respeta el contrato acordado en `P2-02` una vez ese contrato quede congelado
+  - comprobar que el documento persistido respeta el contrato V1 ya congelado en `P2-02`
 - [x] **Secuencia ya verificada en local:**
   - verificar que la app compila tras introducir Firestore en `src/shared/lib/firebase.ts`
   - comprobar creación y lectura del propio documento desde `profile`

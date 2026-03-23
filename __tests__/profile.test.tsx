@@ -6,6 +6,7 @@ import ProfileScreen from '../app/(tabs)/profile';
 const createUserProfileMock = jest.fn();
 const updateUserProfilePreferencesMock = jest.fn();
 const updateHomeEquipmentMock = jest.fn();
+const updateContextProfileMock = jest.fn();
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -65,6 +66,29 @@ jest.mock('react-i18next', () => ({
         'profile.operational.homeEquipmentOptions.bands': 'Bands',
         'profile.operational.homeEquipmentOptions.pullup_bar': 'Pull-up bar',
         'profile.operational.homeEquipmentOptions.kettlebell': 'Kettlebell',
+        'profile.contexts.eyebrow': 'External contexts',
+        'profile.contexts.title': 'Trim each place to what is really available',
+        'profile.contexts.description':
+          'Start from a broad template for each context and remove whatever your usual park or gym does not actually have.',
+        'profile.contexts.save': 'Save contexts',
+        'profile.contexts.saveError': 'We could not save your external contexts.',
+        'profile.contexts.futureNote':
+          'Street stays visible as a future context, but this V1 editor only closes park and gym.',
+        'profile.contexts.status.template': 'Base template',
+        'profile.contexts.status.saved': 'Saved context',
+        'profile.contexts.helpers.park':
+          'Keep only the stations your usual park really offers. The default template starts broad on purpose.',
+        'profile.contexts.helpers.gym':
+          'Use this as the effective equipment baseline for your gym, not as a list of machines you own.',
+        'profile.contexts.capabilityOptions.dumbbells': 'Dumbbells',
+        'profile.contexts.capabilityOptions.barbell': 'Barbell',
+        'profile.contexts.capabilityOptions.bench': 'Bench',
+        'profile.contexts.capabilityOptions.bands': 'Bands',
+        'profile.contexts.capabilityOptions.pullup_bar': 'Pull-up bar',
+        'profile.contexts.capabilityOptions.kettlebell': 'Kettlebell',
+        'profile.contexts.capabilityOptions.parallel_bars': 'Parallel bars',
+        'profile.contexts.capabilityOptions.rings_anchor': 'Rings anchor',
+        'profile.contexts.capabilityOptions.machine_access': 'Machine access',
         'profile.options.personalInfo': 'Personal Information',
         'profile.options.theme': 'Theme',
         'profile.options.language': 'Language',
@@ -89,7 +113,11 @@ jest.mock('react-i18next', () => ({
       }
 
       if (key === 'profile.operational.contextProfilesSummary') {
-        return `${options?.count ?? 0} saved external contexts. Context-specific capture will be expanded in the next slice.`;
+        return `${options?.count ?? 0} saved external contexts. External places are configured in the block below.`;
+      }
+
+      if (key === 'profile.contexts.summary') {
+        return `${options?.count ?? 0} contexts already customized`;
       }
 
       return translations[key] ?? key;
@@ -141,9 +169,11 @@ function buildHookValue(overrides?: Record<string, unknown>) {
     createUserProfile: createUserProfileMock,
     updateUserProfilePreferences: updateUserProfilePreferencesMock,
     updateHomeEquipment: updateHomeEquipmentMock,
+    updateContextProfile: updateContextProfileMock,
     isCreatingProfile: false,
     isUpdatingPreferences: false,
     isUpdatingHomeEquipment: false,
+    isUpdatingContextProfile: false,
     ...overrides,
   };
 }
@@ -153,6 +183,7 @@ describe('ProfileScreen', () => {
     createUserProfileMock.mockReset();
     updateUserProfilePreferencesMock.mockReset();
     updateHomeEquipmentMock.mockReset();
+    updateContextProfileMock.mockReset();
     useUserProfileMock.mockReset();
   });
 
@@ -170,6 +201,7 @@ describe('ProfileScreen', () => {
     expect(getByText('2 items configured')).toBeTruthy();
     expect(getByText('1 contexts saved')).toBeTruthy();
     expect(getByText('Training setup you can actually use')).toBeTruthy();
+    expect(getByText('Trim each place to what is really available')).toBeTruthy();
     expect(getByText('2 items in home setup')).toBeTruthy();
     expect(createUserProfileMock).not.toHaveBeenCalled();
   });
@@ -199,7 +231,7 @@ describe('ProfileScreen', () => {
     fireEvent.press(getAllByText('Advanced')[0]);
     fireEvent.press(getAllByText('Street')[0]);
     fireEvent.press(getAllByText('Street')[1]);
-    fireEvent.press(getByText('Bands'));
+    fireEvent.press(getAllByText('Bands')[0]);
     fireEvent.press(getByText('Save profile'));
 
     await waitFor(() => {
@@ -215,6 +247,52 @@ describe('ProfileScreen', () => {
         bands: {},
       });
     });
+  });
+
+  it('saves trimmed context profiles for park and gym', async () => {
+    updateContextProfileMock.mockResolvedValue(undefined);
+    useUserProfileMock.mockReturnValue(
+      buildHookValue({
+        userProfile: {
+          authUid: 'user-123',
+          experienceLevel: 'beginner',
+          preferredLocations: ['gym', 'park'],
+          defaultLocation: 'gym',
+          homeEquipment: {},
+          contextProfiles: {},
+          createdAt: null,
+          updatedAt: null,
+        },
+      })
+    );
+
+    const { getByText } = render(<ProfileScreen />);
+
+    fireEvent.press(getByText('Parallel bars'));
+    fireEvent.press(getByText('Machine access'));
+    fireEvent.press(getByText('Save contexts'));
+
+    await waitFor(() => {
+      expect(updateContextProfileMock).toHaveBeenCalledWith({
+        location: 'park',
+        profile: {
+          templateId: 'park_v1',
+          enabledCapabilities: ['pullup_bar', 'rings_anchor'],
+        },
+      });
+    });
+
+    await waitFor(() => {
+      expect(updateContextProfileMock).toHaveBeenCalledWith({
+        location: 'gym',
+        profile: {
+          templateId: 'gym_v1',
+          enabledCapabilities: ['dumbbells', 'barbell', 'bench', 'bands', 'kettlebell'],
+        },
+      });
+    });
+
+    expect(updateContextProfileMock).toHaveBeenCalledTimes(2);
   });
 
   it('bootstraps the Firestore profile when the document does not exist yet', async () => {

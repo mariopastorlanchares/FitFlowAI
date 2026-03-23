@@ -317,8 +317,8 @@ homeEquipment: {
 
 ### Paso 6: Diseñar la captura y edición en producto
 - [x] **Acción:** Definir en qué momento de onboarding o perfil se recopila el material disponible en casa
-- [x] **Archivos afectados:** `src/features/profile/screens/profile-screen.tsx`, `src/features/profile/components/profile-operational-settings-card.tsx`, `src/shared/lib/i18n.ts`, `__tests__/profile.test.tsx`
-- [x] **Detalles:** En V1, la captura y edición del material doméstico vive en `profile`. Onboarding y `contextProfiles` podrán ampliar esta estrategia después, pero ya no bloquean la definición del flujo base.
+- [x] **Archivos afectados:** `src/features/profile/screens/profile-screen.tsx`, `src/features/profile/components/profile-operational-settings-card.tsx`, `src/features/profile/components/profile-context-settings-card.tsx`, `src/features/profile/utils/context-profile-templates.ts`, `src/shared/lib/i18n.ts`, `__tests__/profile.test.tsx`
+- [x] **Detalles:** En V1, `profile` ya permite editar el baseline operativo completo: preferencias, `homeEquipment` y `contextProfiles` para `park` y `gym`. La UX de contextos arranca desde plantillas amplias y el usuario recorta capacidades no disponibles; `street` queda visible como contexto futuro, fuera de edición en este slice.
 
 ### Paso 7: Bajar el contrato a Firestore
 - [ ] **Acción:** Traducir el modelo de dominio a documentos, reglas e índices de Firestore
@@ -475,3 +475,4 @@ homeEquipment: {
 - `2026-03-22`: Cerrado que `contextProfiles` permanece embebido en `userProfiles` durante V1 para priorizar simplicidad de lectura y escritura.
 - `2026-03-23`: Congelada la taxonomía V1 con ids canónicos en `snake_case`; `homeEquipment` y `enabledCapabilities` quedan separados como conceptos distintos y `enabledCapabilities` deja de admitirse como texto libre.
 - `2026-03-23`: Primera edición de producto aplicada en `profile`: el usuario ya puede ajustar `experienceLevel`, ubicaciones preferidas, ubicación por defecto y `homeEquipment` sin salir del catálogo V1; `contextProfiles` se mantiene fuera de este slice para no mezclar dos UX distintas.
+- `2026-03-23`: `profile` amplía la captura editable de `contextProfiles`: `park` y `gym` parten de plantillas amplias (`park_v1`, `gym_v1`) y guardan capacidades efectivas recortadas con persistencia real y cobertura básica en tests.

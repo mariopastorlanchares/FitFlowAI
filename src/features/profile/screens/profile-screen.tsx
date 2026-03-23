@@ -12,6 +12,7 @@ import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAuth } from '@features/auth/hooks/use-auth';
+import { ProfileContextSettingsCard } from '../components/profile-context-settings-card';
 import { useUserProfile } from '../hooks/use-user-profile';
 import { ProfileOptionRow } from '../components/profile-option-row';
 import { ProfileOperationalSettingsCard } from '../components/profile-operational-settings-card';
@@ -20,16 +21,35 @@ import { palette } from '@shared/constants/theme';
 import { ConfirmModal } from '@shared/ui/confirm-modal';
 import { getDefaultUserProfileInput } from '../utils/profile-defaults';
 import {
+  ContextCapabilityId,
+  ContextProfile,
   ExperienceLevel,
   HomeEquipment,
   HomeEquipmentId,
   TrainingLocation,
+  UserProfile,
 } from '@shared/types/user-profile';
+import {
+  EDITABLE_CONTEXT_PROFILE_LOCATIONS,
+  EditableContextProfileLocation,
+  getEffectiveContextProfile,
+  isContextProfileDirty,
+  normalizeContextCapabilitiesOrder,
+} from '../utils/context-profile-templates';
 
 function cloneHomeEquipment(homeEquipment: HomeEquipment): HomeEquipment {
   return Object.fromEntries(
     Object.entries(homeEquipment).map(([key, value]) => [key, value ? { ...value } : value])
   ) as HomeEquipment;
+}
+
+function createDraftContextProfiles(userProfile: UserProfile | null) {
+  return Object.fromEntries(
+    EDITABLE_CONTEXT_PROFILE_LOCATIONS.map((location) => [
+      location,
+      getEffectiveContextProfile(userProfile, location),
+    ])
+  ) as Record<EditableContextProfileLocation, Omit<ContextProfile, 'updatedAt'>>;
 }
 
 export function ProfileScreen() {
@@ -43,8 +63,10 @@ export function ProfileScreen() {
     isCreatingProfile,
     updateUserProfilePreferences,
     updateHomeEquipment,
+    updateContextProfile,
     isUpdatingPreferences,
     isUpdatingHomeEquipment,
+    isUpdatingContextProfile,
   } = useUserProfile();
   const userEmail = user?.email || t('profile.noEmail');
 
@@ -56,6 +78,9 @@ export function ProfileScreen() {
   ]);
   const [draftDefaultLocation, setDraftDefaultLocation] = useState<TrainingLocation>('gym');
   const [draftHomeEquipment, setDraftHomeEquipment] = useState<HomeEquipment>({});
+  const [draftContextProfiles, setDraftContextProfiles] = useState(() =>
+    createDraftContextProfiles(null)
+  );
   const hasAttemptedBootstrap = useRef(false);
 
   useEffect(() => {
@@ -71,6 +96,7 @@ export function ProfileScreen() {
     setDraftPreferredLocations(userProfile.preferredLocations);
     setDraftDefaultLocation(userProfile.defaultLocation);
     setDraftHomeEquipment(cloneHomeEquipment(userProfile.homeEquipment));
+    setDraftContextProfiles(createDraftContextProfiles(userProfile));
   }, [userProfile]);
 
   useEffect(() => {
@@ -127,6 +153,7 @@ export function ProfileScreen() {
       : 'loading';
 
   const isSavingOperationalProfile = isUpdatingPreferences || isUpdatingHomeEquipment;
+  const isSavingContextProfiles = isUpdatingContextProfile;
 
   const handleTogglePreferredLocation = (location: TrainingLocation) => {
     setDraftPreferredLocations((current) => {
@@ -162,6 +189,27 @@ export function ProfileScreen() {
     });
   };
 
+  const handleToggleContextCapability = (
+    location: EditableContextProfileLocation,
+    capabilityId: ContextCapabilityId
+  ) => {
+    setDraftContextProfiles((current) => {
+      const currentProfile = current[location];
+      const isEnabled = currentProfile.enabledCapabilities.includes(capabilityId);
+      const nextCapabilities = isEnabled
+        ? currentProfile.enabledCapabilities.filter((item) => item !== capabilityId)
+        : [...currentProfile.enabledCapabilities, capabilityId];
+
+      return {
+        ...current,
+        [location]: {
+          ...currentProfile,
+          enabledCapabilities: normalizeContextCapabilitiesOrder(location, nextCapabilities),
+        },
+      };
+    });
+  };
+
   const handleSaveOperationalProfile = async () => {
     if (!userProfile) {
       return;
@@ -177,6 +225,33 @@ export function ProfileScreen() {
       ]);
     } catch {
       Alert.alert(t('common.error'), t('profile.operational.saveError'));
+    }
+  };
+
+  const handleSaveContextProfiles = async () => {
+    if (!userProfile) {
+      return;
+    }
+
+    const dirtyLocations = EDITABLE_CONTEXT_PROFILE_LOCATIONS.filter((location) =>
+      isContextProfileDirty(userProfile, location, draftContextProfiles[location])
+    );
+
+    if (dirtyLocations.length === 0) {
+      return;
+    }
+
+    try {
+      await Promise.all(
+        dirtyLocations.map((location) =>
+          updateContextProfile({
+            location,
+            profile: draftContextProfiles[location],
+          })
+        )
+      );
+    } catch {
+      Alert.alert(t('common.error'), t('profile.contexts.saveError'));
     }
   };
 
@@ -218,6 +293,18 @@ export function ProfileScreen() {
               onSelectDefaultLocation={setDraftDefaultLocation}
               onToggleHomeEquipment={handleToggleHomeEquipment}
               onSave={handleSaveOperationalProfile}
+            />
+          </View>
+        ) : null}
+
+        {profileStatus === 'ready' && userProfile ? (
+          <View style={styles.section}>
+            <ProfileContextSettingsCard
+              userProfile={userProfile}
+              draftContextProfiles={draftContextProfiles}
+              isSaving={isSavingContextProfiles}
+              onToggleCapability={handleToggleContextCapability}
+              onSave={handleSaveContextProfiles}
             />
           </View>
         ) : null}

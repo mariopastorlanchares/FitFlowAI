@@ -185,9 +185,9 @@ const en = {
         homeEquipmentHelper:
           'Mark only the equipment you really have at home. Context-specific capabilities stay outside this block.',
         contextProfilesSummary_one:
-          '{{count}} saved external context. Context-specific capture will be expanded in the next slice.',
+          '{{count}} saved external context. External places are configured in the block below.',
         contextProfilesSummary_other:
-          '{{count}} saved external contexts. Context-specific capture will be expanded in the next slice.',
+          '{{count}} saved external contexts. External places are configured in the block below.',
         groups: {
           experience: 'Experience level',
           preferredLocations: 'Preferred locations',
@@ -201,6 +201,39 @@ const en = {
           bands: 'Bands',
           pullup_bar: 'Pull-up bar',
           kettlebell: 'Kettlebell',
+        },
+      },
+      contexts: {
+        eyebrow: 'External contexts',
+        title: 'Trim each place to what is really available',
+        description:
+          'Start from a broad template for each context and remove whatever your usual park or gym does not actually have.',
+        summary_one: '{{count}} context already customized',
+        summary_other: '{{count}} contexts already customized',
+        save: 'Save contexts',
+        saveError: 'We could not save your external contexts.',
+        futureNote:
+          'Street stays visible as a future context, but this V1 editor only closes park and gym.',
+        status: {
+          template: 'Base template',
+          saved: 'Saved context',
+        },
+        helpers: {
+          park:
+            'Keep only the stations your usual park really offers. The default template starts broad on purpose.',
+          gym:
+            'Use this as the effective equipment baseline for your gym, not as a list of machines you own.',
+        },
+        capabilityOptions: {
+          dumbbells: 'Dumbbells',
+          barbell: 'Barbell',
+          bench: 'Bench',
+          bands: 'Bands',
+          pullup_bar: 'Pull-up bar',
+          kettlebell: 'Kettlebell',
+          parallel_bars: 'Parallel bars',
+          rings_anchor: 'Rings anchor',
+          machine_access: 'Machine access',
         },
       },
       options: {
@@ -486,9 +519,9 @@ const es = {
         homeEquipmentHelper:
           'Marca solo el equipamiento que realmente tienes en casa. Las capabilities específicas del contexto van fuera de este bloque.',
         contextProfilesSummary_one:
-          '{{count}} contexto externo guardado. La captura específica por contexto se ampliará en el siguiente slice.',
+          '{{count}} contexto externo guardado. Los lugares externos se configuran en el bloque inferior.',
         contextProfilesSummary_other:
-          '{{count}} contextos externos guardados. La captura específica por contexto se ampliará en el siguiente slice.',
+          '{{count}} contextos externos guardados. Los lugares externos se configuran en el bloque inferior.',
         groups: {
           experience: 'Nivel de experiencia',
           preferredLocations: 'Ubicaciones preferidas',
@@ -607,6 +640,82 @@ const es = {
   },
 };
 
+en.translation.profile.operational.contextProfilesSummary_one =
+  '{{count}} saved external context. External places are configured in the block below.';
+en.translation.profile.operational.contextProfilesSummary_other =
+  '{{count}} saved external contexts. External places are configured in the block below.';
+(en.translation.profile as any).contexts = {
+  eyebrow: 'External contexts',
+  title: 'Trim each place to what is really available',
+  description:
+    'Start from a broad template for each context and remove whatever your usual park or gym does not actually have.',
+  summary_one: '{{count}} context already customized',
+  summary_other: '{{count}} contexts already customized',
+  save: 'Save contexts',
+  saveError: 'We could not save your external contexts.',
+  futureNote:
+    'Street stays visible as a future context, but this V1 editor only closes park and gym.',
+  status: {
+    template: 'Base template',
+    saved: 'Saved context',
+  },
+  helpers: {
+    park:
+      'Keep only the stations your usual park really offers. The default template starts broad on purpose.',
+    gym:
+      'Use this as the effective equipment baseline for your gym, not as a list of machines you own.',
+  },
+  capabilityOptions: {
+    dumbbells: 'Dumbbells',
+    barbell: 'Barbell',
+    bench: 'Bench',
+    bands: 'Bands',
+    pullup_bar: 'Pull-up bar',
+    kettlebell: 'Kettlebell',
+    parallel_bars: 'Parallel bars',
+    rings_anchor: 'Rings anchor',
+    machine_access: 'Machine access',
+  },
+};
+
+es.translation.profile.operational.contextProfilesSummary_one =
+  '{{count}} contexto externo guardado. Los lugares externos se configuran en el bloque inferior.';
+es.translation.profile.operational.contextProfilesSummary_other =
+  '{{count}} contextos externos guardados. Los lugares externos se configuran en el bloque inferior.';
+(es.translation.profile as any).contexts = {
+  eyebrow: 'Contextos externos',
+  title: 'Recorta cada lugar a lo que de verdad tienes',
+  description:
+    'Partimos de una plantilla amplia por contexto y quitas lo que tu parque o gimnasio habitual no ofrece de verdad.',
+  summary_one: '{{count}} contexto ya personalizado',
+  summary_other: '{{count}} contextos ya personalizados',
+  save: 'Guardar contextos',
+  saveError: 'No hemos podido guardar tus contextos externos.',
+  futureNote:
+    'Calle queda visible como contexto futuro, pero este editor V1 solo cierra parque y gimnasio.',
+  status: {
+    template: 'Plantilla base',
+    saved: 'Contexto guardado',
+  },
+  helpers: {
+    park:
+      'Deja solo las estaciones que tu parque habitual ofrece de verdad. La plantilla base arranca amplia a propÃ³sito.',
+    gym:
+      'Ãšsalo como baseline efectivo del gimnasio en el que entrenas, no como una lista de equipamiento que posees.',
+  },
+  capabilityOptions: {
+    dumbbells: 'Mancuernas',
+    barbell: 'Barra',
+    bench: 'Banco',
+    bands: 'Bandas',
+    pullup_bar: 'Barra de dominadas',
+    kettlebell: 'Kettlebell',
+    parallel_bars: 'Paralelas',
+    rings_anchor: 'Anclaje para anillas',
+    machine_access: 'Acceso a mÃ¡quinas',
+  },
+};
+
 const systemLang = Localization.getLocales()[0]?.languageCode || 'es';
 const supportedLangs = ['en', 'es'];
 const initialLang = supportedLangs.includes(systemLang) ? systemLang : 'es';
@@ -650,3 +759,4 @@ export const getFirebaseErrorMessage = (err: any) => {
 
   return err.message || i18n.t('common.unexpectedError');
 };
+
