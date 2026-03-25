@@ -284,7 +284,6 @@ export function useWorkoutSession(workoutId: string | string[]) {
   }, []);
 
   const requestAlternative = useCallback(() => {
-    console.log('Mock: Solicitando alternativa a la IA...');
     Alert.alert(
       i18n.t('workout.feedback.alternativeTitle'),
       i18n.t('workout.feedback.alternativeMessage')
@@ -292,12 +291,16 @@ export function useWorkoutSession(workoutId: string | string[]) {
   }, []);
 
   const sendAIFeedback = useCallback((feedback: string) => {
-    console.log('Mock: Enviando feedback a la IA:', feedback);
+    void feedback;
+
+    Alert.alert(i18n.t('workout.ai.pendingTitle'), i18n.t('workout.ai.pendingFeedbackBody'));
+
+    return false;
   }, []);
 
   const finishWorkout = useCallback(() => {
-    console.log('Mock: Finalizando entrenamiento', session);
-  }, [session]);
+    return;
+  }, []);
 
   return {
     session,

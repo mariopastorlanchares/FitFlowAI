@@ -24,9 +24,8 @@ export function AIGuidanceCard({
   onSubmitFeedback,
 }: AIGuidanceCardProps) {
   const { t } = useTranslation();
-  const resolvedFocus = focus ?? t('workout.ai.defaultFocus');
-  const resolvedAdvice = advice ?? t('workout.ai.defaultAdvice');
   const isSubmitDisabled = !feedback.trim();
+  const hasPersonalizedGuidance = Boolean(focus || advice);
 
   return (
     <View style={styles.container}>
@@ -36,10 +35,12 @@ export function AIGuidanceCard({
         {t('workout.ai.recommendation', { weight: targetWeight, reps: targetReps })}
       </Text>
       <Text style={styles.subText}>
-        {t('workout.ai.focusAdvice', {
-          focus: resolvedFocus,
-          advice: resolvedAdvice,
-        })}
+        {hasPersonalizedGuidance
+          ? t('workout.ai.focusAdvice', {
+              focus,
+              advice,
+            })
+          : t('workout.ai.pendingBody')}
       </Text>
 
       <Text style={styles.feedbackLabel}>{t('workout.ai.feedbackLabel')}</Text>

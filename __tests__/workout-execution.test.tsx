@@ -36,6 +36,8 @@ jest.mock('react-i18next', () => ({
         'workout.header.restTimer': 'Rest',
         'workout.exercise.currentLabel': 'Current exercise',
         'workout.exercise.alternativeAction': 'See alternative',
+        'workout.exercise.mediaPending':
+          'Reference media is still pending. Use the exercise name and description for now.',
         'workout.activeSet.title': 'Log this set',
         'workout.activeSet.editTitle': `Edit set ${options?.current}`,
         'workout.activeSet.targetLabel': 'Target',
@@ -50,8 +52,11 @@ jest.mock('react-i18next', () => ({
         'workout.rest.skip': 'Skip rest',
         'workout.ai.title': 'AI support',
         'workout.ai.recommendationLabel': 'Suggested target:',
-        'workout.ai.defaultFocus': 'Hypertrophy, RIR 2',
-        'workout.ai.defaultAdvice': 'Go above the previous log if form stays clean.',
+        'workout.ai.pendingTitle': 'AI feedback is not connected yet',
+        'workout.ai.pendingBody':
+          'Personalized guidance will appear here once the recommendation flow is connected.',
+        'workout.ai.pendingFeedbackBody':
+          'This note is not being sent anywhere yet. We will wire this action once the AI flow is available.',
         'workout.ai.feedbackLabel': 'Anything to adjust?',
         'workout.ai.feedbackPlaceholder':
           'Tell the AI if something feels off, unstable or unavailable.',
@@ -167,7 +172,7 @@ function buildHookState(overrides: Partial<HookState> = {}): HookState {
 
   const session = {
     id: '1',
-    workoutName: 'Chest Day V2',
+    workoutName: 'Session preview',
     startTime: new Date('2026-03-21T10:00:00.000Z'),
     currentExerciseIndex: 0,
     exercises: [

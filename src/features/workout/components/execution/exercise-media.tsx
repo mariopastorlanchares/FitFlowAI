@@ -31,6 +31,7 @@ export function ExerciseMedia({
           style={styles.image}
           resizeMode="contain"
         />
+        <Text style={styles.mediaCaption}>{t('workout.exercise.mediaPending')}</Text>
       </View>
 
       <TouchableOpacity style={styles.alternativeButton} onPress={onRequestAlternative}>
@@ -81,6 +82,12 @@ const styles = StyleSheet.create({
   image: {
     width: 180,
     height: 180,
+  },
+  mediaCaption: {
+    ...typography.caption,
+    color: palette.textSecondary,
+    textAlign: 'center',
+    marginTop: 8,
   },
   alternativeButton: {
     flexDirection: 'row',

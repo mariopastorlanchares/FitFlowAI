@@ -1,7 +1,7 @@
 import { ActiveWorkoutSession } from '../types/workout';
 import i18n from '@shared/lib/i18n';
 
-function buildMockWorkout(): ActiveWorkoutSession {
+function buildPreviewWorkout(): ActiveWorkoutSession {
   return {
     id: '1',
     workoutName: i18n.t('workout.mock.workoutName'),
@@ -35,11 +35,15 @@ function buildMockWorkout(): ActiveWorkoutSession {
 
 export async function getWorkoutSession(workoutId: string | string[]) {
   await new Promise((resolve) => setTimeout(resolve, 500));
-  const mockWorkout = buildMockWorkout();
+  const previewWorkout = buildPreviewWorkout();
 
-  if (Array.isArray(workoutId) ? workoutId[0] !== mockWorkout.id : workoutId !== mockWorkout.id) {
-    return mockWorkout;
+  if (
+    Array.isArray(workoutId)
+      ? workoutId[0] !== previewWorkout.id
+      : workoutId !== previewWorkout.id
+  ) {
+    return previewWorkout;
   }
 
-  return mockWorkout;
+  return previewWorkout;
 }

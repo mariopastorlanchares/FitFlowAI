@@ -23,6 +23,8 @@ export const palette = {
   primaryDark: '#E07800',
   /** Lighter orange for highlights */
   primaryLight: '#FFA733',
+  /** Link color on dark surfaces */
+  link: '#FFA733',
   /** Primary tint backgrounds */
   primaryTint: 'rgba(255, 140, 0, 0.15)',
   /** Soft primary tint for hover and pressed states */

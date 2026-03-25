@@ -120,8 +120,11 @@ export function WorkoutExecutionScreen() {
       return;
     }
 
-    sendAIFeedback(trimmedComment);
-    setAiComment('');
+    const wasSent = sendAIFeedback(trimmedComment);
+
+    if (wasSent) {
+      setAiComment('');
+    }
   };
 
   if (isLoading || !currentExercise || !session || !selectedSet) {

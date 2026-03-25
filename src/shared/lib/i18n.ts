@@ -255,14 +255,18 @@ const en = {
       exercise: {
         currentLabel: 'Current exercise',
         alternativeAction: 'See alternative',
+        mediaPending: 'Reference media is still pending. Use the exercise name and description for now.',
       },
       ai: {
         title: 'AI support',
         recommendationLabel: 'Suggested target:',
         recommendation: '{{weight}} kg x {{reps}} reps',
         focusAdvice: '(Focus: {{focus}}). {{advice}}',
-        defaultFocus: 'Hypertrophy, RIR 2',
-        defaultAdvice: 'Go above the previous log if form stays clean.',
+        pendingTitle: 'AI feedback is not connected yet',
+        pendingBody:
+          'Personalized guidance will appear here once the recommendation flow is connected.',
+        pendingFeedbackBody:
+          'This note is not being sent anywhere yet. We will wire this action once the AI flow is available.',
         feedbackLabel: 'Anything to adjust?',
         feedbackPlaceholder:
           'Tell the AI if something feels off, unstable or unavailable.',
@@ -311,18 +315,18 @@ const en = {
       feedback: {
         alternativeTitle: 'Alternative requested',
         alternativeMessage:
-          'This is still mocked. The app will suggest another exercise once the AI flow is connected.',
+          'Alternatives are not available yet. This action will be connected when the recommendation flow is ready.',
       },
       mock: {
-        workoutName: 'Chest Day V2',
+        workoutName: 'Session preview',
         exercises: {
           squat: {
             name: 'Back Squat',
-            description: 'Olympic bar, keep your back neutral.',
+            description: 'Sample execution block while live workout plans are not connected yet.',
           },
           legPress: {
             name: 'Leg Press',
-            description: 'Keep your knees aligned.',
+            description: 'Second sample exercise used to validate the execution flow end to end.',
           },
         },
       },
@@ -556,14 +560,19 @@ const es = {
       exercise: {
         currentLabel: 'Ejercicio actual',
         alternativeAction: 'Ver alternativa',
+        mediaPending:
+          'La referencia visual sigue pendiente. Usa por ahora el nombre y la descripción del ejercicio.',
       },
       ai: {
         title: 'Soporte IA',
         recommendationLabel: 'Objetivo sugerido:',
         recommendation: '{{weight}} kg x {{reps}} reps',
         focusAdvice: '(Foco: {{focus}}). {{advice}}',
-        defaultFocus: 'Hipertrofia, RIR 2',
-        defaultAdvice: 'Sube respecto al registro anterior si mantienes buena técnica.',
+        pendingTitle: 'El feedback con IA aún no está conectado',
+        pendingBody:
+          'La guía personalizada aparecerá aquí cuando conectemos el flujo de recomendaciones.',
+        pendingFeedbackBody:
+          'Esta nota todavía no se envía a ningún sitio. Conectaremos esta acción cuando el flujo de IA esté disponible.',
         feedbackLabel: '¿Algo que ajustar?',
         feedbackPlaceholder:
           'Cuéntale a la IA si algo molesta, está inestable o no está disponible.',
@@ -613,18 +622,20 @@ const es = {
       feedback: {
         alternativeTitle: 'Alternativa solicitada',
         alternativeMessage:
-          'Esto sigue mockeado. La app propondrá otro ejercicio cuando conectemos el flujo de IA.',
+          'Las alternativas aún no están disponibles. Esta acción se conectará cuando el flujo de recomendaciones esté listo.',
       },
       mock: {
-        workoutName: 'Dia de Pecho V2',
+        workoutName: 'Vista previa de sesión',
         exercises: {
           squat: {
             name: 'Sentadillas',
-            description: 'Barra olímpica, espalda recta.',
+            description:
+              'Bloque de ejecución de muestra mientras los planes reales de entrenamiento no están conectados.',
           },
           legPress: {
             name: 'Prensa de piernas',
-            description: 'Mantener rodillas alineadas.',
+            description:
+              'Segundo ejercicio de muestra para validar el flujo de ejecución de punta a punta.',
           },
         },
       },

@@ -37,9 +37,7 @@ export function ActiveExerciseDisplay({
 
         <TouchableOpacity onPress={onRequestAlternative} style={styles.altButton}>
           <Ionicons name="swap-horizontal" size={20} color={palette.error} />
-          <Text style={styles.altButtonText}>
-            {t('workout.request_alternative', { defaultValue: 'Alternativa' })}
-          </Text>
+          <Text style={styles.altButtonText}>{t('workout.exercise.alternativeAction')}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -52,7 +50,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     height: 220,
-    backgroundColor: '#1E1E1E',
+    backgroundColor: palette.surfaceMuted,
     borderRadius: 16,
     overflow: 'hidden',
     marginBottom: 16,
