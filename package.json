@@ -9,6 +9,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint app src __tests__",
+    "test:firestore-rules": "firebase emulators:exec --only firestore --project demo-fitflowai \"npx jest __tests__/firestore.rules.test.ts --runInBand\"",
     "firebase:login": "firebase login --no-localhost",
     "firebase:whoami": "firebase login:list",
     "firebase:deploy:firestore": "firebase deploy --only firestore",
@@ -55,6 +56,7 @@
     "tailwindcss": "^3.4.19"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.0",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^29.5.14",

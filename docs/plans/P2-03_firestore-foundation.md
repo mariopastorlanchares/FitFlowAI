@@ -1,6 +1,6 @@
 # P2-03 Configuración Base de Firestore
 
-> **Fase:** 2 | **Complejidad:** M | **Estado:** 🔄
+> **Fase:** 2 | **Complejidad:** M | **Estado:** ✅
 
 ## 🎯 Objetivo
 Preparar la base de Firestore para soportar el perfil operativo del usuario y las futuras capas de generación, sin introducir todavía persistencia de rutinas ni de sesiones activas. El foco de esta tarea es dejar clara la estructura inicial, las reglas de acceso, los índices necesarios y la estrategia de validación local.
@@ -69,9 +69,9 @@ Esta tarea depende directamente del trabajo de dominio ya definido en:
 - [x] **Criterio de reglas aplicado:**
   - `read`: permitido solo si `request.auth != null` y `request.auth.uid == userId`
   - `create`: permitido solo si `request.auth != null`, `request.auth.uid == userId` y `request.resource.data.authUid == request.auth.uid`
-  - `update`: permitido solo si `request.auth != null`, `request.auth.uid == userId` y `resource.data.authUid == request.auth.uid`
+  - `update`: permitido solo si `request.auth != null`, `request.auth.uid == userId`, `resource.data.authUid == request.auth.uid` y `request.resource.data.authUid == resource.data.authUid`
   - `delete`: denegado en V1 salvo caso explícito futuro
-- [ ] **Nota pendiente:** Falta validar materialmente estas reglas en emulador o proyecto autenticado, incluyendo acceso cruzado denegado y escrituras del propio perfil.
+- [x] **Detalles:** Las reglas quedan validadas materialmente con emulador a través de `__tests__/firestore.rules.test.ts`, cubriendo lectura/escritura propia, acceso cruzado denegado, create con `authUid` manipulado, update sin cambio de ownership y delete denegado.
 
 #### Borrador inicial de reglas (referencia de plan)
 
@@ -132,18 +132,18 @@ service cloud.firestore {
 - [x] **Motivo arquitectónico:** `profile` es el primer owner natural del dato, aunque el generador y Home acaben reutilizándolo después.
 
 ### Paso 7: Definir validación y verificación
-- [ ] **Acción:** Dejar claro cómo se validará la configuración base sin esperar a la funcionalidad completa
-- [x] **Archivos afectados:** este plan, `package.json`, `__tests__/profile.test.tsx`
-- [ ] **Detalles pendientes:** La verificación mínima ya está descrita y parcialmente ejecutada (`npx tsc --noEmit`, `npm run lint`, `npx jest --runInBand`), pero sigue pendiente validar reglas en emulador o proyecto autenticado y comprobar acceso cruzado denegado.
+- [x] **Acción:** Dejar claro cómo se validará la configuración base sin esperar a la funcionalidad completa
+- [x] **Archivos afectados:** este plan, `package.json`, `__tests__/profile.test.tsx`, `__tests__/firestore.rules.test.ts`
+- [x] **Detalles:** La verificación mínima queda cerrada con compilación/lint, test de integración de `profile` y suite de reglas contra emulador ejecutable con `npm run test:firestore-rules`.
 - [x] **La verificación mínima debería contemplar:**
   - reglas coherentes con Auth
   - lectura/escritura del propio perfil
   - denegación de acceso a perfiles ajenos
   - consistencia con el contrato de `P2-02`
-- [ ] **Secuencia mínima de verificación pendiente:**
-  - verificar materialmente reglas sobre `userProfiles/{authUid}` con emulador o entorno controlado
+- [x] **Secuencia mínima de verificación:**
+  - verificar materialmente reglas sobre `userProfiles/{authUid}` con emulador controlado
   - comprobar denegación de lectura/escritura cruzada
-  - comprobar que el documento persistido respeta el contrato V1 ya congelado en `P2-02`
+  - comprobar que el documento persistido mantiene `authUid` estable y respeta el contrato V1 base de `P2-02`
 - [x] **Secuencia ya verificada en local:**
   - verificar que la app compila tras introducir Firestore en `src/shared/lib/firebase.ts`
   - comprobar creación y lectura del propio documento desde `profile`
@@ -166,7 +166,7 @@ service cloud.firestore {
 - [x] Quedan identificados los archivos base de Firestore que habrá que crear
 - [x] La integración futura respeta service layer + hooks y no filtra Firestore directamente a pantallas
 - [x] La validación mínima de seguridad y consistencia está descrita
-- [ ] Las reglas V1 se han validado materialmente con emulador o proyecto autenticado
+- [x] Las reglas V1 se han validado materialmente con emulador o proyecto autenticado
 
 ## 📝 Notas Técnicas / Aprendizajes
 - No conviene introducir colecciones adicionales hasta que `userProfiles` deje de cubrir bien el caso de uso.
@@ -185,3 +185,4 @@ service cloud.firestore {
 - `2026-03-23`: CLI de Firebase preparado en repo con `.firebaserc`, `firebase-tools` en `devDependencies` y scripts de login/deploy/emulador; el siguiente bloqueo operativo es autenticar la máquina con `firebase login`.
 - `2026-03-23`: Sincronización documental del estado real: la infraestructura base y la primera integración en `profile` quedan reflejadas como implementadas; el plan permanece en curso solo por dos bloqueos reales, congelar `P2-02` y validar reglas con emulador o proyecto autenticado.
 - `2026-03-23`: `P2-02` queda congelado para V1 con catálogo canónico en `snake_case`; `P2-03` deja de depender de un borrador de dominio y pasa a quedar bloqueado solo por la validación material de reglas.
+- `2026-03-23`: Validación material cerrada con emulador: se añade `__tests__/firestore.rules.test.ts`, script `npm run test:firestore-rules`, puerto explícito del emulador en `firebase.json` y endurecimiento de `firestore.rules` para impedir cambios de `authUid` en updates.
