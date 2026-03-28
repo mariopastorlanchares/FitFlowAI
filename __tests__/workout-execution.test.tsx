@@ -115,6 +115,7 @@ jest.mock('react-i18next', () => ({
 
 type WorkoutExerciseMock = {
   id: string;
+  exerciseId: string;
   name: string;
   description: string;
   restSeconds: number;
@@ -178,6 +179,7 @@ function buildHookState(overrides: Partial<HookState> = {}): HookState {
     exercises: [
       {
         id: 'ex1',
+        exerciseId: 'back_squat',
         name: 'Back Squat',
         description: 'Olympic bar, keep your back neutral.',
         restSeconds: 90,
@@ -202,6 +204,7 @@ function buildHookState(overrides: Partial<HookState> = {}): HookState {
       },
       {
         id: 'ex2',
+        exerciseId: 'leg_press',
         name: 'Leg Press',
         description: 'Keep your knees aligned.',
         restSeconds: 60,

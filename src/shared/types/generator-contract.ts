@@ -1,9 +1,5 @@
-import {
-  ContextCapabilityId,
-  ExperienceLevel,
-  HomeEquipment,
-  TrainingLocation,
-} from './user-profile';
+import { ExperienceLevel, HomeEquipment, TrainingLocation } from './user-profile';
+import { EffectiveCapabilityId, ExerciseId } from './exercise-catalog';
 
 export const SESSION_GOALS = [
   'strength',
@@ -50,10 +46,9 @@ export const SELECTION_REASON_CODES = [
 
 export type SelectionReasonCode = (typeof SELECTION_REASON_CODES)[number];
 
-export type EffectiveCapabilityId = ContextCapabilityId | 'bodyweight';
+export const GENERATED_SESSION_TYPES = ['generated_ephemeral'] as const;
 
-// TODO: Replace with a canonical union once the V1 exercise catalog is frozen.
-export type ExerciseId = string;
+export type GeneratedSessionType = (typeof GENERATED_SESSION_TYPES)[number];
 
 export interface SelectionReason {
   reason_codes: SelectionReasonCode[];
@@ -147,7 +142,7 @@ export interface GenerateWorkoutSessionInput {
 
 export interface GeneratedWorkoutSession {
   session_id: string;
-  session_type: 'generated_ephemeral';
+  session_type: GeneratedSessionType;
   location: TrainingLocation;
   session_goal: SessionGoal;
   estimated_duration_minutes: number;

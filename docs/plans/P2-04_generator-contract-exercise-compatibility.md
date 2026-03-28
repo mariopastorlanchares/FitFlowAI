@@ -19,8 +19,8 @@ Este plan une dos necesidades que ya estaban separadas en `P2-02` pero que en pr
 - [x] `userProfile` V1 congelado en `P2-02`
 - [x] Firestore foundation validada en `P2-03`
 - [x] Taxonomía V1 de `enabledCapabilities` congelada
-- [ ] Cerrar contrato V1 de ejercicios concretos y sus `requiredCapabilities`
-- [ ] Cerrar contrato V1 de entrada/salida del generador
+- [x] Cerrar contrato V1 de ejercicios concretos y sus `requiredCapabilities`
+- [x] Cerrar contrato V1 de entrada/salida del generador
 
 ## 🧭 Decisiones cerradas hasta ahora
 - [x] El catálogo V1 se modelará por `exercise_id` concreto, no por texto libre ni solo por familias abstractas.
@@ -60,9 +60,9 @@ Este plan une dos necesidades que ya estaban separadas en `P2-02` pero que en pr
   - prescripción por ejercicio
 
 ### Paso 2: Congelar el catálogo de ejercicios V1
-- [ ] **Acción:** Definir `exercise_id` concretos y sus metadatos base
-- [ ] **Archivos afectados:** futuro catálogo tipado de ejercicios, validadores y assets
-- [ ] **Detalles:** Cada ejercicio concreto debe tener al menos:
+- [x] **Acción:** Definir `exercise_id` concretos y sus metadatos base
+- [x] **Archivos afectados:** `src/shared/types/exercise-catalog.ts`, `src/shared/lib/exercise-catalog.ts`, `src/shared/lib/i18n.ts`
+- [x] **Detalles:** Queda congelado un primer catálogo V1 pequeño pero canónico con ids concretos, patrón de movimiento, `requiredCapabilities` y `translationKey` suficiente para que producto deje de depender de nombres libres como fuente primaria. Cada ejercicio concreto tiene al menos:
   - `exercise_id`
   - nombre canónico interno
   - familia o patrón de movimiento
@@ -70,14 +70,14 @@ Este plan une dos necesidades que ya estaban separadas en `P2-02` pero que en pr
   - metadata suficiente para que la app resuelva copy, media y validación
 
 ### Paso 3: Fijar `requiredCapabilities` y reglas de compatibilidad
-- [ ] **Acción:** Asociar capacidades mínimas por ejercicio y documentar degradaciones válidas
-- [ ] **Archivos afectados:** catálogo de ejercicios, validadores de dominio, `P2-02`
-- [ ] **Detalles:** Este paso convierte el dominio en algo validable antes y después de la llamada al modelo.
+- [x] **Acción:** Asociar capacidades mínimas por ejercicio y documentar degradaciones válidas
+- [x] **Archivos afectados:** `src/shared/types/exercise-catalog.ts`, `src/shared/lib/exercise-compatibility.ts`, `docs/plans/P2-02_data-schema-equipment-profile.md`, `__tests__/exercise-compatibility.test.ts`
+- [x] **Detalles:** El dominio ya puede responder de forma determinista si un `exercise_id` es compatible con las capacidades efectivas del contexto y detectar exactamente qué capabilities faltan antes de mostrar o generar la sesión.
 
 ### Paso 4: Fijar el contrato de entrada al generador
-- [ ] **Acción:** Definir el payload exacto que Genkit recibirá
-- [ ] **Archivos afectados:** futuro plan de Genkit, constructores de prompt/input, tipos compartidos
-- [ ] **Detalles:** Debe incluir como mínimo:
+- [x] **Acción:** Definir el payload exacto que Genkit recibirá
+- [x] **Archivos afectados:** `src/shared/types/generator-contract.ts`, `src/shared/lib/generator-contract.ts`, `src/shared/lib/exercise-compatibility.ts`, `__tests__/generator-contract.test.ts`
+- [x] **Detalles:** El contrato de entrada queda fijado con un builder canónico que deriva `available_capabilities` desde el contexto real del usuario y empaqueta el snapshot mínimo necesario para Genkit sin obligar a la capa futura de prompts a recomponer dominio. Incluye como mínimo:
   - `location`
   - `experienceLevel`
   - `homeEquipment` o `contextProfiles.<location>.enabledCapabilities`
@@ -86,22 +86,23 @@ Este plan une dos necesidades que ya estaban separadas en `P2-02` pero que en pr
   - formato de bloque soportado
 
 ### Paso 5: Fijar el contrato de salida del generador
-- [ ] **Acción:** Definir un JSON validable que la app pueda renderizar sin heurísticas
-- [ ] **Archivos afectados:** futuro plan de Genkit, validadores, tipos compartidos, pantalla de workout
-- [ ] **Detalles:** La salida V1 deberá usar ids canónicos y solo permitir texto libre en campos auxiliares controlados.
+- [x] **Acción:** Definir un JSON validable que la app pueda renderizar sin heurísticas
+- [x] **Archivos afectados:** `src/shared/types/generator-contract.ts`, `src/shared/lib/generator-contract.ts`, `__tests__/generator-contract.test.ts`
+- [x] **Detalles:** La salida V1 ya tiene validación de runtime para bloques, prescripciones y `exercise_id` canónicos. El contrato acepta texto libre solo en campos auxiliares controlados (`selection_reason.reason_text`, `coach_notes`, `summary`, `session_notes`) y rechaza errores estructurales como `block_type` inválido, `emom.interval_seconds !== 60` o `circuit` sin `rounds/duration_seconds`.
 
 ### Paso 6: Diseñar validación y degradación defensiva
-- [ ] **Acción:** Definir qué hace el sistema cuando la respuesta es inválida o incompleta
-- [ ] **Archivos afectados:** validadores, capa de adaptación del generador, futuros tests
-- [ ] **Detalles:** Estrategia preferida en V1:
+- [x] **Acción:** Definir qué hace el sistema cuando la respuesta es inválida o incompleta
+- [x] **Archivos afectados:** `src/shared/lib/generator-contract.ts`, `src/shared/lib/exercise-compatibility.ts`, `__tests__/generator-contract.test.ts`
+- [x] **Detalles:** La estrategia V1 queda fijada así:
   - sustituir ejercicios incompatibles
   - rechazar campos estructurales inválidos
-  - no pintar la sesión si falla el contrato básico
+  - descartar bloques sin sustituto compatible
+  - no pintar la sesión si falla el contrato básico o si no queda una sesión utilizable tras el saneado
 
 ### Paso 7: Mapear el contrato a la pantalla de ejercicios
-- [ ] **Acción:** Definir qué campos estructurados necesita la UI de ejecución
-- [ ] **Archivos afectados:** `src/features/workout/*`, tipos compartidos, adaptadores
-- [ ] **Detalles:** La UI no debe depender de texto libre para:
+- [x] **Acción:** Definir qué campos estructurados necesita la UI de ejecución
+- [x] **Archivos afectados:** `src/features/workout/types/workout.ts`, `src/features/workout/services/generated-workout-session-adapter.ts`, `src/features/workout/services/workout-service.ts`, `__tests__/generated-workout-session-adapter.test.ts`
+- [x] **Detalles:** La UI de ejecución ya consume un view-model derivado desde `GeneratedWorkoutSession` en vez de un mock manual ad hoc. El adaptador actual aplana bloques compuestos a una secuencia operativa para la pantalla existente y resuelve desde datos estructurados:
   - nombre del ejercicio
   - imagen/video
   - sets
@@ -110,9 +111,9 @@ Este plan une dos necesidades que ya estaban separadas en `P2-02` pero que en pr
   - orden dentro de bloque
 
 ### Paso 8: Definir la matriz de tests V1
-- [ ] **Acción:** Preparar casos de prueba para contrato, validación y renderizado
-- [ ] **Archivos afectados:** futuros tests de dominio, validadores y UI
-- [ ] **Detalles:** Debe cubrir al menos:
+- [x] **Acción:** Preparar casos de prueba para contrato, validación y renderizado
+- [x] **Archivos afectados:** `__tests__/generator-contract.test.ts`, `__tests__/generated-workout-session-adapter.test.ts`, `__tests__/workout-execution.test.tsx`
+- [x] **Detalles:** La matriz V1 ya cubre al menos:
   - incompatibilidad por equipamiento
   - sustitución puntual
   - bloques múltiples
@@ -317,14 +318,14 @@ type ExercisePrescription = {
   - `circuit` debe traer al menos `rounds` o `duration_seconds`
 
 ## ✅ Criterios de Aceptación
-- [ ] Existe un catálogo V1 de `exercise_id` concretos con `requiredCapabilities`
+- [x] Existe un catálogo V1 de `exercise_id` concretos con `requiredCapabilities`
 - [x] Existe una estructura tipada de bloques que soporta `straight_sets`, `superset`, `triset`, `circuit` y `emom`
 - [x] La entrada al generador queda definida como tipos concretos TypeScript sin depender de texto libre
-- [ ] La salida del generador queda definida como JSON validable y alineable con tipos TypeScript
-- [ ] La UI puede renderizar la sesión desde datos estructurados
-- [ ] La sustitución de un ejercicio inválido queda definida como estrategia V1
+- [x] La salida del generador queda definida como JSON validable y alineable con tipos TypeScript
+- [x] La UI puede renderizar la sesión desde datos estructurados
+- [x] La sustitución de un ejercicio inválido queda definida como estrategia V1
 - [x] Se documenta qué campos son canónicos y cuáles admiten texto libre
-- [ ] La matriz de tests cubre incompatibilidades, bloques compuestos y degradaciones
+- [x] La matriz de tests cubre incompatibilidades, bloques compuestos y degradaciones
 
 ## 📝 Notas Técnicas / Aprendizajes
 - Si mezclamos ids canónicos con nombres generados como fuente primaria, la UI pierde estabilidad.
@@ -343,3 +344,8 @@ type ExercisePrescription = {
 - `2026-03-25`: El plan baja a borradores concretos de tipos TypeScript para entrada/salida del generador, incorpora `reason_codes` V1, `tempo` como string validado superficialmente y fija la estrategia de descanso por tipo de bloque.
 - `2026-03-25`: `session_goal` añade `fat_loss`, `circuit` pasa a exigir al menos `rounds` o `duration_seconds` y `unilateral_mode` sale de V1 por no ser contractual para render ni validación básica.
 - `2026-03-25`: Primer slice implementado en `src/shared/types/generator-contract.ts`; la estructura base del contrato del generador compila y queda verificada con `npx tsc --noEmit` y `npm run lint`.
+- `2026-03-25`: Cerrados `Paso 2` y `Paso 3` con un catálogo V1 canónico de ejercicios, helpers de compatibilidad y adaptación del mock de `workout` para consumir `exerciseId` estable. Verificado con `npx tsc --noEmit`, `npm run lint` y `npx jest __tests__/exercise-compatibility.test.ts __tests__/workout-execution.test.tsx --runInBand`.
+- `2026-03-25`: Cerrados `Paso 4` y `Paso 5` con un builder canónico de entrada al generador y validación runtime de la salida V1. Verificado con `npx tsc --noEmit`, `npm run lint` y `npx jest __tests__/generator-contract.test.ts __tests__/exercise-compatibility.test.ts __tests__/workout-execution.test.tsx --runInBand`.
+- `2026-03-25`: Cerrado `Paso 6` con saneado defensivo V1: la sesión rechaza errores estructurales, intenta sustitución por patrón de movimiento y descarta bloques sin reemplazo compatible; si no queda una sesión utilizable, se rechaza el resultado completo. Verificado con `npx tsc --noEmit`, `npm run lint` y `npx jest __tests__/generator-contract.test.ts __tests__/exercise-compatibility.test.ts __tests__/workout-execution.test.tsx --runInBand`.
+- `2026-03-28`: Cerrado `Paso 7` con un adaptador entre `GeneratedWorkoutSession` y el view-model operativo de `workout`; la pantalla ya renderiza desde datos estructurados en lugar de depender del mock legacy como fuente primaria. Verificado con `npx tsc --noEmit`, `npm run lint` y `npx jest __tests__/generated-workout-session-adapter.test.ts __tests__/generator-contract.test.ts __tests__/exercise-compatibility.test.ts __tests__/workout-execution.test.tsx --runInBand`.
+- `2026-03-28`: Cerrado `Paso 8` ampliando la matriz de tests V1 con cobertura explícita para saneado dentro de bloques compuestos, descarte de compuestos inviables y adaptación de `circuit`/`emom` al view-model actual. Verificado con `npx tsc --noEmit`, `npm run lint` y `npx jest __tests__/generated-workout-session-adapter.test.ts __tests__/generator-contract.test.ts __tests__/exercise-compatibility.test.ts __tests__/workout-execution.test.tsx --runInBand`.

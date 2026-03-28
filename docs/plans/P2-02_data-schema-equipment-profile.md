@@ -306,9 +306,9 @@ homeEquipment: {
 - [x] **Detalles:** Queda congelado un contrato V1 con `preferredLocations`, `defaultLocation`, `experienceLevel`, `homeEquipment` y `contextProfiles`, dejando claro que `preferredLocations`/`defaultLocation` son datos de UX y que `location` sigue siendo el input operativo del generador.
 
 ### Paso 4: Conectar equipamiento con el dominio de ejercicios
-- [ ] **Acción:** Añadir compatibilidad requerida por ejercicio o patrón de ejercicio
-- [ ] **Archivos afectados:** futuro esquema de ejercicios/rutinas y capa de generación
-- [ ] **Detalles:** Cada ejercicio debe declarar requisitos mínimos de equipamiento para permitir invalidación determinista antes de mostrar o generar la sesión.
+- [x] **Acción:** Añadir compatibilidad requerida por ejercicio o patrón de ejercicio
+- [x] **Archivos afectados:** `src/shared/types/exercise-catalog.ts`, `src/shared/lib/exercise-catalog.ts`, `src/shared/lib/exercise-compatibility.ts`, `docs/plans/P2-04_generator-contract-exercise-compatibility.md`
+- [x] **Detalles:** El catálogo V1 ya declara `requiredCapabilities` por `exercise_id` concreto y expone helpers de compatibilidad para invalidación determinista antes de mostrar o generar la sesión.
 
 ### Paso 5: Formalizar el contrato del generador
 - [ ] **Acción:** Definir cómo `location` y `homeEquipment` entran al generador y cómo se validan las respuestas
@@ -441,7 +441,7 @@ homeEquipment: {
 ## ✅ Criterios de Aceptación
 - [x] Existe una estructura de datos definida para `homeEquipment` dentro del perfil de usuario
 - [x] `location` queda documentado como hard constraint del sistema de generación
-- [ ] Cada ejercicio o familia de ejercicios puede mapearse a requisitos mínimos de equipamiento
+- [x] Cada ejercicio o familia de ejercicios puede mapearse a requisitos mínimos de equipamiento
 - [x] La futura IA no depende de texto libre del usuario para inferir material disponible
 - [x] Queda previsto dónde se captura y edita el material doméstico dentro del producto
 - [x] La taxonomía V1 está congelada antes de modelar persistencia e integración con Genkit
@@ -476,3 +476,4 @@ homeEquipment: {
 - `2026-03-23`: Congelada la taxonomía V1 con ids canónicos en `snake_case`; `homeEquipment` y `enabledCapabilities` quedan separados como conceptos distintos y `enabledCapabilities` deja de admitirse como texto libre.
 - `2026-03-23`: Primera edición de producto aplicada en `profile`: el usuario ya puede ajustar `experienceLevel`, ubicaciones preferidas, ubicación por defecto y `homeEquipment` sin salir del catálogo V1; `contextProfiles` se mantiene fuera de este slice para no mezclar dos UX distintas.
 - `2026-03-23`: `profile` amplía la captura editable de `contextProfiles`: `park` y `gym` parten de plantillas amplias (`park_v1`, `gym_v1`) y guardan capacidades efectivas recortadas con persistencia real y cobertura básica en tests.
+- `2026-03-25`: Cerrado el mapeo inicial entre equipamiento y dominio de ejercicios: `exercise_id` V1 ya declara `requiredCapabilities` y el dominio expone validación determinista reutilizable por el generador y por producto.

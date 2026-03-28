@@ -1,33 +1,47 @@
-import { ActiveWorkoutSession } from '../types/workout';
-import i18n from '@shared/lib/i18n';
+import { GeneratedWorkoutSession } from '@shared/types/generator-contract';
 
-function buildPreviewWorkout(): ActiveWorkoutSession {
+import { adaptGeneratedWorkoutSession } from './generated-workout-session-adapter';
+
+function buildPreviewGeneratedWorkout(): GeneratedWorkoutSession {
   return {
-    id: '1',
-    workoutName: i18n.t('workout.mock.workoutName'),
-    startTime: new Date(),
-    currentExerciseIndex: 0,
-    exercises: [
+    session_id: '1',
+    session_type: 'generated_ephemeral',
+    location: 'gym',
+    session_goal: 'strength',
+    estimated_duration_minutes: 42,
+    summary: 'Preview session generated from the structured contract.',
+    blocks: [
       {
-        id: 'ex1',
-        name: i18n.t('workout.mock.exercises.squat.name'),
-        description: i18n.t('workout.mock.exercises.squat.description'),
-        restSeconds: 90,
-        sets: [
-          { id: 'set1', targetReps: 10, targetWeight: 60, actualReps: 10, actualWeight: 60, completed: false },
-          { id: 'set2', targetReps: 8, targetWeight: 65, actualReps: 8, actualWeight: 65, completed: false },
-          { id: 'set3', targetReps: 8, targetWeight: 65, actualReps: 8, actualWeight: 65, completed: false },
-        ],
+        block_id: 'block-1',
+        block_type: 'straight_sets',
+        order_index: 0,
+        exercise: {
+          entry_id: 'entry-1',
+          exercise_id: 'back_squat',
+          prescription: {
+            set_count: 3,
+            target_reps: [10, 8, 8],
+            intensity_method: 'load_kg',
+            intensity_value: 60,
+          },
+        },
+        rest_seconds_after_exercise: 90,
       },
       {
-        id: 'ex2',
-        name: i18n.t('workout.mock.exercises.legPress.name'),
-        description: i18n.t('workout.mock.exercises.legPress.description'),
-        restSeconds: 60,
-        sets: [
-          { id: 'set4', targetReps: 12, targetWeight: 160, actualReps: 12, actualWeight: 160, completed: false },
-          { id: 'set5', targetReps: 12, targetWeight: 160, actualReps: 12, actualWeight: 160, completed: false },
-        ],
+        block_id: 'block-2',
+        block_type: 'straight_sets',
+        order_index: 1,
+        exercise: {
+          entry_id: 'entry-2',
+          exercise_id: 'leg_press',
+          prescription: {
+            set_count: 2,
+            target_reps: 12,
+            intensity_method: 'load_kg',
+            intensity_value: 160,
+          },
+        },
+        rest_seconds_after_exercise: 60,
       },
     ],
   };
@@ -35,7 +49,7 @@ function buildPreviewWorkout(): ActiveWorkoutSession {
 
 export async function getWorkoutSession(workoutId: string | string[]) {
   await new Promise((resolve) => setTimeout(resolve, 500));
-  const previewWorkout = buildPreviewWorkout();
+  const previewWorkout = adaptGeneratedWorkoutSession(buildPreviewGeneratedWorkout());
 
   if (
     Array.isArray(workoutId)

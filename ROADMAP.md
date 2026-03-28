@@ -65,7 +65,7 @@
 | ✅ | Configuración base de Firestore (infraestructura y validación en emulador cerradas) | M | [🔗 P2-03 Firestore Foundation](docs/plans/P2-03_firestore-foundation.md) |
 | 🔄 | Esquema de datos: Usuarios, Rutinas, Historial y Perfil de Equipamiento | L | [🔗 P2-02 Data Schema + Equipment Profile](docs/plans/P2-02_data-schema-equipment-profile.md) |
 | ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
-| ⬜ | Conexión segura con Gemini vía Genkit | XL | [🔗 P2-04 Generator Contract + Compatibility](docs/plans/P2-04_generator-contract-exercise-compatibility.md) |
+| 🔄 | Conexión segura con Gemini vía Genkit | XL | [🔗 P2-04 Generator Contract + Compatibility](docs/plans/P2-04_generator-contract-exercise-compatibility.md) |
 | ⬜ | Lógica de recomendaciones IA en tiempo real | XL | Pendiente de plan |
 
 ---
@@ -171,4 +171,19 @@
 </p>
 <p align="center">
   <sub>Perfil operativo ampliado el 23 de marzo de 2026: `profile` ya edita `experienceLevel`, ubicaciones preferidas, ubicación por defecto, equipamiento doméstico y `contextProfiles` de `park`/`gym` con persistencia real y cobertura básica en tests.</sub>
+</p>
+<p align="center">
+  <sub>Contrato del generador ampliado el 25 de marzo de 2026: `P2-04` ya congela un primer catálogo V1 de `exercise_id` con `requiredCapabilities`, añade validación determinista de compatibilidad y hace que el mock de `workout` consuma ids canónicos en vez de nombres libres.</sub>
+</p>
+<p align="center">
+  <sub>Contrato del generador endurecido el 25 de marzo de 2026: `P2-04` ya fija también el builder canónico del payload de entrada para Genkit y valida en runtime la salida estructurada de sesión antes de que llegue a UI.</sub>
+</p>
+<p align="center">
+  <sub>Degradación defensiva definida el 25 de marzo de 2026: `P2-04` ya sanea sesiones generadas intentando sustitución por patrón de movimiento, descartando bloques inviables y rechazando sesiones que queden estructuralmente rotas o vacías tras la reparación.</sub>
+</p>
+<p align="center">
+  <sub>UI de workout conectada al contrato el 28 de marzo de 2026: `workout` ya adapta `GeneratedWorkoutSession` a su view-model operativo y deja de usar el mock manual como fuente primaria de nombre, sets y descanso.</sub>
+</p>
+<p align="center">
+  <sub>Matriz de tests V1 ampliada el 28 de marzo de 2026: `P2-04` ya cubre incompatibilidades, sustitución, bloques compuestos y adaptación de `circuit`/`emom` sin romper la UI operativa actual.</sub>
 </p>

@@ -317,6 +317,61 @@ const en = {
         alternativeMessage:
           'Alternatives are not available yet. This action will be connected when the recommendation flow is ready.',
       },
+      generatedSession: {
+        title: '{{goal}} session',
+        goals: {
+          strength: 'Strength',
+          hypertrophy: 'Hypertrophy',
+          conditioning: 'Conditioning',
+          skill: 'Skill',
+          general_fitness: 'General fitness',
+          fat_loss: 'Fat loss',
+        },
+      },
+      catalog: {
+        exercises: {
+          back_squat: {
+            name: 'Back Squat',
+            description: 'Barbell squat pattern used as a canonical lower-body strength exercise.',
+          },
+          leg_press: {
+            name: 'Leg Press',
+            description: 'Machine-based squat variation for gym contexts with machine access.',
+          },
+          push_up: {
+            name: 'Push-Up',
+            description: 'Bodyweight horizontal push variation that works without extra equipment.',
+          },
+          dumbbell_floor_press: {
+            name: 'Dumbbell Floor Press',
+            description: 'Horizontal push option for home setups with dumbbells and no bench.',
+          },
+          dumbbell_bench_press: {
+            name: 'Dumbbell Bench Press',
+            description: 'Horizontal press that requires both dumbbells and a bench.',
+          },
+          band_row: {
+            name: 'Band Row',
+            description: 'Horizontal pull variation that only depends on resistance bands.',
+          },
+          pull_up: {
+            name: 'Pull-Up',
+            description: 'Vertical pull exercise that requires a pull-up bar.',
+          },
+          kettlebell_swing: {
+            name: 'Kettlebell Swing',
+            description: 'Hip-dominant conditioning exercise that depends on a kettlebell.',
+          },
+          parallel_bar_dip: {
+            name: 'Parallel Bar Dip',
+            description: 'Dip variation that requires access to parallel bars.',
+          },
+          ring_row: {
+            name: 'Ring Row',
+            description: 'Horizontal pull option that depends on a rings anchor setup.',
+          },
+        },
+      },
       mock: {
         workoutName: 'Session preview',
         exercises: {
@@ -623,6 +678,61 @@ const es = {
         alternativeTitle: 'Alternativa solicitada',
         alternativeMessage:
           'Las alternativas aún no están disponibles. Esta acción se conectará cuando el flujo de recomendaciones esté listo.',
+      },
+      generatedSession: {
+        title: 'Sesion de {{goal}}',
+        goals: {
+          strength: 'fuerza',
+          hypertrophy: 'hipertrofia',
+          conditioning: 'acondicionamiento',
+          skill: 'habilidad',
+          general_fitness: 'fitness general',
+          fat_loss: 'perdida de grasa',
+        },
+      },
+      catalog: {
+        exercises: {
+          back_squat: {
+            name: 'Sentadilla trasera',
+            description: 'Patron de sentadilla con barra usado como ejercicio canonico de fuerza para tren inferior.',
+          },
+          leg_press: {
+            name: 'Prensa de piernas',
+            description: 'Variacion guiada de sentadilla para contextos de gimnasio con acceso a maquinas.',
+          },
+          push_up: {
+            name: 'Flexiones',
+            description: 'Empuje horizontal con peso corporal que no necesita equipamiento extra.',
+          },
+          dumbbell_floor_press: {
+            name: 'Press en suelo con mancuernas',
+            description: 'Opcion de empuje horizontal para casa cuando hay mancuernas pero no banco.',
+          },
+          dumbbell_bench_press: {
+            name: 'Press banca con mancuernas',
+            description: 'Press horizontal que requiere mancuernas y banco.',
+          },
+          band_row: {
+            name: 'Remo con bandas',
+            description: 'Variacion de traccion horizontal que solo depende de bandas elasticas.',
+          },
+          pull_up: {
+            name: 'Dominadas',
+            description: 'Ejercicio de traccion vertical que requiere barra de dominadas.',
+          },
+          kettlebell_swing: {
+            name: 'Kettlebell swing',
+            description: 'Ejercicio de bisagra y acondicionamiento que depende de una kettlebell.',
+          },
+          parallel_bar_dip: {
+            name: 'Fondo en paralelas',
+            description: 'Variacion de fondos que requiere acceso a barras paralelas.',
+          },
+          ring_row: {
+            name: 'Remo en anillas',
+            description: 'Opcion de traccion horizontal que depende de un anclaje para anillas.',
+          },
+        },
       },
       mock: {
         workoutName: 'Vista previa de sesión',
