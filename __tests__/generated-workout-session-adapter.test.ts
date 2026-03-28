@@ -41,12 +41,34 @@ describe('generated workout session adapter', () => {
     expect(adapted).toMatchObject({
       id: 'session-1',
       sourceSessionId: 'session-1',
+      source: 'live_generated',
       workoutName: 'Strength session',
       sessionGoal: 'strength',
       sessionNotes: 'Keep one rep in reserve.',
       summary: 'Structured preview session.',
       currentExerciseIndex: 0,
     });
+    expect(adapted.displayBlocks).toEqual([
+      {
+        blockId: 'block-1',
+        blockType: 'straight_sets',
+        title: 'Primary lift',
+        orderIndex: 0,
+        restSeconds: 90,
+        exercises: [
+          {
+            entryId: 'entry-1',
+            exerciseId: 'back_squat',
+            name: 'Back Squat',
+            description: 'Barbell squat pattern used as a canonical lower-body strength exercise.',
+            coachNotes: 'Stay braced.',
+            selectionReason: {
+              reason_codes: ['matches_goal', 'fits_equipment'],
+            },
+          },
+        ],
+      },
+    ]);
     expect(adapted.exercises[0]).toMatchObject({
       id: 'block-1:entry-1',
       exerciseId: 'back_squat',
@@ -127,6 +149,33 @@ describe('generated workout session adapter', () => {
 
     const adapted = adaptGeneratedWorkoutSession(session);
 
+    expect(adapted.displayBlocks).toEqual([
+      {
+        blockId: 'block-1',
+        blockType: 'superset',
+        title: undefined,
+        orderIndex: 0,
+        restSeconds: 75,
+        exercises: [
+          {
+            entryId: 'entry-1',
+            exerciseId: 'dumbbell_floor_press',
+            name: 'Dumbbell Floor Press',
+            description: 'Horizontal push option for home setups with dumbbells and no bench.',
+            coachNotes: undefined,
+            selectionReason: undefined,
+          },
+          {
+            entryId: 'entry-2',
+            exerciseId: 'band_row',
+            name: 'Band Row',
+            description: 'Horizontal pull variation that only depends on resistance bands.',
+            coachNotes: undefined,
+            selectionReason: undefined,
+          },
+        ],
+      },
+    ]);
     expect(adapted.exercises).toHaveLength(2);
     expect(adapted.exercises[0]).toMatchObject({
       id: 'block-1:entry-1',
@@ -195,6 +244,49 @@ describe('generated workout session adapter', () => {
 
     expect(adapted.workoutName).toBe('Conditioning session');
     expect(adapted.exercises).toHaveLength(2);
+    expect(adapted.displayBlocks).toEqual([
+      {
+        blockId: 'block-1',
+        blockType: 'circuit',
+        title: 'Circuit opener',
+        orderIndex: 0,
+        restSeconds: 45,
+        rounds: 2,
+        durationSeconds: undefined,
+        exercises: [
+          {
+            entryId: 'entry-1',
+            exerciseId: 'push_up',
+            name: 'Push-Up',
+            description: 'Bodyweight horizontal push variation that works without extra equipment.',
+            coachNotes: undefined,
+            selectionReason: {
+              reason_codes: ['time_efficient'],
+              reason_text: 'Simple opener with low setup cost.',
+            },
+          },
+        ],
+      },
+      {
+        blockId: 'block-2',
+        blockType: 'emom',
+        title: undefined,
+        orderIndex: 1,
+        restSeconds: undefined,
+        intervalSeconds: 60,
+        durationSeconds: 600,
+        exercises: [
+          {
+            entryId: 'entry-2',
+            exerciseId: 'pull_up',
+            name: 'Pull-Up',
+            description: 'Vertical pull exercise that requires a pull-up bar.',
+            coachNotes: 'Reset grip every minute.',
+            selectionReason: undefined,
+          },
+        ],
+      },
+    ]);
     expect(adapted.exercises[0]).toMatchObject({
       exerciseId: 'push_up',
       blockType: 'circuit',

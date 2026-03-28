@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@features/auth/hooks/use-auth';
 import { useUserProfile } from '@features/profile/hooks/use-user-profile';
 import { getWorkoutSession } from '../services/workout-service';
-import { ActiveWorkoutSession, ExerciseSet } from '../types/workout';
+import { ActiveWorkoutSession, ExerciseSet, WorkoutDisplayBlock } from '../types/workout';
 import i18n from '@shared/lib/i18n';
 
 function buildSetId() {
@@ -95,6 +95,34 @@ export function useWorkoutSession(workoutId: string | string[]) {
 
     return session.exercises[session.currentExerciseIndex] ?? null;
   }, [session]);
+
+  const currentBlock = useMemo<WorkoutDisplayBlock | null>(() => {
+    if (!session) {
+      return null;
+    }
+
+    if (!currentExercise?.blockId) {
+      return session.displayBlocks[0] ?? null;
+    }
+
+    return (
+      session.displayBlocks.find((block) => block.blockId === currentExercise.blockId) ??
+      session.displayBlocks[0] ??
+      null
+    );
+  }, [currentExercise?.blockId, session]);
+
+  const currentBlockIndex = useMemo(() => {
+    if (!session || !currentBlock) {
+      return 0;
+    }
+
+    const resolvedIndex = session.displayBlocks.findIndex(
+      (block) => block.blockId === currentBlock.blockId
+    );
+
+    return resolvedIndex >= 0 ? resolvedIndex : 0;
+  }, [currentBlock, session]);
 
   const nextPendingSetIndex = useMemo(() => {
     if (!currentExercise) {
@@ -321,6 +349,8 @@ export function useWorkoutSession(workoutId: string | string[]) {
     session,
     isLoading,
     currentExercise,
+    currentBlock,
+    currentBlockIndex,
     currentExerciseIndex: session ? session.currentExerciseIndex : 0,
     isLastExercise: session
       ? session.currentExerciseIndex === session.exercises.length - 1

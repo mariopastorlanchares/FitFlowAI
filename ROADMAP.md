@@ -196,3 +196,6 @@
 <p align="center">
   <sub>Generación live validada en app el 28 de marzo de 2026: `workout` ya carga una sesión coherente desde la callable desplegada; la deuda inmediata pasa a ser representar en UI la estructura real de bloques y distinguir mejor entre sesión live y fallback.</sub>
 </p>
+<p align="center">
+  <sub>Fidelidad de UI ampliada el 28 de marzo de 2026: `workout` ya muestra origen `live`/`fallback` y contexto de bloque real sin abandonar todavía la ejecución secuencial; la deuda prioritaria abierta vuelve a ser el hardening de acceso de la callable.</sub>
+</p>

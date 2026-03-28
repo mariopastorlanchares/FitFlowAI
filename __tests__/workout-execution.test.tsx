@@ -38,6 +38,15 @@ jest.mock('react-i18next', () => ({
         'workout.exercise.alternativeAction': 'See alternative',
         'workout.exercise.mediaPending':
           'Reference media is still pending. Use the exercise name and description for now.',
+        'workout.generatedSession.sources.live_generated': 'Live AI',
+        'workout.generatedSession.sources.fallback_preview': 'Preview',
+        'workout.generatedSession.currentBlock': 'Current block',
+        'workout.generatedSession.exerciseFlow': 'Block flow',
+        'workout.generatedSession.blockTypes.straight_sets': 'Straight sets',
+        'workout.generatedSession.blockTypes.superset': 'Superset',
+        'workout.generatedSession.blockTypes.triset': 'Triset',
+        'workout.generatedSession.blockTypes.circuit': 'Circuit',
+        'workout.generatedSession.blockTypes.emom': 'EMOM',
         'workout.activeSet.title': 'Log this set',
         'workout.activeSet.editTitle': `Edit set ${options?.current}`,
         'workout.activeSet.targetLabel': 'Target',
@@ -96,6 +105,26 @@ jest.mock('react-i18next', () => ({
         return `(Focus: ${options?.focus}). ${options?.advice}`;
       }
 
+      if (key === 'workout.generatedSession.blockProgress') {
+        return `Block ${options?.current} of ${options?.total}`;
+      }
+
+      if (key === 'workout.generatedSession.cadence.rounds') {
+        return `${options?.count} rounds`;
+      }
+
+      if (key === 'workout.generatedSession.cadence.durationMinutes') {
+        return `${options?.minutes} min`;
+      }
+
+      if (key === 'workout.generatedSession.cadence.intervalSeconds') {
+        return `Every ${options?.seconds} sec`;
+      }
+
+      if (key === 'workout.generatedSession.cadence.restSeconds') {
+        return `${options?.seconds} sec rest`;
+      }
+
       if (key === 'workout.rest.goal') {
         return `Goal ${options?.time}`;
       }
@@ -132,13 +161,46 @@ type WorkoutExerciseMock = {
 type HookState = {
   session: {
     id: string;
+    source: 'live_generated' | 'fallback_preview';
     workoutName: string;
+    summary?: string;
     startTime: Date;
     currentExerciseIndex: number;
+    displayBlocks: {
+      blockId: string;
+      blockType: string;
+      title?: string;
+      orderIndex: number;
+      restSeconds?: number;
+      rounds?: number;
+      durationSeconds?: number;
+      intervalSeconds?: number;
+      exercises: {
+        entryId: string;
+        exerciseId: string;
+        name: string;
+      }[];
+    }[];
     exercises: WorkoutExerciseMock[];
   };
   isLoading: boolean;
   currentExercise: WorkoutExerciseMock;
+  currentBlock: {
+    blockId: string;
+    blockType: string;
+    title?: string;
+    orderIndex: number;
+    restSeconds?: number;
+    rounds?: number;
+    durationSeconds?: number;
+    intervalSeconds?: number;
+    exercises: {
+      entryId: string;
+      exerciseId: string;
+      name: string;
+    }[];
+  } | null;
+  currentBlockIndex: number;
   currentExerciseIndex: number;
   isLastExercise: boolean;
   selectedSet: WorkoutExerciseMock['sets'][number];
@@ -173,9 +235,32 @@ function buildHookState(overrides: Partial<HookState> = {}): HookState {
 
   const session = {
     id: '1',
-    workoutName: 'Session preview',
+    source: 'live_generated' as const,
+    workoutName: 'General fitness session',
+    summary: 'Live workout generated from the current profile.',
     startTime: new Date('2026-03-21T10:00:00.000Z'),
     currentExerciseIndex: 0,
+    displayBlocks: [
+      {
+        blockId: 'block-1',
+        blockType: 'superset',
+        title: 'Upper-body pairing',
+        orderIndex: 0,
+        restSeconds: 90,
+        exercises: [
+          {
+            entryId: 'entry-1',
+            exerciseId: 'back_squat',
+            name: 'Back Squat',
+          },
+          {
+            entryId: 'entry-2',
+            exerciseId: 'leg_press',
+            name: 'Leg Press',
+          },
+        ],
+      },
+    ],
     exercises: [
       {
         id: 'ex1',
@@ -226,6 +311,8 @@ function buildHookState(overrides: Partial<HookState> = {}): HookState {
     session,
     isLoading: false,
     currentExercise: session.exercises[0],
+    currentBlock: session.displayBlocks[0],
+    currentBlockIndex: 0,
     currentExerciseIndex: 0,
     isLastExercise: false,
     selectedSet: session.exercises[0].sets[0],
@@ -262,9 +349,16 @@ describe('WorkoutExecutionScreen', () => {
   it('renders operational header timers and main workout blocks in the right order', () => {
     (useWorkoutSession as jest.Mock).mockReturnValue(buildHookState());
 
-    const { getByText, queryByText } = render(<WorkoutExecutionScreen />);
+    const { getAllByText, getByText, queryByText } = render(<WorkoutExecutionScreen />);
 
     expect(getByText('Exercise 1 of 2')).toBeTruthy();
+    expect(getByText('Live AI')).toBeTruthy();
+    expect(getByText('Block 1 of 1')).toBeTruthy();
+    expect(getByText('Superset')).toBeTruthy();
+    expect(getByText('Upper-body pairing')).toBeTruthy();
+    expect(getByText('Block flow')).toBeTruthy();
+    expect(getAllByText('Back Squat').length).toBeGreaterThan(0);
+    expect(getAllByText('Leg Press').length).toBeGreaterThan(0);
     expect(getByText('Session')).toBeTruthy();
     expect(getByText('Exercise')).toBeTruthy();
     expect(getByText('Rest')).toBeTruthy();
@@ -375,6 +469,8 @@ describe('WorkoutExecutionScreen', () => {
         exercises: [baseState.session.exercises[0], finishedExercise],
       },
       currentExercise: finishedExercise,
+      currentBlock: baseState.session.displayBlocks[0],
+      currentBlockIndex: 0,
       currentExerciseIndex: 1,
       isLastExercise: true,
       selectedSet: finishedExercise.sets[0],

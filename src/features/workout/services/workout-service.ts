@@ -2,6 +2,7 @@ import {
   getAvailableCapabilitiesForWorkoutContext,
   isExerciseCompatibleWithCapabilities,
 } from '@shared/lib/exercise-compatibility';
+import i18n from '@shared/lib/i18n';
 import { EffectiveCapabilityId, EXERCISE_CATALOG, ExerciseId } from '@shared/types/exercise-catalog';
 import { GeneratedWorkoutSession } from '@shared/types/generator-contract';
 import type { UserProfile } from '@shared/types/user-profile';
@@ -79,7 +80,7 @@ function buildPreviewGeneratedWorkout(
     location,
     session_goal: 'general_fitness',
     estimated_duration_minutes: 40,
-    summary: 'Fallback preview generated while the live session is unavailable.',
+    summary: i18n.t('workout.generatedSession.previewSummary'),
     blocks: previewExerciseIds.map((exerciseId, index) => ({
       block_id: `preview-block-${index + 1}`,
       block_type: 'straight_sets',
@@ -111,14 +112,15 @@ export async function getWorkoutSession(
 
   const previewLocation = options.userProfile?.defaultLocation ?? 'gym';
   const previewWorkout = adaptGeneratedWorkoutSession(
-    buildPreviewGeneratedWorkout(previewLocation, resolvePreviewCapabilities(options.userProfile))
+    buildPreviewGeneratedWorkout(previewLocation, resolvePreviewCapabilities(options.userProfile)),
+    { source: 'fallback_preview' }
   );
 
   if (options.authUid && options.userProfile) {
     try {
       const generatedWorkout = await requestGeneratedWorkoutSession(options.userProfile);
 
-      return adaptGeneratedWorkoutSession(generatedWorkout);
+      return adaptGeneratedWorkoutSession(generatedWorkout, { source: 'live_generated' });
     } catch (error) {
       console.warn('Falling back to preview workout session after generation failure.', error);
     }

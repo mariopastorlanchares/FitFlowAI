@@ -9,6 +9,7 @@ import { AIGuidanceCard } from '../components/execution/ai-guidance-card';
 import { ExecutionControls } from '../components/execution/execution-controls';
 import { ExerciseMedia } from '../components/execution/exercise-media';
 import { RestTimerLarge } from '../components/execution/rest-timer-large';
+import { SessionContextCard } from '../components/execution/session-context-card';
 import { SetProgressStrip } from '../components/execution/set-progress-strip';
 import { WorkoutHeader } from '../components/execution/workout-header';
 import { useWorkoutSession } from '../hooks/use-workout-session';
@@ -29,6 +30,8 @@ export function WorkoutExecutionScreen() {
     session,
     isLoading,
     currentExercise,
+    currentBlock,
+    currentBlockIndex,
     isLastExercise,
     currentExerciseIndex,
     selectedSet,
@@ -149,6 +152,15 @@ export function WorkoutExecutionScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
+          <SessionContextCard
+            source={session.source}
+            summary={session.summary ?? session.sessionNotes}
+            currentBlock={currentBlock}
+            currentBlockIndex={currentBlockIndex}
+            totalBlocks={session.displayBlocks.length}
+            currentExerciseId={currentExercise.exerciseId}
+          />
+
           <ExerciseMedia
             name={currentExercise.name}
             description={currentExercise.description}

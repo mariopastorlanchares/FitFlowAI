@@ -319,6 +319,8 @@ const en = {
       },
       generatedSession: {
         title: '{{goal}} session',
+        previewSummary:
+          'Preview session shown while the live generation is unavailable.',
         goals: {
           strength: 'Strength',
           hypertrophy: 'Hypertrophy',
@@ -326,6 +328,27 @@ const en = {
           skill: 'Skill',
           general_fitness: 'General fitness',
           fat_loss: 'Fat loss',
+        },
+        sources: {
+          live_generated: 'Live AI',
+          fallback_preview: 'Preview',
+        },
+        currentBlock: 'Current block',
+        blockProgress: 'Block {{current}} of {{total}}',
+        exerciseFlow: 'Block flow',
+        blockTypes: {
+          straight_sets: 'Straight sets',
+          superset: 'Superset',
+          triset: 'Triset',
+          circuit: 'Circuit',
+          emom: 'EMOM',
+        },
+        cadence: {
+          rounds_one: '{{count}} round',
+          rounds_other: '{{count}} rounds',
+          durationMinutes: '{{minutes}} min',
+          intervalSeconds: 'Every {{seconds}} sec',
+          restSeconds: '{{seconds}} sec rest',
         },
       },
       catalog: {
@@ -681,6 +704,8 @@ const es = {
       },
       generatedSession: {
         title: 'Sesion de {{goal}}',
+        previewSummary:
+          'Vista previa mostrada mientras la generacion en vivo no esta disponible.',
         goals: {
           strength: 'fuerza',
           hypertrophy: 'hipertrofia',
@@ -688,6 +713,27 @@ const es = {
           skill: 'habilidad',
           general_fitness: 'fitness general',
           fat_loss: 'perdida de grasa',
+        },
+        sources: {
+          live_generated: 'IA en vivo',
+          fallback_preview: 'Vista previa',
+        },
+        currentBlock: 'Bloque actual',
+        blockProgress: 'Bloque {{current}} de {{total}}',
+        exerciseFlow: 'Flujo del bloque',
+        blockTypes: {
+          straight_sets: 'Series rectas',
+          superset: 'Superserie',
+          triset: 'Triserie',
+          circuit: 'Circuito',
+          emom: 'EMOM',
+        },
+        cadence: {
+          rounds_one: '{{count}} ronda',
+          rounds_other: '{{count}} rondas',
+          durationMinutes: '{{minutes}} min',
+          intervalSeconds: 'Cada {{seconds}} s',
+          restSeconds: '{{seconds}} s descanso',
         },
       },
       catalog: {

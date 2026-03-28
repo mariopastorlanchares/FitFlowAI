@@ -7,7 +7,14 @@ import {
 import { getExerciseDisplayCopy } from '@shared/lib/exercise-catalog';
 import i18n from '@shared/lib/i18n';
 
-import { ActiveWorkoutSession, ExerciseSet, WorkoutExercise } from '../types/workout';
+import {
+  ActiveWorkoutSession,
+  ExerciseSet,
+  WorkoutDisplayBlock,
+  WorkoutDisplayExercise,
+  WorkoutExercise,
+  WorkoutSessionSource,
+} from '../types/workout';
 
 function getSetCount(prescription: ExercisePrescription) {
   if (prescription.set_count && prescription.set_count > 0) {
@@ -89,6 +96,19 @@ function buildWorkoutExercise(
   };
 }
 
+function buildDisplayExercise(entry: GeneratedExerciseEntry): WorkoutDisplayExercise {
+  const displayCopy = getExerciseDisplayCopy(entry.exercise_id);
+
+  return {
+    entryId: entry.entry_id,
+    exerciseId: entry.exercise_id,
+    name: displayCopy.name,
+    description: displayCopy.description,
+    coachNotes: entry.coach_notes,
+    selectionReason: entry.selection_reason,
+  };
+}
+
 function flattenBlockExercises(block: WorkoutBlock): WorkoutExercise[] {
   const restSeconds = getBlockRestSeconds(block);
 
@@ -99,6 +119,56 @@ function flattenBlockExercises(block: WorkoutBlock): WorkoutExercise[] {
   return block.exercises.map((entry) => buildWorkoutExercise(block, entry, restSeconds));
 }
 
+function buildDisplayBlock(block: WorkoutBlock): WorkoutDisplayBlock {
+  const exercises =
+    block.block_type === 'straight_sets'
+      ? [buildDisplayExercise(block.exercise)]
+      : block.exercises.map((entry) => buildDisplayExercise(entry));
+
+  switch (block.block_type) {
+    case 'straight_sets':
+      return {
+        blockId: block.block_id,
+        blockType: block.block_type,
+        title: block.title,
+        orderIndex: block.order_index,
+        restSeconds: block.rest_seconds_after_exercise,
+        exercises,
+      };
+    case 'superset':
+    case 'triset':
+      return {
+        blockId: block.block_id,
+        blockType: block.block_type,
+        title: block.title,
+        orderIndex: block.order_index,
+        restSeconds: block.rest_seconds_after_block,
+        exercises,
+      };
+    case 'circuit':
+      return {
+        blockId: block.block_id,
+        blockType: block.block_type,
+        title: block.title,
+        orderIndex: block.order_index,
+        restSeconds: block.rest_seconds_after_round,
+        rounds: block.rounds,
+        durationSeconds: block.duration_seconds,
+        exercises,
+      };
+    case 'emom':
+      return {
+        blockId: block.block_id,
+        blockType: block.block_type,
+        title: block.title,
+        orderIndex: block.order_index,
+        intervalSeconds: block.interval_seconds,
+        durationSeconds: block.duration_seconds,
+        exercises,
+      };
+  }
+}
+
 function getWorkoutName(session: GeneratedWorkoutSession) {
   return i18n.t('workout.generatedSession.title', {
     goal: i18n.t(`workout.generatedSession.goals.${session.session_goal}` as any),
@@ -106,17 +176,21 @@ function getWorkoutName(session: GeneratedWorkoutSession) {
 }
 
 export function adaptGeneratedWorkoutSession(
-  session: GeneratedWorkoutSession
+  session: GeneratedWorkoutSession,
+  options: { source?: WorkoutSessionSource } = {}
 ): ActiveWorkoutSession {
   const exercises = session.blocks.flatMap((block) => flattenBlockExercises(block));
+  const displayBlocks = session.blocks.map((block) => buildDisplayBlock(block));
 
   return {
     id: session.session_id,
     sourceSessionId: session.session_id,
+    source: options.source ?? 'live_generated',
     workoutName: getWorkoutName(session),
     sessionGoal: session.session_goal,
     sessionNotes: session.session_notes,
     summary: session.summary,
+    displayBlocks,
     exercises,
     startTime: new Date(),
     currentExerciseIndex: 0,

@@ -117,14 +117,14 @@ El contrato del generador ya está cerrado en `P2-04`. Este plan cubre la bajada
 - En marzo de 2026, Google AI Pro expone crédito mensual de Cloud suficiente para tratar esta integración como experimento controlado, pero no como licencia para diseñar sin límites.
 
 ## ▶️ Siguiente Slice Recomendado
-- **Objetivo:** Hacer que `workout` renderice con fidelidad la estructura real de la sesión generada, no solo su versión aplanada para ejecución.
-- **Motivación:** La generación live ya funciona, pero la UI todavía consume un view-model secuencial que oculta semántica de bloque (`superset`, `triset`, `circuit`, `emom`) y no distingue claramente entre sesión live y fallback.
+- **Objetivo:** Endurecer la callable `generateWorkoutSession` como superficie realmente segura antes de seguir ampliando producto sobre ella.
+- **Motivación:** La generación live ya funciona y la UI enseña mejor la estructura real de la sesión, pero el criterio de aceptación pendiente en este plan sigue siendo seguridad de acceso, no presentación.
 - **Alcance propuesto:**
-  - extender el view-model de `workout` para incluir `displayBlocks` además de `exercises`
-  - mantener `exercises[]` plano para no romper la ejecución actual
-  - mostrar en UI el tipo de bloque, los ejercicios hermanos del bloque y el estado `live` vs `fallback`
-  - añadir tests del adaptador y de render para esta fidelidad visual
-- **Fuera de alcance:** reescritura completa de la ejecución para soportar bloques compuestos de forma nativa; eso debe ir en un slice posterior.
+  - exigir `auth` en la callable y rechazar solicitudes anónimas
+  - preparar o activar `App Check` según el entorno real de pruebas
+  - añadir tests del wrapper y de rechazo temprano cuando falte contexto autorizado
+  - documentar la frontera esperada entre app autenticada y backend
+- **Fuera de alcance:** reescribir la ejecución para soportar bloques compuestos de forma nativa; eso queda como slice posterior de `workout`.
 
 ---
 **Historial:**
@@ -133,3 +133,4 @@ El contrato del generador ya está cerrado en `P2-04`. Este plan cubre la bajada
 - `2026-03-28`: Slice de implementación completado: workspace `functions/`, flow Genkit callable, cliente Expo conectado con fallback honesto y verificación local por TypeScript, lint y tests.
 - `2026-03-28`: Smoke test real exitoso contra `generateWorkoutSession` en `europe-west1`; se añade salida estructurada con esquema, transformación a contrato final y saneado adicional para duplicados en bloques compuestos.
 - `2026-03-28`: Corregida la normalización de `equipment_profile.context_capabilities` para tolerar `null` cuando el campo no aplica, redeploy realizado y generación real validada de nuevo desde la app.
+- `2026-03-28`: La UI de `workout` expone ya `live` vs `fallback` y contexto real de bloque (`superset`, `circuit`, `emom`) mediante `displayBlocks`, sin romper la ejecución secuencial actual.

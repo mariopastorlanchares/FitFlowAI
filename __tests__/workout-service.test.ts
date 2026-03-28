@@ -69,6 +69,8 @@ describe('workout service runtime integration', () => {
 
     expect(mockRequestGeneratedWorkoutSession).toHaveBeenCalledWith(baseUserProfile);
     expect(session.id).toBe('generated-1');
+    expect(session.source).toBe('live_generated');
+    expect(session.displayBlocks[0]?.blockType).toBe('straight_sets');
     expect(session.exercises[0]?.exerciseId).toBe('push_up');
   });
 
@@ -81,6 +83,8 @@ describe('workout service runtime integration', () => {
     });
 
     expect(session.id).toBe('preview-session');
+    expect(session.source).toBe('fallback_preview');
+    expect(session.summary).toBe('Preview session shown while the live generation is unavailable.');
     expect(session.exercises[0]?.exerciseId).toBe('push_up');
   });
 });
