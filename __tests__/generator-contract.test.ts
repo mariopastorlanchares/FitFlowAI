@@ -59,7 +59,6 @@ describe('generator contract builder', () => {
           dumbbells: { isPair: true, adjustable: true, maxWeightKg: 24 },
           bench: { adjustableIncline: true },
         },
-        context_capabilities: undefined,
       },
     });
   });
@@ -93,6 +92,36 @@ describe('generator contract validation', () => {
     expect(validateGenerateWorkoutSessionInput(input)).toEqual({
       success: true,
       data: input,
+    });
+  });
+
+  it('accepts null context_capabilities from transport when the field is effectively absent', () => {
+    const input = buildGenerateWorkoutSessionInput({
+      requestId: 'req-null-context',
+      location: 'home',
+      profile: buildProfile(),
+      preferredBlockTypes: ['straight_sets'],
+      durationMinutes: 35,
+      sessionGoal: 'general_fitness',
+    });
+
+    const result = validateGenerateWorkoutSessionInput({
+      ...input,
+      equipment_profile: {
+        ...input.equipment_profile,
+        context_capabilities: null,
+      },
+    });
+
+    expect(result).toEqual({
+      success: true,
+      data: {
+        ...input,
+        equipment_profile: {
+          ...input.equipment_profile,
+          context_capabilities: null,
+        },
+      },
     });
   });
 
@@ -558,6 +587,83 @@ describe('generator contract sanitization', () => {
       block_id: 'block-1',
       reason: 'no_compatible_replacement',
       affected_exercise_ids: ['leg_press', 'push_up'],
+    });
+  });
+
+  it('replaces duplicate exercises inside a superset with a compatible alternative', () => {
+    const result = sanitizeWithCapabilities(
+      {
+        session_id: 'session-repair-6',
+        session_type: 'generated_ephemeral',
+        location: 'home',
+        session_goal: 'general_fitness',
+        estimated_duration_minutes: 30,
+        blocks: [
+          {
+            block_id: 'block-1',
+            block_type: 'superset',
+            order_index: 0,
+            exercises: [
+              {
+                entry_id: 'entry-1',
+                exercise_id: 'dumbbell_floor_press',
+                prescription: {
+                  set_count: 3,
+                  target_reps: 10,
+                  intensity_method: 'rir',
+                  intensity_value: 2,
+                },
+              },
+              {
+                entry_id: 'entry-2',
+                exercise_id: 'dumbbell_floor_press',
+                prescription: {
+                  set_count: 3,
+                  target_reps: 10,
+                  intensity_method: 'rir',
+                  intensity_value: 2,
+                },
+              },
+            ],
+            rest_seconds_after_block: 75,
+          },
+        ],
+      },
+      ['bodyweight', 'dumbbells', 'bench']
+    );
+
+    expect(result.success).toBe(true);
+
+    if (!result.success) {
+      throw new Error('Expected sanitized session with duplicate repair.');
+    }
+
+    expect(result.data.blocks[0]).toMatchObject({
+      block_type: 'superset',
+      exercises: [
+        {
+          exercise_id: 'dumbbell_bench_press',
+        },
+        {
+          exercise_id: 'push_up',
+        },
+      ],
+    });
+    expect(result.repairs).toContainEqual({
+      type: 'exercise_replaced',
+      block_id: 'block-1',
+      entry_id: 'entry-1',
+      original_exercise_id: 'dumbbell_floor_press',
+      replacement_exercise_id: 'dumbbell_bench_press',
+      missing_capabilities: [],
+    });
+    expect(result.repairs).toContainEqual({
+      type: 'exercise_replaced',
+      block_id: 'block-1',
+      entry_id: 'entry-2',
+      original_exercise_id: 'dumbbell_floor_press',
+      replacement_exercise_id: 'push_up',
+      missing_capabilities: [],
     });
   });
 });

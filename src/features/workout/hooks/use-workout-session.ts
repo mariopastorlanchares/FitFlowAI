@@ -1,6 +1,8 @@
 import { Alert } from 'react-native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useAuth } from '@features/auth/hooks/use-auth';
+import { useUserProfile } from '@features/profile/hooks/use-user-profile';
 import { getWorkoutSession } from '../services/workout-service';
 import { ActiveWorkoutSession, ExerciseSet } from '../types/workout';
 import i18n from '@shared/lib/i18n';
@@ -24,6 +26,8 @@ function getDefaultSelectedIndex(sets: ExerciseSet[]) {
 }
 
 export function useWorkoutSession(workoutId: string | string[]) {
+  const { user, isLoading: isAuthLoading } = useAuth();
+  const { userProfile, isLoading: isProfileLoading } = useUserProfile();
   const [session, setSession] = useState<ActiveWorkoutSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [restActive, setRestActive] = useState(false);
@@ -31,12 +35,23 @@ export function useWorkoutSession(workoutId: string | string[]) {
   const [selectedSetIndex, setSelectedSetIndex] = useState<number | null>(null);
   const [isEditingSet, setIsEditingSet] = useState(false);
 
+  const isGenerationContextLoading = isAuthLoading || (Boolean(user) && isProfileLoading);
+
   useEffect(() => {
     let isMounted = true;
 
+    if (isGenerationContextLoading) {
+      return () => {
+        isMounted = false;
+      };
+    }
+
     async function loadSession() {
       setIsLoading(true);
-      const workoutSession = await getWorkoutSession(workoutId);
+      const workoutSession = await getWorkoutSession(workoutId, {
+        authUid: user?.uid ?? null,
+        userProfile,
+      });
 
       if (!isMounted) {
         return;
@@ -53,7 +68,7 @@ export function useWorkoutSession(workoutId: string | string[]) {
     return () => {
       isMounted = false;
     };
-  }, [workoutId]);
+  }, [isGenerationContextLoading, user?.uid, userProfile, workoutId]);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | undefined;

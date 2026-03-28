@@ -1,6 +1,10 @@
-import { HOME_EQUIPMENT_IDS, HomeEquipment, TrainingLocation } from '../types/user-profile';
-import { EffectiveCapabilityId, EXERCISE_CATALOG, ExerciseId } from '../types/exercise-catalog';
-import { getExerciseCatalogEntry } from './exercise-catalog';
+import { HOME_EQUIPMENT_IDS, HomeEquipment, TrainingLocation } from '../types/workout-context';
+import {
+  EffectiveCapabilityId,
+  EXERCISE_CATALOG,
+  ExerciseCatalogEntry,
+  ExerciseId,
+} from '../types/exercise-catalog';
 
 type AvailableCapabilitiesParams = {
   location: TrainingLocation;
@@ -10,6 +14,17 @@ type AvailableCapabilitiesParams = {
 
 function dedupeCapabilities(capabilities: EffectiveCapabilityId[]) {
   return Array.from(new Set<EffectiveCapabilityId>(capabilities));
+}
+
+function getExerciseCatalogEntry(exerciseId: ExerciseId): ExerciseCatalogEntry {
+  const definition = EXERCISE_CATALOG[exerciseId];
+
+  return {
+    id: exerciseId,
+    movementPattern: definition.movementPattern,
+    requiredCapabilities: [...definition.requiredCapabilities],
+    translationKey: definition.translationKey,
+  };
 }
 
 export function deriveHomeAvailableCapabilities(homeEquipment: HomeEquipment) {

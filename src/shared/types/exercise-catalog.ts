@@ -1,4 +1,4 @@
-import { ContextCapabilityId } from './user-profile';
+import { ContextCapabilityId } from './workout-context';
 
 export type EffectiveCapabilityId = ContextCapabilityId | 'bodyweight';
 

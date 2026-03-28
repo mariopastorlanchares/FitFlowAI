@@ -65,7 +65,7 @@
 | ✅ | Configuración base de Firestore (infraestructura y validación en emulador cerradas) | M | [🔗 P2-03 Firestore Foundation](docs/plans/P2-03_firestore-foundation.md) |
 | 🔄 | Esquema de datos: Usuarios, Rutinas, Historial y Perfil de Equipamiento | L | [🔗 P2-02 Data Schema + Equipment Profile](docs/plans/P2-02_data-schema-equipment-profile.md) |
 | ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
-| 🔄 | Conexión segura con Gemini vía Genkit | XL | [🔗 P2-04 Generator Contract + Compatibility](docs/plans/P2-04_generator-contract-exercise-compatibility.md) |
+| 🔄 | Conexión segura con Gemini vía Genkit | XL | [🔗 P2-04 Generator Contract + Compatibility](docs/plans/P2-04_generator-contract-exercise-compatibility.md) · [🔗 P2-04B Integración Runtime Genkit](docs/plans/P2-04B_genkit-runtime-integration.md) |
 | ⬜ | Lógica de recomendaciones IA en tiempo real | XL | Pendiente de plan |
 
 ---
@@ -186,4 +186,13 @@
 </p>
 <p align="center">
   <sub>Matriz de tests V1 ampliada el 28 de marzo de 2026: `P2-04` ya cubre incompatibilidades, sustitución, bloques compuestos y adaptación de `circuit`/`emom` sin romper la UI operativa actual.</sub>
+</p>
+<p align="center">
+  <sub>Runtime Genkit integrado el 28 de marzo de 2026: existe ya un backend `functions/` con callable server-side, modelo barato por defecto, cliente Expo conectado y fallback compatible en `workout`; queda pendiente solo la activación del secreto y una prueba end-to-end real.</sub>
+</p>
+<p align="center">
+  <sub>Smoke test Genkit superado el 28 de marzo de 2026: la callable `generateWorkoutSession` ya responde con una sesión estructurada real desde Gemini; la deuda abierta pasa a ser el hardening de acceso (auth/App Check) y no la integración base.</sub>
+</p>
+<p align="center">
+  <sub>Generación live validada en app el 28 de marzo de 2026: `workout` ya carga una sesión coherente desde la callable desplegada; la deuda inmediata pasa a ser representar en UI la estructura real de bloques y distinguir mejor entre sesión live y fallback.</sub>
 </p>

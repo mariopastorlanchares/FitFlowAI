@@ -16,6 +16,8 @@ import {
   ContextProfileLocation,
   HOME_EQUIPMENT_IDS,
   TrainingLocation,
+} from '../types/workout-context';
+import {
   UserProfile,
 } from '../types/user-profile';
 import { EffectiveCapabilityId, EXERCISE_CATALOG, ExerciseId } from '../types/exercise-catalog';
@@ -372,6 +374,15 @@ export function buildGenerateWorkoutSessionInput({
     location === 'home'
       ? undefined
       : profile.contextProfiles[location as ContextProfileLocation]?.enabledCapabilities;
+  const equipmentProfile =
+    contextCapabilities === undefined
+      ? {
+          home_equipment: profile.homeEquipment,
+        }
+      : {
+          home_equipment: profile.homeEquipment,
+          context_capabilities: contextCapabilities,
+        };
 
   return {
     request_id: requestId,
@@ -385,10 +396,7 @@ export function buildGenerateWorkoutSessionInput({
     preferred_block_types: preferredBlockTypes,
     duration_minutes: durationMinutes,
     session_goal: sessionGoal,
-    equipment_profile: {
-      home_equipment: profile.homeEquipment,
-      context_capabilities: contextCapabilities,
-    },
+    equipment_profile: equipmentProfile,
   };
 }
 
@@ -445,7 +453,10 @@ export function validateGenerateWorkoutSessionInput(
   } else {
     validateHomeEquipment(value.equipment_profile.home_equipment, errors, 'equipment_profile.home_equipment');
 
-    if (value.equipment_profile.context_capabilities !== undefined) {
+    if (
+      value.equipment_profile.context_capabilities !== undefined &&
+      value.equipment_profile.context_capabilities !== null
+    ) {
       validateCapabilityArray(
         value.equipment_profile.context_capabilities,
         [...CONTEXT_CAPABILITY_IDS, 'bodyweight'] as const,
@@ -546,8 +557,9 @@ function sanitizeExerciseEntry(
     entry.exercise_id,
     availableCapabilities
   );
+  const isExcludedInBlock = excludedExerciseIds.includes(entry.exercise_id);
 
-  if (missingCapabilities.length === 0) {
+  if (missingCapabilities.length === 0 && !isExcludedInBlock) {
     return {
       success: true,
       data: entry,

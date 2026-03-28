@@ -1,4 +1,4 @@
-import { ExperienceLevel, HomeEquipment, TrainingLocation } from './user-profile';
+import { ExperienceLevel, HomeEquipment, TrainingLocation } from './workout-context';
 import { EffectiveCapabilityId, ExerciseId } from './exercise-catalog';
 
 export const SESSION_GOALS = [

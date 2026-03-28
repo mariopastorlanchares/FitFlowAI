@@ -46,12 +46,7 @@ const firebaseConfig = {
     appId: firebaseEnv.appId,
 };
 
-let app;
-if (getApps().length === 0) {
-    app = initializeApp(firebaseConfig);
-} else {
-    app = getApp();
-}
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
 let auth: Auth;
 try {
@@ -70,6 +65,35 @@ try {
 }
 
 const db = getFirestore(app);
+const functionsRegion = 'europe-west1';
+const functionsEmulatorHost = process.env.EXPO_PUBLIC_FIREBASE_FUNCTIONS_EMULATOR_HOST;
+const functionsEmulatorPort = Number(
+    process.env.EXPO_PUBLIC_FIREBASE_FUNCTIONS_EMULATOR_PORT ?? '5001'
+);
+
+let functionsClientPromise: Promise<any> | null = null;
+
+export async function getFirebaseFunctionsClient() {
+    if (!functionsClientPromise) {
+        functionsClientPromise = import('firebase/functions').then(
+            ({ connectFunctionsEmulator, getFunctions }) => {
+                const functions = getFunctions(app, functionsRegion);
+
+                if (
+                    typeof functionsEmulatorHost === 'string' &&
+                    functionsEmulatorHost.trim().length > 0 &&
+                    Number.isInteger(functionsEmulatorPort)
+                ) {
+                    connectFunctionsEmulator(functions, functionsEmulatorHost, functionsEmulatorPort);
+                }
+
+                return functions;
+            }
+        );
+    }
+
+    return functionsClientPromise;
+}
 
 export { app, auth, db };
 

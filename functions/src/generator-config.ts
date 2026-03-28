@@ -1,0 +1,5 @@
+export const WORKOUT_GENERATOR_REGION = 'europe-west1';
+export const WORKOUT_GENERATOR_MODEL = 'gemini-2.5-flash-lite';
+export const WORKOUT_GENERATOR_TEMPERATURE = 0.2;
+export const WORKOUT_GENERATOR_MAX_OUTPUT_TOKENS = 1500;
+export const WORKOUT_GENERATOR_MAX_INSTANCES = 2;
