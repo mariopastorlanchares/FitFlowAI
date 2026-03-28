@@ -67,9 +67,14 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 - [x] **Detalles:** `stats` ya tiene tratamiento intencional y `profile` ya permite editar nivel, ubicaciones, equipamiento doméstico y `contextProfiles` de `park`/`gym` con guardado real. El paso queda cerrado; la deuda visual restante de la fase vive en theme hardcodeado y contenido mock de `workout`, no en `profile`.
 
 ### Paso 8: Sustituir contenido fake por estados reales (Ola C)
-- [ ] **Acción:** Reemplazar datos hardcodeados del dashboard, workout e IA por estados conectados a Firestore/Genkit o placeholders de carga vacíos pero honestos
-- [ ] **Archivos afectados:** features `dashboard`, `workout`, `analytics`, servicios y hooks de datos
-- [ ] **Detalles:** Esta tarea solo tiene sentido cuando la capa de datos esté preparada; hacerlo antes genera retrabajo y duplicación de mocks.
+- [x] **Acción:** Reemplazar datos hardcodeados del dashboard y conectar el selector de contexto real a la generación IA.
+- [x] **Archivos afectados:** features `dashboard`, `workout`, componente `workout-context-selector.tsx`, `today-workout-card.tsx`, `weekly-streak.tsx`, e `i18n.ts`.
+- [x] **Detalles:** 
+  1. Crear `useWorkoutIntentStore` en Zustand para guardar el contexto (`location`, `duration`, `energy`).
+  2. Ajustar el `WorkoutContextSelector` para que lea y escriba en este store.
+  3. Cambiar `TodayWorkoutCard` por una tarjeta honesta ("Generar sesión" con el resumen del intent actual).
+  4. Cambiar `WeeklyStreak` por un estado vacío honesto (0/0 sesiones) ya que no hay historial guardado en Firebase aún.
+  5. Asegurar que `requestGeneratedWorkoutSession` recibe el intent desde Zustand para la llamada a Genkit.
 
 ### Paso 9: Accesibilidad, feedback y tests visuales básicos (Ola D)
 - [ ] **Acción:** Añadir revisión de contraste, targets táctiles, estados disabled/loading y tests de componentes críticos
@@ -103,3 +108,4 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 - `2026-03-23`: `workout` rebaja señales de prototipo: la sesión se presenta como vista previa operativa, IA y media pasan a estados honestos de "pendiente/no conectado" y se eliminan logs `Mock:` del hook. Verificado con `npm run lint`, `npx tsc --noEmit` y `npx jest __tests__/workout-execution.test.tsx --runInBand`.
 - `2026-03-23`: `profile` añade la primera edición real del perfil operativo: `experienceLevel`, `preferredLocations`, `defaultLocation` y `homeEquipment` ya se guardan desde producto con cobertura básica en `__tests__/profile.test.tsx`; `contextProfiles` sigue pendiente para un slice específico.
 - `2026-03-23`: `profile` completa el siguiente tramo de producto con edición de `contextProfiles` para `park` y `gym`, usando plantillas amplias recortables y persistencia real validada por tests.
+- `2026-03-28`: ✅ Paso 8 completado (Ola C). Sustituidos Mocks por UI honestas conectadas al `useWorkoutIntent` (Zustand). El selector de contexto en Dashboard ahora envía datos reales a Genkit para customizar la sesión en base a duración, localización y energía elegida.

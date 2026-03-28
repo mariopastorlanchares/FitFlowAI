@@ -9,11 +9,12 @@ import type { UserProfile } from '@shared/types/user-profile';
 import type { TrainingLocation } from '@shared/types/workout-context';
 
 import { adaptGeneratedWorkoutSession } from './generated-workout-session-adapter';
-import { requestGeneratedWorkoutSession } from './workout-generator-service';
+import { requestGeneratedWorkoutSession, type WorkoutIntentParams } from './workout-generator-service';
 
 type GetWorkoutSessionOptions = {
   authUid?: string | null;
   userProfile?: UserProfile | null;
+  intent?: WorkoutIntentParams;
 };
 
 function getDefaultPreviewCapabilities(location: TrainingLocation): EffectiveCapabilityId[] {
@@ -110,15 +111,15 @@ export async function getWorkoutSession(
 ) {
   void workoutId;
 
-  const previewLocation = options.userProfile?.defaultLocation ?? 'gym';
+  const previewLocation = options.intent?.location ?? options.userProfile?.defaultLocation ?? 'gym';
   const previewWorkout = adaptGeneratedWorkoutSession(
     buildPreviewGeneratedWorkout(previewLocation, resolvePreviewCapabilities(options.userProfile)),
     { source: 'fallback_preview' }
   );
 
-  if (options.authUid && options.userProfile) {
+  if (options.authUid && options.userProfile && options.intent) {
     try {
-      const generatedWorkout = await requestGeneratedWorkoutSession(options.userProfile);
+      const generatedWorkout = await requestGeneratedWorkoutSession(options.userProfile, options.intent);
 
       return adaptGeneratedWorkoutSession(generatedWorkout, { source: 'live_generated' });
     } catch (error) {

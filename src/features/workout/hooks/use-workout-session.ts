@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@features/auth/hooks/use-auth';
 import { useUserProfile } from '@features/profile/hooks/use-user-profile';
 import { getWorkoutSession } from '../services/workout-service';
+import { useWorkoutIntent } from '../store/use-workout-intent';
 import { ActiveWorkoutSession, ExerciseSet, WorkoutDisplayBlock } from '../types/workout';
 import i18n from '@shared/lib/i18n';
 
@@ -48,9 +49,11 @@ export function useWorkoutSession(workoutId: string | string[]) {
 
     async function loadSession() {
       setIsLoading(true);
+      const currentIntent = useWorkoutIntent.getState();
       const workoutSession = await getWorkoutSession(workoutId, {
         authUid: user?.uid ?? null,
         userProfile,
+        intent: currentIntent,
       });
 
       if (!isMounted) {

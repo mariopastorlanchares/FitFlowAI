@@ -5,16 +5,22 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { fonts, palette } from '@shared/constants/theme';
 import { PrimaryButton } from '@shared/ui/primary-button';
+import { useWorkoutIntent } from '@features/workout/store/use-workout-intent';
 
 export function TodayWorkoutCard() {
   const { t } = useTranslation();
   const router = useRouter();
+  const { location, duration, energy } = useWorkoutIntent();
 
   return (
     <View style={styles.card}>
       <View style={styles.titleBlock}>
         <Text style={styles.kicker}>{t('dashboard.today_workout')}</Text>
-        <Text style={styles.title}>{t('dashboard.card.title')}</Text>
+        <Text style={styles.title}>
+          {t('dashboard.card.title', { 
+            location: t(`dashboard.context.locationOptions.${location}`) 
+          })}
+        </Text>
         <Text style={styles.description}>{t('dashboard.card.description')}</Text>
       </View>
 
@@ -24,12 +30,16 @@ export function TodayWorkoutCard() {
         <View style={styles.metaCard}>
           <Feather name="clock" size={16} color={palette.primaryLight} />
           <Text style={styles.metaLabel}>{t('dashboard.time')}</Text>
-          <Text style={styles.metaValue}>{t('dashboard.card.duration')}</Text>
+          <Text style={styles.metaValue}>
+            {t(`dashboard.context.durationOptions.${duration}`)}
+          </Text>
         </View>
         <View style={styles.metaCard}>
           <Feather name="target" size={16} color={palette.primaryLight} />
           <Text style={styles.metaLabel}>{t('dashboard.focus')}</Text>
-          <Text style={styles.metaValue}>{t('dashboard.card.focusValue')}</Text>
+          <Text style={styles.metaValue}>
+            {t(`dashboard.context.energyOptions.${energy}`)}
+          </Text>
         </View>
       </View>
 

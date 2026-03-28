@@ -1,4 +1,4 @@
-import { onCallGenkit } from 'firebase-functions/https';
+import { onCallGenkit, isSignedIn } from 'firebase-functions/https';
 import { defineSecret } from 'firebase-functions/params';
 
 import {
@@ -15,6 +15,8 @@ export const generateWorkoutSession = onCallGenkit(
     maxInstances: WORKOUT_GENERATOR_MAX_INSTANCES,
     timeoutSeconds: 60,
     secrets: [geminiApiKey],
+    authPolicy: isSignedIn(),
+    enforceAppCheck: true,
   },
   generateWorkoutSessionFlow
 );

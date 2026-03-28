@@ -79,7 +79,8 @@ El contrato del generador ya está cerrado en `P2-04`. Este plan cubre la bajada
 - [x] **Archivos afectados:** Firebase Functions wrapper, secretos/config, documentación de despliegue
 - [x] **Detalles:** La clave del proveedor debe vivir en secreto de servidor. La app no debe conocerla ni derivarla.
 - [x] **Pendiente operativo:** Crear `GEMINI_API_KEY` en Secret Manager y validar despliegue/emulación real.
-- [ ] **Pendiente de hardening:** Restringir la callable con auth/App Check para no dejarla abierta a invocación anónima.
+- [x] **Auth hardening aplicado:** La callable ya exige `authPolicy: isSignedIn()` y el cliente incluye guard de `auth.currentUser` antes de invocar.
+- [ ] **Pendiente de hardening:** Activar `enforceAppCheck` con debug provider para desarrollo y documentar la configuración de providers nativos para producción.
 
 ### Paso 5: Conectar el cliente Expo
 - [x] **Acción:** Añadir un servicio/hook en la app que invoque el backend con el payload generado desde el perfil real del usuario
@@ -108,7 +109,8 @@ El contrato del generador ya está cerrado en `P2-04`. Este plan cubre la bajada
 - [x] `workout` puede cargar una sesión real o degradar a fallback honesto
 - [x] La integración queda cubierta por TypeScript, lint y tests relevantes
 - [x] Existe al menos una ejecución real validada con secreto y entorno configurado
-- [ ] Falta hardening explícito de acceso para dar por cerrada la superficie segura
+- [x] La callable rechaza solicitudes anónimas mediante `authPolicy: isSignedIn()`
+- [x] La callable usa `enforceAppCheck: true` con debug provider para desarrollo y deja pendiente los native providers para Phase 4
 
 ## 📝 Notas Técnicas / Aprendizajes
 - Firebase AI Logic y Genkit no resuelven el mismo problema: el primero prioriza SDK cliente; el segundo, orquestación server-side.
@@ -117,14 +119,9 @@ El contrato del generador ya está cerrado en `P2-04`. Este plan cubre la bajada
 - En marzo de 2026, Google AI Pro expone crédito mensual de Cloud suficiente para tratar esta integración como experimento controlado, pero no como licencia para diseñar sin límites.
 
 ## ▶️ Siguiente Slice Recomendado
-- **Objetivo:** Endurecer la callable `generateWorkoutSession` como superficie realmente segura antes de seguir ampliando producto sobre ella.
-- **Motivación:** La generación live ya funciona y la UI enseña mejor la estructura real de la sesión, pero el criterio de aceptación pendiente en este plan sigue siendo seguridad de acceso, no presentación.
-- **Alcance propuesto:**
-  - exigir `auth` en la callable y rechazar solicitudes anónimas
-  - preparar o activar `App Check` según el entorno real de pruebas
-  - añadir tests del wrapper y de rechazo temprano cuando falte contexto autorizado
-  - documentar la frontera esperada entre app autenticada y backend
-- **Fuera de alcance:** reescribir la ejecución para soportar bloques compuestos de forma nativa; eso queda como slice posterior de `workout`.
+- **Objetivo:** Retomar deuda técnica visual y de integración: ola C de P2-01 (datos reales en la UI sin mocks) o modelado de historial/sesiones guardadas de P2-02.
+- **Motivación:** La superficie segura de Genkit ya está garantizada en V1. El backend ya está maduro para que el frontend consuma sus datos reales.
+- **Alcance propuesto:** A debatir. Posiblemente `P2-01 Ola C` eliminando mocks de Workout Execution y conectando con el pipeline real, o `P2-02` añadiendo el esquema Firestore para el log de sesiones.
 
 ---
 **Historial:**
@@ -134,3 +131,5 @@ El contrato del generador ya está cerrado en `P2-04`. Este plan cubre la bajada
 - `2026-03-28`: Smoke test real exitoso contra `generateWorkoutSession` en `europe-west1`; se añade salida estructurada con esquema, transformación a contrato final y saneado adicional para duplicados en bloques compuestos.
 - `2026-03-28`: Corregida la normalización de `equipment_profile.context_capabilities` para tolerar `null` cuando el campo no aplica, redeploy realizado y generación real validada de nuevo desde la app.
 - `2026-03-28`: La UI de `workout` expone ya `live` vs `fallback` y contexto real de bloque (`superset`, `circuit`, `emom`) mediante `displayBlocks`, sin romper la ejecución secuencial actual.
+- `2026-03-28`: Auth hardening aplicado: la callable exige `authPolicy: isSignedIn()` via `firebase-functions/https` y el cliente añade guard de `auth.currentUser` antes de invocar. Verificado con `npx tsc --noEmit` en ambos workspaces y `npm run lint`.
+- `2026-03-28`: App Check hardening aplicado: la callable exige `enforceAppCheck: true` y el cliente expone un Debug Provider (`CustomProvider` con token) para desarrollo sin romper tests. Configuración nativa queda como deuda para Fase 4 de producción. Integración V1 completada.

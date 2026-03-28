@@ -65,7 +65,7 @@
 | ✅ | Configuración base de Firestore (infraestructura y validación en emulador cerradas) | M | [🔗 P2-03 Firestore Foundation](docs/plans/P2-03_firestore-foundation.md) |
 | 🔄 | Esquema de datos: Usuarios, Rutinas, Historial y Perfil de Equipamiento | L | [🔗 P2-02 Data Schema + Equipment Profile](docs/plans/P2-02_data-schema-equipment-profile.md) |
 | ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
-| 🔄 | Conexión segura con Gemini vía Genkit | XL | [🔗 P2-04 Generator Contract + Compatibility](docs/plans/P2-04_generator-contract-exercise-compatibility.md) · [🔗 P2-04B Integración Runtime Genkit](docs/plans/P2-04B_genkit-runtime-integration.md) |
+| ✅ | Conexión segura con Gemini vía Genkit | XL | [🔗 P2-04 Generator Contract + Compatibility](docs/plans/P2-04_generator-contract-exercise-compatibility.md) · [🔗 P2-04B Integración Runtime Genkit](docs/plans/P2-04B_genkit-runtime-integration.md) |
 | ⬜ | Lógica de recomendaciones IA en tiempo real | XL | Pendiente de plan |
 
 ---
@@ -198,4 +198,10 @@
 </p>
 <p align="center">
   <sub>Fidelidad de UI ampliada el 28 de marzo de 2026: `workout` ya muestra origen `live`/`fallback` y contexto de bloque real sin abandonar todavía la ejecución secuencial; la deuda prioritaria abierta vuelve a ser el hardening de acceso de la callable.</sub>
+</p>
+<p align="center">
+  <sub>Seguridad de Genkit cerrada el 28 de marzo de 2026: `P2-04B` queda completado tras aplicar `authPolicy: isSignedIn()` y `enforceAppCheck` con Debug Provider local. La callable rechaza clientes/usuarios ilegítimos y la integración V1 se considera cerrada.</sub>
+</p>
+<p align="center">
+  <sub>Segregación de UI generada completada el 28 de marzo de 2026: `P2-01 Ola C` cerrada con un store Zustand de `workoutIntent`. El Dashboard dejó atrás los mocks para renderizar el contexto real de generación, y la pantalla de workout consume ese intent para alimentar a Genkit.</sub>
 </p>

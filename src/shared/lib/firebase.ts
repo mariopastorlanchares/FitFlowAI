@@ -48,6 +48,29 @@ const firebaseConfig = {
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
+if (Platform.OS !== 'web' || typeof window !== 'undefined') {
+    try {
+        const { initializeAppCheck, CustomProvider } = require('firebase/app-check');
+        // V1: We configure the debug provider for development. 
+        // Production native providers (reCAPTCHA, Play Integrity, DeviceCheck) are pending for Phase 4.
+        const appCheckToken = process.env.EXPO_PUBLIC_APP_CHECK_DEBUG_TOKEN || 'local-debug-token';
+        
+        initializeAppCheck(app, {
+            provider: new CustomProvider({
+                getToken: () => {
+                    return Promise.resolve({
+                        token: appCheckToken,
+                        expireTimeMillis: Date.now() + 60 * 60 * 1000, 
+                    });
+                }
+            }),
+            isTokenAutoRefreshEnabled: true
+        });
+    } catch (e) {
+        console.warn('Failed to initialize App Check:', e);
+    }
+}
+
 let auth: Auth;
 try {
     if (Platform.OS === 'web') {

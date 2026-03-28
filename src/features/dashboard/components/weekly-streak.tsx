@@ -3,13 +3,8 @@ import { useTranslation } from 'react-i18next';
 
 import { fonts, palette } from '@shared/constants/theme';
 
-const COMPLETED_SESSIONS = 3;
-const GOAL_SESSIONS = 4;
-const ACTIVE_DAYS = 6;
-
 export function WeeklyStreak() {
   const { t } = useTranslation();
-  const progressWidth = `${(COMPLETED_SESSIONS / GOAL_SESSIONS) * 100}%` as const;
 
   return (
     <View style={styles.container}>
@@ -19,21 +14,18 @@ export function WeeklyStreak() {
           <Text style={styles.title}>{t('dashboard.weeklyStreak.title')}</Text>
         </View>
         <Text style={styles.progressValue}>
-          {t('dashboard.weeklyStreak.progress', {
-            completed: COMPLETED_SESSIONS,
-            goal: GOAL_SESSIONS,
-          })}
+          {t('dashboard.weeklyStreak.progress')}
         </Text>
       </View>
 
       <View style={styles.progressTrack}>
-        <View style={[styles.progressFill, { width: progressWidth }]} />
+        <View style={[styles.progressFill, { width: '0%' }]} />
       </View>
 
       <View style={styles.footer}>
         <Text style={styles.caption}>{t('dashboard.weeklyStreak.caption')}</Text>
         <Text style={styles.days}>
-          {t('dashboard.weeklyStreak.daysLabel', { days: ACTIVE_DAYS })}
+          {t('dashboard.weeklyStreak.daysLabel')}
         </Text>
       </View>
 

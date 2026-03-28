@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { fonts, palette } from '@shared/constants/theme';
+import { useWorkoutIntent } from '@features/workout/store/use-workout-intent';
 
 const LOCATION_KEYS = ['gym', 'home', 'street', 'park'] as const;
 const DURATION_KEYS = ['short', 'medium', 'long', 'extended'] as const;
@@ -11,12 +12,15 @@ const ENERGY_KEYS = ['low', 'medium', 'high'] as const;
 
 export function WorkoutContextSelector() {
   const { t } = useTranslation();
-  const [selectedLocation, setSelectedLocation] =
-    useState<(typeof LOCATION_KEYS)[number]>('gym');
-  const [selectedDuration, setSelectedDuration] =
-    useState<(typeof DURATION_KEYS)[number]>('medium');
-  const [selectedEnergy, setSelectedEnergy] =
-    useState<(typeof ENERGY_KEYS)[number]>('medium');
+  const {
+    location: selectedLocation,
+    duration: selectedDuration,
+    energy: selectedEnergy,
+    setLocation: setSelectedLocation,
+    setDuration: setSelectedDuration,
+    setEnergy: setSelectedEnergy,
+  } = useWorkoutIntent();
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   const renderChips = <T extends string>(

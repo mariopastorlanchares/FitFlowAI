@@ -1,0 +1,15 @@
+﻿
+> fitflowai@1.0.0 lint
+> expo lint app src __tests__
+
+env: load .env
+env: export EXPO_PUBLIC_FIREBASE_API_KEY EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN EXPO_PUBLIC_FIREBASE_PROJECT_ID EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID EXPO_PUBLIC_FIREBASE_APP_ID
+
+C:\Proyectos\FitFlowAI\__tests__\firestore.rules.test.ts
+  11:8  error  Unable to resolve path to module '@firebase/rules-unit-testing'  import/no-unresolved
+
+C:\Proyectos\FitFlowAI\src\shared\lib\firebase.ts
+  53:56  warning  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+Ô£û 2 problems (1 error, 1 warning)
+
