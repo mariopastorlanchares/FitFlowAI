@@ -5,6 +5,7 @@ import { HeaderLogo } from '@features/dashboard/components/header-logo';
 import { TodayWorkoutCard } from '@features/dashboard/components/today-workout-card';
 import { WeeklyStreak } from '@features/dashboard/components/weekly-streak';
 import { WorkoutContextSelector } from '@features/dashboard/components/workout-context-selector';
+import { useWorkoutHistorySummary } from '@features/workout/hooks/use-workout-history-summary';
 
 const mockPush = jest.fn();
 
@@ -22,10 +23,15 @@ jest.mock('@expo/vector-icons', () => ({
   Feather: 'Feather',
 }));
 
+jest.mock('@features/workout/hooks/use-workout-history-summary', () => ({
+  useWorkoutHistorySummary: jest.fn(),
+}));
+
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, options?: Record<string, number>) => {
       const translations: Record<string, string> = {
+        'common.loading': 'Loading...',
         'dashboard.header.eyebrow': 'Today',
         'dashboard.header.subtitle': 'Choose the session and start training.',
         'dashboard.sessionSetup.title': 'Tune today’s session',
@@ -41,11 +47,11 @@ jest.mock('react-i18next', () => ({
           'Main lifts first, accessories after. Estimated setup: 2 min.',
         'dashboard.weeklyStreak.label': 'Consistency',
         'dashboard.weeklyStreak.title': 'Weekly progress',
-        'dashboard.weeklyStreak.progress': '0 sessions',
-        'dashboard.weeklyStreak.caption': 'No history connected',
-        'dashboard.weeklyStreak.helper':
-          'Your completed sessions will be tracked here once the history module is ready.',
-        'dashboard.weeklyStreak.daysLabel': '0 days active',
+        'dashboard.weeklyStreak.loadingCaption': 'Loading history',
+        'dashboard.weeklyStreak.loadingHelper': 'Checking your latest completed sessions.',
+        'dashboard.weeklyStreak.emptyCaption': 'No history yet',
+        'dashboard.weeklyStreak.emptyHelper':
+          'Complete your first workout to start building real weekly progress.',
         'dashboard.context.locationLabel': 'Where are you training today?',
         'dashboard.context.durationLabel': 'Available time',
         'dashboard.context.energyLabel': 'Energy level',
@@ -70,6 +76,29 @@ jest.mock('react-i18next', () => ({
 describe('Dashboard home blocks', () => {
   beforeEach(() => {
     mockPush.mockReset();
+    (useWorkoutHistorySummary as jest.Mock).mockReturnValue({
+      summary: {
+        totalCompletedSessions: 3,
+        completedSessionsThisWeek: 2,
+        activeDaysThisWeek: 2,
+        recentSessions: [
+          {
+            id: 'session-1',
+            workoutName: 'Strength session',
+            location: 'gym',
+            completedAt: new Date('2026-04-02T18:45:00Z'),
+            totalExercises: 2,
+            totalSets: 6,
+            completedSets: 6,
+            source: 'live_generated',
+          },
+        ],
+      },
+      isLoading: false,
+      isFetching: false,
+      error: null,
+      refetch: jest.fn(),
+    });
   });
 
   it('renders a compact dashboard header and supporting copy', () => {
@@ -98,10 +127,10 @@ describe('Dashboard home blocks', () => {
     const { getByText } = render(<WeeklyStreak />);
 
     expect(getByText('Weekly progress')).toBeTruthy();
-    expect(getByText('0 sessions')).toBeTruthy();
-    expect(
-      getByText('Your completed sessions will be tracked here once the history module is ready.')
-    ).toBeTruthy();
+    expect(getByText('dashboard.weeklyStreak.progressLabel')).toBeTruthy();
+    expect(getByText('dashboard.weeklyStreak.captionReady')).toBeTruthy();
+    expect(getByText('dashboard.weeklyStreak.daysLabel')).toBeTruthy();
+    expect(getByText('dashboard.weeklyStreak.helperReady')).toBeTruthy();
   });
 
   it('renders a compact session summary and expands when needed', () => {

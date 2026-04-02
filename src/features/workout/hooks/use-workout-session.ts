@@ -1,12 +1,17 @@
 import { Alert } from 'react-native';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { useAuth } from '@features/auth/hooks/use-auth';
 import { useUserProfile } from '@features/profile/hooks/use-user-profile';
+import type { WorkoutHistoryContextSnapshot } from '@shared/types/workout-history';
 import { getWorkoutSession } from '../services/workout-service';
+import { recordCompletedWorkoutSession } from '../services/workout-history-service';
 import { useWorkoutIntent } from '../store/use-workout-intent';
 import { ActiveWorkoutSession, ExerciseSet, WorkoutDisplayBlock } from '../types/workout';
 import i18n from '@shared/lib/i18n';
+import { workoutHistorySummaryQueryKey } from './use-workout-history-summary';
 
 function buildSetId() {
   return `set-${Date.now()}-${Math.round(Math.random() * 1000)}`;
@@ -26,17 +31,62 @@ function getDefaultSelectedIndex(sets: ExerciseSet[]) {
   return Math.max(0, sets.length - 1);
 }
 
+const FINISH_WORKOUT_TIMEOUT_MS = 6000;
+const FINISH_WORKOUT_TIMEOUT_CODE = 'WORKOUT_FINISH_TIMEOUT';
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number) {
+  return new Promise<T>((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error(FINISH_WORKOUT_TIMEOUT_CODE));
+    }, timeoutMs);
+
+    promise.then(
+      (value) => {
+        clearTimeout(timeoutId);
+        resolve(value);
+      },
+      (error) => {
+        clearTimeout(timeoutId);
+        reject(error);
+      }
+    );
+  });
+}
+
+function isFinishTimeoutError(error: unknown) {
+  return error instanceof Error && error.message === FINISH_WORKOUT_TIMEOUT_CODE;
+}
+
 export function useWorkoutSession(workoutId: string | string[]) {
   const { user, isLoading: isAuthLoading } = useAuth();
   const { userProfile, isLoading: isProfileLoading } = useUserProfile();
+  const queryClient = useQueryClient();
   const [session, setSession] = useState<ActiveWorkoutSession | null>(null);
+  const [sessionContext, setSessionContext] = useState<WorkoutHistoryContextSnapshot | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFinishing, setIsFinishing] = useState(false);
   const [restActive, setRestActive] = useState(false);
   const [restTimeLeft, setRestTimeLeft] = useState(0);
   const [selectedSetIndex, setSelectedSetIndex] = useState<number | null>(null);
   const [isEditingSet, setIsEditingSet] = useState(false);
+  const [reloadNonce, setReloadNonce] = useState(0);
+  const shouldReloadOnFocusRef = useRef(false);
 
   const isGenerationContextLoading = isAuthLoading || (Boolean(user) && isProfileLoading);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!shouldReloadOnFocusRef.current) {
+        return undefined;
+      }
+
+      shouldReloadOnFocusRef.current = false;
+      setIsLoading(true);
+      setReloadNonce((previousValue) => previousValue + 1);
+
+      return undefined;
+    }, [])
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -50,6 +100,11 @@ export function useWorkoutSession(workoutId: string | string[]) {
     async function loadSession() {
       setIsLoading(true);
       const currentIntent = useWorkoutIntent.getState();
+      const currentSessionContext: WorkoutHistoryContextSnapshot = {
+        location: currentIntent.location,
+        duration: currentIntent.duration,
+        energy: currentIntent.energy,
+      };
       const workoutSession = await getWorkoutSession(workoutId, {
         authUid: user?.uid ?? null,
         userProfile,
@@ -61,8 +116,11 @@ export function useWorkoutSession(workoutId: string | string[]) {
       }
 
       setSession(workoutSession);
+      setSessionContext(currentSessionContext);
       setSelectedSetIndex(getDefaultSelectedIndex(workoutSession.exercises[0]?.sets ?? []));
       setIsEditingSet(false);
+      setRestActive(false);
+      setRestTimeLeft(0);
       setIsLoading(false);
     }
 
@@ -71,7 +129,7 @@ export function useWorkoutSession(workoutId: string | string[]) {
     return () => {
       isMounted = false;
     };
-  }, [isGenerationContextLoading, user?.uid, userProfile, workoutId]);
+  }, [isGenerationContextLoading, reloadNonce, user?.uid, userProfile, workoutId]);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | undefined;
@@ -344,13 +402,51 @@ export function useWorkoutSession(workoutId: string | string[]) {
     return false;
   }, []);
 
-  const finishWorkout = useCallback(() => {
-    return;
-  }, []);
+  const finishWorkout = useCallback(async () => {
+    if (!session) {
+      return false;
+    }
+
+    if (!user?.uid || !sessionContext) {
+      console.warn('Skipping workout history persistence because auth or session context is missing.');
+      return true;
+    }
+
+    if (isFinishing) {
+      return false;
+    }
+
+    try {
+      setIsFinishing(true);
+      await withTimeout(
+        recordCompletedWorkoutSession({
+          authUid: user.uid,
+          session,
+          context: sessionContext,
+        }),
+        FINISH_WORKOUT_TIMEOUT_MS
+      );
+      await queryClient.invalidateQueries({ queryKey: workoutHistorySummaryQueryKey(user.uid) });
+      shouldReloadOnFocusRef.current = true;
+
+      return true;
+    } catch (error) {
+      console.warn('Failed to persist completed workout session.', error);
+      Alert.alert(
+        i18n.t('common.error'),
+        i18n.t(isFinishTimeoutError(error) ? 'workout.finish.saveTimeout' : 'workout.finish.saveError')
+      );
+
+      return false;
+    } finally {
+      setIsFinishing(false);
+    }
+  }, [isFinishing, queryClient, session, sessionContext, user?.uid]);
 
   return {
     session,
     isLoading,
+    isFinishing,
     currentExercise,
     currentBlock,
     currentBlockIndex,

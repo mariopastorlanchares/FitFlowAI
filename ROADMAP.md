@@ -220,3 +220,12 @@
 <p align="center">
   <sub>Workout afinado el 2 de abril de 2026 tras prueba manual: la pantalla enseña loading explícito al resolver la sesión y compacta la zona inferior eliminando helper visible y parte del aire muerto para recuperar altura útil.</sub>
 </p>
+<p align="center">
+  <sub>Workout a pantalla útil completa el 2 de abril de 2026: la ejecución oculta la tab bar inferior mientras entrenas para evitar espacio muerto y dejar que la CTA operativa use toda la altura disponible.</sub>
+</p>
+<p align="center">
+  <sub>Historial V1 iniciado el 2 de abril de 2026: `workout` persiste ya sesiones completadas en Firestore, `dashboard` muestra progreso semanal real y `stats` pasa a exponer métricas básicas e historial reciente en lugar de un placeholder fijo.</sub>
+</p>
+<p align="center">
+  <sub>QA de workout/history endurecido el 2 de abril de 2026: finalizar entrenamiento ya no deja la CTA bloqueada indefinidamente si cae la red, y al volver a `workout` tras cerrar una sesión se fuerza la recarga de una sesión nueva en lugar de reciclar el estado previo.</sub>
+</p>

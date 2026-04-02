@@ -311,9 +311,9 @@ homeEquipment: {
 - [x] **Detalles:** El catálogo V1 ya declara `requiredCapabilities` por `exercise_id` concreto y expone helpers de compatibilidad para invalidación determinista antes de mostrar o generar la sesión.
 
 ### Paso 5: Formalizar el contrato del generador
-- [ ] **Acción:** Definir cómo `location` y `homeEquipment` entran al generador y cómo se validan las respuestas
-- [ ] **Archivos afectados:** futuro plan de Genkit/Gemini, funciones de construcción de prompt y validadores post-generación
-- [ ] **Detalles:** Si `location === home`, el sistema no debe sugerir ejercicios incompatibles con `homeEquipment`. Si `location` usa un contexto persistido (`park`, futuro `gym` con overrides), el generador debe consumir sus capacidades efectivas. Si no hay cobertura suficiente, debe degradar a alternativas válidas o informar falta de material.
+- [x] **Acción:** Definir cómo `location` y `homeEquipment` entran al generador y cómo se validan las respuestas
+- [x] **Archivos afectados:** `src/shared/lib/generator-contract.ts`, `src/features/workout/services/workout-generator-service.ts`, `functions/src/flows/generate-workout-session-flow.ts`, planes `P2-04` y `P2-04B`
+- [x] **Detalles:** El builder canónico ya empaqueta capacidades efectivas por contexto y la salida del generador se valida y sanea antes de llegar a UI. Si `location === home`, el runtime ya restringe la sesión al equipamiento disponible; si la respuesta viola el contrato, el sistema degrada a fallback compatible.
 
 ### Paso 6: Diseñar la captura y edición en producto
 - [x] **Acción:** Definir en qué momento de onboarding o perfil se recopila el material disponible en casa
@@ -322,13 +322,13 @@ homeEquipment: {
 
 ### Paso 7: Bajar el contrato a Firestore
 - [ ] **Acción:** Traducir el modelo de dominio a documentos, reglas e índices de Firestore
-- [ ] **Archivos afectados:** futuro plan Firestore, reglas, índices, tipos compartidos y capa de acceso a datos
-- [ ] **Detalles:** Este paso empieza solo cuando la taxonomía y `userProfile` ya están congelados, para evitar retrabajo transversal. Este plan ya incorpora un borrador de documento `userProfiles/{authUid}` que debe validarse antes de escribir reglas e índices.
+- [ ] **Archivos afectados:** `firestore.rules`, `src/features/profile/services/profile-service.ts`, nueva capa `src/features/workout/services/workout-history-service.ts`, `src/shared/types/workout-history.ts`
+- [ ] **Detalles:** La primera bajada real ya existe: `userProfiles/{authUid}` persiste el perfil operativo y `userProfiles/{authUid}/workoutSessions/{sessionId}` guarda ahora snapshots de sesiones completadas con contexto, bloques y sets. Este slice ya endurece además la persistencia con ids deterministas por sesión para permitir reintentos idempotentes tras caídas de red y recarga limpia del flujo al volver a `workout` después de finalizar. Quedan fuera todavía los drafts/in-progress, sesiones abandonadas y cualquier modelo de rutina reusable.
 
 ### Paso 8: Validación y tests del modelo
 - [ ] **Acción:** Preparar criterios de prueba para asegurar que las restricciones se respetan
-- [ ] **Archivos afectados:** futuros tests de dominio, validadores y generador
-- [ ] **Detalles:** Cubrir casos como "usuario en casa sin banco", "usuario con bandas pero sin barra", "usuario cambia de `gym` a `home` sin rehacer manualmente la rutina" y "usuario con una sola mancuerna".
+- [ ] **Archivos afectados:** `__tests__/exercise-compatibility.test.ts`, `__tests__/generator-contract.test.ts`, `__tests__/workout-history.test.ts`, `__tests__/firestore.rules.test.ts`
+- [ ] **Detalles:** La validación de compatibilidad ya cubre dominio y generador, y este slice añade tests puros del snapshot de historial y reglas para `workoutSessions`. Sigue pendiente ejecutar la batería de reglas con emulador activo y ampliar cobertura a cambios de contexto/historial más avanzados.
 
 ## 🧪 Matriz de validación V1
 
@@ -477,3 +477,6 @@ homeEquipment: {
 - `2026-03-23`: Primera edición de producto aplicada en `profile`: el usuario ya puede ajustar `experienceLevel`, ubicaciones preferidas, ubicación por defecto y `homeEquipment` sin salir del catálogo V1; `contextProfiles` se mantiene fuera de este slice para no mezclar dos UX distintas.
 - `2026-03-23`: `profile` amplía la captura editable de `contextProfiles`: `park` y `gym` parten de plantillas amplias (`park_v1`, `gym_v1`) y guardan capacidades efectivas recortadas con persistencia real y cobertura básica en tests.
 - `2026-03-25`: Cerrado el mapeo inicial entre equipamiento y dominio de ejercicios: `exercise_id` V1 ya declara `requiredCapabilities` y el dominio expone validación determinista reutilizable por el generador y por producto.
+- `2026-04-02`: Reconciliado el plan con la realidad de `P2-04/P2-04B`: el contrato del generador ya consume `location` y capacidades efectivas reales, y valida/sanea la salida antes de renderizar `workout`.
+- `2026-04-02`: Primer slice material de historial persistido: `workout` guarda sesiones completadas en `userProfiles/{authUid}/workoutSessions`, `dashboard` consume un resumen real para progreso semanal y `stats` deja atrás el placeholder para mostrar métricas básicas e historial reciente. Verificado con `npx tsc --noEmit`, `npx expo lint src/features/workout src/features/dashboard src/features/analytics src/shared/types __tests__/workout-history.test.ts __tests__/dashboard-home.test.tsx __tests__/stats-screen.test.tsx __tests__/workout-execution.test.tsx` y `npx jest __tests__/workout-history.test.ts __tests__/dashboard-home.test.tsx __tests__/stats-screen.test.tsx __tests__/workout-execution.test.tsx --runInBand`. La validación material de reglas queda pendiente de lanzar con emulador Firestore disponible.
+- `2026-04-02`: QA hardening sobre historial/workout: el guardado de sesión completada pasa a usar un id estable por sesión para reintentos idempotentes, `finishWorkout` deja de bloquear indefinidamente la CTA cuando la red cae gracias a un timeout explícito, y `workout` recarga una sesión nueva al recuperar foco después de finalizar sin desmontar una sesión activa en mitad del flujo. Verificado con `npx tsc --noEmit`, `npx jest __tests__/workout-history.test.ts __tests__/use-workout-session.test.tsx __tests__/workout-execution.test.tsx --runInBand` y `npx expo lint src/features/workout src/shared/lib __tests__/use-workout-session.test.tsx __tests__/workout-history.test.ts __tests__/firestore.rules.test.ts __tests__/workout-execution.test.tsx`.

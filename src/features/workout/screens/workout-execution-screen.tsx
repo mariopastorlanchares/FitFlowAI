@@ -29,6 +29,7 @@ export function WorkoutExecutionScreen() {
   const {
     session,
     isLoading,
+    isFinishing,
     currentExercise,
     currentBlock,
     currentBlockIndex,
@@ -58,6 +59,9 @@ export function WorkoutExecutionScreen() {
   const [activeReps, setActiveReps] = useState('0');
   const [activeWeight, setActiveWeight] = useState('0');
   const [aiComment, setAiComment] = useState('');
+  const sessionRunKey = session
+    ? `${session.sourceSessionId ?? session.id}:${session.startTime.getTime()}`
+    : null;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -82,10 +86,20 @@ export function WorkoutExecutionScreen() {
     setAiComment('');
   }, [selectedSet]);
 
+  useEffect(() => {
+    if (!sessionRunKey) {
+      return;
+    }
+
+    setSessionElapsedSeconds(0);
+    setExerciseElapsedSeconds(0);
+    setSetStripExpanded(false);
+  }, [sessionRunKey]);
+
   const isExerciseFinished = nextPendingSetIndex === -1;
   const hasPendingSet = nextPendingSetIndex !== -1;
 
-  const handlePrimaryAction = () => {
+  const handlePrimaryAction = async () => {
     if (!selectedSet) {
       return;
     }
@@ -100,8 +114,11 @@ export function WorkoutExecutionScreen() {
 
     if (!hasPendingSet) {
       if (isLastExercise) {
-        finishWorkout();
-        router.replace('/(tabs)');
+        const didFinish = await finishWorkout();
+
+        if (didFinish) {
+          router.replace('/(tabs)');
+        }
       } else {
         nextExercise();
       }
@@ -226,6 +243,7 @@ export function WorkoutExecutionScreen() {
           isExerciseFinished={isExerciseFinished}
           isLastExercise={isLastExercise}
           isEditingSet={isEditingSet}
+          isBusy={isFinishing}
           restActive={restActive}
           onNextAction={handlePrimaryAction}
         />

@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import React from 'react';
 
 import { useWorkoutSession } from '@features/workout/hooks/use-workout-session';
@@ -70,6 +70,8 @@ jest.mock('react-i18next', () => ({
         'workout.ai.feedbackPlaceholder':
           'Tell the AI if something feels off, unstable or unavailable.',
         'workout.ai.feedbackSubmit': 'Send to AI',
+        'workout.finish.saveError':
+          'We could not save this completed workout. Try again before leaving the screen.',
         'workout.controls.logSet': 'Save set',
         'workout.controls.saveChanges': 'Save changes',
         'workout.controls.nextExercise': 'Next exercise',
@@ -187,6 +189,7 @@ type HookState = {
     exercises: WorkoutExerciseMock[];
   };
   isLoading: boolean;
+  isFinishing: boolean;
   currentExercise: WorkoutExerciseMock;
   currentBlock: {
     blockId: string;
@@ -234,7 +237,7 @@ function buildHookState(overrides: Partial<HookState> = {}): HookState {
   const skipRest = jest.fn();
   const requestAlternative = jest.fn();
   const sendAIFeedback = jest.fn();
-  const finishWorkout = jest.fn();
+  const finishWorkout = jest.fn().mockResolvedValue(true);
 
   const session = {
     id: '1',
@@ -313,6 +316,7 @@ function buildHookState(overrides: Partial<HookState> = {}): HookState {
   return {
     session,
     isLoading: false,
+    isFinishing: false,
     currentExercise: session.exercises[0],
     currentBlock: session.displayBlocks[0],
     currentBlockIndex: 0,
@@ -469,7 +473,7 @@ describe('WorkoutExecutionScreen', () => {
     expect(hookState.nextExercise).not.toHaveBeenCalled();
   });
 
-  it('finishes the workout when the last exercise has no pending sets', () => {
+  it('finishes the workout when the last exercise has no pending sets', async () => {
     const baseState = buildHookState();
     const finishedExercise = {
       ...baseState.session.exercises[1],
@@ -510,7 +514,9 @@ describe('WorkoutExecutionScreen', () => {
     fireEvent.press(getByText('Finish workout'));
 
     expect(hookState.finishWorkout).toHaveBeenCalled();
-    expect(mockReplace).toHaveBeenCalledWith('/(tabs)');
+    await waitFor(() => {
+      expect(mockReplace).toHaveBeenCalledWith('/(tabs)');
+    });
   });
 
   it('shows a visible loading state while the workout session is being prepared', () => {

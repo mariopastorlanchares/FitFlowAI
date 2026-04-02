@@ -8,6 +8,7 @@ interface ExecutionControlsProps {
   isExerciseFinished: boolean;
   isLastExercise: boolean;
   isEditingSet: boolean;
+  isBusy?: boolean;
   restActive: boolean;
   onNextAction: () => void;
 }
@@ -16,6 +17,7 @@ export function ExecutionControls({
   isExerciseFinished,
   isLastExercise,
   isEditingSet,
+  isBusy = false,
   restActive,
   onNextAction,
 }: ExecutionControlsProps) {
@@ -41,9 +43,12 @@ export function ExecutionControls({
         accessibilityRole="button"
         accessibilityLabel={primaryActionText}
         accessibilityHint={helperText}
+        accessibilityState={{ disabled: isBusy }}
         onPress={onNextAction}
+        disabled={isBusy}
         style={({ pressed }) => [
           styles.primaryButton,
+          isBusy ? styles.primaryButtonDisabled : null,
           pressed ? styles.primaryButtonPressed : null,
         ]}
       >
@@ -73,6 +78,9 @@ const styles = StyleSheet.create({
   },
   primaryButtonPressed: {
     opacity: 0.92,
+  },
+  primaryButtonDisabled: {
+    opacity: 0.5,
   },
   primaryButtonText: {
     ...typography.button,

@@ -82,11 +82,17 @@ const en = {
       },
       weeklyStreak: {
         label: 'Consistency',
-        progress: '0 sessions',
-        caption: 'No history connected',
         title: 'Weekly progress',
-        helper: 'Your completed sessions will be tracked here once the history module is ready.',
-        daysLabel: '0 days active',
+        progressLabel_one: '{{count}} session',
+        progressLabel_other: '{{count}} sessions',
+        loadingCaption: 'Loading history',
+        loadingHelper: 'Checking your latest completed sessions.',
+        emptyCaption: 'No history yet',
+        emptyHelper: 'Complete your first workout to start building real weekly progress.',
+        captionReady: '{{count}} completed total',
+        helperReady: 'Latest workout: {{name}}',
+        daysLabel_one: '{{count}} active day',
+        daysLabel_other: '{{count}} active days',
       },
       context: {
         locationLabel: 'Where are you training today?',
@@ -112,9 +118,19 @@ const en = {
       },
     },
     analytics: {
-      placeholderTitle: 'Stats are on the way',
+      loadingTitle: 'Loading your stats',
+      loadingBody: 'We are collecting the latest completed sessions from Firestore.',
+      placeholderTitle: 'No completed sessions yet',
       placeholderBody:
-        'We will unlock this screen once workout history and recovery metrics come from real data.',
+        'Finish your first workout to unlock real progress metrics and recent session history.',
+      metrics: {
+        totalSessions: 'Completed sessions',
+        thisWeek: 'This week',
+        activeDays: 'Active days',
+      },
+      recentTitle: 'Recent sessions',
+      recentMeta: '{{location}} · {{date}}',
+      recentSets: '{{completed}}/{{total}} sets',
     },
     profile: {
       title: 'My Profile',
@@ -328,6 +344,9 @@ const en = {
         alternativeMessage:
           'Alternatives are not available yet. This action will be connected when the recommendation flow is ready.',
       },
+      finish: {
+        saveError: 'We could not save this completed workout. Try again before leaving the screen.',
+      },
       generatedSession: {
         title: '{{goal}} session',
         previewSummary:
@@ -511,11 +530,17 @@ const es = {
       },
       weeklyStreak: {
         label: 'Consistencia',
-        progress: '0 sesiones',
-        caption: 'Historial no conectado',
         title: 'Progreso semanal',
-        helper: 'Tus sesiones se registrarán aquí cuando el módulo de historial esté listo.',
-        daysLabel: '0 días activo',
+        progressLabel_one: '{{count}} sesion',
+        progressLabel_other: '{{count}} sesiones',
+        loadingCaption: 'Cargando historial',
+        loadingHelper: 'Estamos revisando tus ultimas sesiones completadas.',
+        emptyCaption: 'Todavia no hay historial',
+        emptyHelper: 'Completa tu primer entrenamiento para empezar a construir progreso semanal real.',
+        captionReady: '{{count}} completadas en total',
+        helperReady: 'Ultimo entrenamiento: {{name}}',
+        daysLabel_one: '{{count}} dia activo',
+        daysLabel_other: '{{count}} dias activos',
       },
       context: {
         locationLabel: '¿Dónde entrenas hoy?',
@@ -541,9 +566,19 @@ const es = {
       },
     },
     analytics: {
-      placeholderTitle: 'La analítica llegará pronto',
+      loadingTitle: 'Cargando tu analitica',
+      loadingBody: 'Estamos recuperando las ultimas sesiones completadas desde Firestore.',
+      placeholderTitle: 'Todavia no hay sesiones completadas',
       placeholderBody:
-        'Esta pantalla se activará cuando conectemos el historial de entrenamientos y la recuperación real.',
+        'Termina tu primer entrenamiento para desbloquear metricas reales de progreso e historial reciente.',
+      metrics: {
+        totalSessions: 'Sesiones completadas',
+        thisWeek: 'Esta semana',
+        activeDays: 'Dias activos',
+      },
+      recentTitle: 'Sesiones recientes',
+      recentMeta: '{{location}} · {{date}}',
+      recentSets: '{{completed}}/{{total}} sets',
     },
     profile: {
       title: 'Mi Perfil',
@@ -720,6 +755,9 @@ const es = {
         alternativeTitle: 'Alternativa solicitada',
         alternativeMessage:
           'Las alternativas aún no están disponibles. Esta acción se conectará cuando el flujo de recomendaciones esté listo.',
+      },
+      finish: {
+        saveError: 'No hemos podido guardar este entrenamiento completado. Intentalo de nuevo antes de salir.',
       },
       generatedSession: {
         title: 'Sesion de {{goal}}',
@@ -918,10 +956,14 @@ es.translation.profile.operational.contextProfilesSummary_other =
   'Save the current park and gym capability configuration.';
 (en.translation.profile as any).contexts.saveDisabledHint =
   'There are no external context changes to save yet.';
+(en.translation.workout.finish as any).saveTimeout =
+  'We could not confirm the save right now. Check your connection and try again before leaving the screen.';
 (es.translation.profile as any).contexts.saveHint =
   'Guarda la configuracion actual de capacidades para parque y gimnasio.';
 (es.translation.profile as any).contexts.saveDisabledHint =
   'Todavia no hay cambios de contextos externos para guardar.';
+(es.translation.workout.finish as any).saveTimeout =
+  'No hemos podido confirmar el guardado ahora mismo. Revisa la conexion y vuelve a intentarlo antes de salir de esta pantalla.';
 
 const systemLang = Localization.getLocales()[0]?.languageCode || 'es';
 const supportedLangs = ['en', 'es'];

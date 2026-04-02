@@ -2,9 +2,33 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { fonts, palette } from '@shared/constants/theme';
+import { useWorkoutHistorySummary } from '@features/workout/hooks/use-workout-history-summary';
 
 export function WeeklyStreak() {
   const { t } = useTranslation();
+  const { summary, isLoading } = useWorkoutHistorySummary();
+  const latestSession = summary.recentSessions[0] ?? null;
+  const weeklyTargetSessions = 4;
+  const progressPercent = isLoading
+    ? 0
+    : Math.min((summary.completedSessionsThisWeek / weeklyTargetSessions) * 100, 100);
+  const progressWidth: `${number}%` = `${progressPercent}%`;
+  const progressValue = isLoading
+    ? t('common.loading')
+    : t('dashboard.weeklyStreak.progressLabel', { count: summary.completedSessionsThisWeek });
+  const caption = isLoading
+    ? t('dashboard.weeklyStreak.loadingCaption')
+    : summary.totalCompletedSessions > 0
+      ? t('dashboard.weeklyStreak.captionReady', { count: summary.totalCompletedSessions })
+      : t('dashboard.weeklyStreak.emptyCaption');
+  const helper = isLoading
+    ? t('dashboard.weeklyStreak.loadingHelper')
+    : summary.totalCompletedSessions > 0 && latestSession
+      ? t('dashboard.weeklyStreak.helperReady', { name: latestSession.workoutName })
+      : t('dashboard.weeklyStreak.emptyHelper');
+  const activeDaysLabel = isLoading
+    ? '...'
+    : t('dashboard.weeklyStreak.daysLabel', { count: summary.activeDaysThisWeek });
 
   return (
     <View style={styles.container}>
@@ -13,23 +37,19 @@ export function WeeklyStreak() {
           <Text style={styles.label}>{t('dashboard.weeklyStreak.label')}</Text>
           <Text style={styles.title}>{t('dashboard.weeklyStreak.title')}</Text>
         </View>
-        <Text style={styles.progressValue}>
-          {t('dashboard.weeklyStreak.progress')}
-        </Text>
+        <Text style={styles.progressValue}>{progressValue}</Text>
       </View>
 
       <View style={styles.progressTrack}>
-        <View style={[styles.progressFill, { width: '0%' }]} />
+        <View style={[styles.progressFill, { width: progressWidth }]} />
       </View>
 
       <View style={styles.footer}>
-        <Text style={styles.caption}>{t('dashboard.weeklyStreak.caption')}</Text>
-        <Text style={styles.days}>
-          {t('dashboard.weeklyStreak.daysLabel')}
-        </Text>
+        <Text style={styles.caption}>{caption}</Text>
+        <Text style={styles.days}>{activeDaysLabel}</Text>
       </View>
 
-      <Text style={styles.helper}>{t('dashboard.weeklyStreak.helper')}</Text>
+      <Text style={styles.helper}>{helper}</Text>
     </View>
   );
 }

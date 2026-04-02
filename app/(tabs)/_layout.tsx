@@ -49,6 +49,9 @@ export default function TabLayout() {
                 name="workout"
                 options={{
                     title: t('dashboard.tabs.workout'),
+                    tabBarStyle: {
+                        display: 'none',
+                    },
                     tabBarIcon: ({ color, size }) => <Feather name="activity" size={size} color={color} />,
                 }}
             />
