@@ -229,3 +229,6 @@
 <p align="center">
   <sub>QA de workout/history endurecido el 2 de abril de 2026: finalizar entrenamiento ya no deja la CTA bloqueada indefinidamente si cae la red, y al volver a `workout` tras cerrar una sesión se fuerza la recarga de una sesión nueva en lugar de reciclar el estado previo.</sub>
 </p>
+<p align="center">
+  <sub>Cierre de workout reforzado el 2 de abril de 2026: completar una sesión ya muestra feedback positivo y un resumen breve antes de volver a Home, para que el final del entrenamiento no se perciba como un salto abrupto de pantalla.</sub>
+</p>

@@ -346,6 +346,14 @@ const en = {
       },
       finish: {
         saveError: 'We could not save this completed workout. Try again before leaving the screen.',
+        successBadge: 'Workout completed',
+        successTitle: 'Strong finish',
+        successBody: 'Your session is closed and saved.',
+        successStatsSets: '{{completed}}/{{total}} sets',
+        successStatsExercises_one: '{{count}} exercise',
+        successStatsExercises_other: '{{count}} exercises',
+        successMotivation: 'Your history is updated. Keep the streak alive.',
+        successContinue: 'Back to Home',
       },
       generatedSession: {
         title: '{{goal}} session',
@@ -758,6 +766,14 @@ const es = {
       },
       finish: {
         saveError: 'No hemos podido guardar este entrenamiento completado. Intentalo de nuevo antes de salir.',
+        successBadge: 'Entrenamiento completado',
+        successTitle: 'Buen trabajo',
+        successBody: 'La sesion esta cerrada y guardada.',
+        successStatsSets: '{{completed}}/{{total}} sets',
+        successStatsExercises_one: '{{count}} ejercicio',
+        successStatsExercises_other: '{{count}} ejercicios',
+        successMotivation: 'Tu historial ya esta actualizado. Sigue sumando constancia.',
+        successContinue: 'Volver a inicio',
       },
       generatedSession: {
         title: 'Sesion de {{goal}}',

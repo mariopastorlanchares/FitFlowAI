@@ -11,6 +11,7 @@ import { ExerciseMedia } from '../components/execution/exercise-media';
 import { RestTimerLarge } from '../components/execution/rest-timer-large';
 import { SessionContextCard } from '../components/execution/session-context-card';
 import { SetProgressStrip } from '../components/execution/set-progress-strip';
+import { WorkoutCompletionModal } from '../components/execution/workout-completion-modal';
 import { WorkoutHeader } from '../components/execution/workout-header';
 import { useWorkoutSession } from '../hooks/use-workout-session';
 import { AppBackground } from '@shared/components/app-background';
@@ -21,6 +22,26 @@ function formatTime(totalSeconds: number) {
   const seconds = totalSeconds % 60;
 
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+type WorkoutCompletionSummary = {
+  totalExercises: number;
+  totalSets: number;
+  completedSets: number;
+};
+
+function buildWorkoutCompletionSummary(session: NonNullable<ReturnType<typeof useWorkoutSession>['session']>): WorkoutCompletionSummary {
+  const totalSets = session.exercises.reduce((sum, exercise) => sum + exercise.sets.length, 0);
+  const completedSets = session.exercises.reduce(
+    (sum, exercise) => sum + exercise.sets.filter((set) => set.completed).length,
+    0
+  );
+
+  return {
+    totalExercises: session.exercises.length,
+    totalSets,
+    completedSets,
+  };
 }
 
 export function WorkoutExecutionScreen() {
@@ -59,6 +80,7 @@ export function WorkoutExecutionScreen() {
   const [activeReps, setActiveReps] = useState('0');
   const [activeWeight, setActiveWeight] = useState('0');
   const [aiComment, setAiComment] = useState('');
+  const [completionSummary, setCompletionSummary] = useState<WorkoutCompletionSummary | null>(null);
   const sessionRunKey = session
     ? `${session.sourceSessionId ?? session.id}:${session.startTime.getTime()}`
     : null;
@@ -94,6 +116,7 @@ export function WorkoutExecutionScreen() {
     setSessionElapsedSeconds(0);
     setExerciseElapsedSeconds(0);
     setSetStripExpanded(false);
+    setCompletionSummary(null);
   }, [sessionRunKey]);
 
   const isExerciseFinished = nextPendingSetIndex === -1;
@@ -117,7 +140,13 @@ export function WorkoutExecutionScreen() {
         const didFinish = await finishWorkout();
 
         if (didFinish) {
-          router.replace('/(tabs)');
+          const completedSession = session;
+
+          if (!completedSession) {
+            return;
+          }
+
+          setCompletionSummary(buildWorkoutCompletionSummary(completedSession));
         }
       } else {
         nextExercise();
@@ -246,6 +275,17 @@ export function WorkoutExecutionScreen() {
           isBusy={isFinishing}
           restActive={restActive}
           onNextAction={handlePrimaryAction}
+        />
+
+        <WorkoutCompletionModal
+          visible={completionSummary !== null}
+          completedSets={completionSummary?.completedSets ?? 0}
+          totalSets={completionSummary?.totalSets ?? 0}
+          totalExercises={completionSummary?.totalExercises ?? 0}
+          onContinue={() => {
+            setCompletionSummary(null);
+            router.replace('/(tabs)');
+          }}
         />
       </AppBackground>
     </SafeAreaView>

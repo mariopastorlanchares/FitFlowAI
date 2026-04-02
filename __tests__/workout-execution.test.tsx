@@ -72,6 +72,11 @@ jest.mock('react-i18next', () => ({
         'workout.ai.feedbackSubmit': 'Send to AI',
         'workout.finish.saveError':
           'We could not save this completed workout. Try again before leaving the screen.',
+        'workout.finish.successBadge': 'Workout completed',
+        'workout.finish.successTitle': 'Strong finish',
+        'workout.finish.successBody': 'Your session is closed and saved.',
+        'workout.finish.successMotivation': 'Your history is updated. Keep the streak alive.',
+        'workout.finish.successContinue': 'Back to Home',
         'workout.controls.logSet': 'Save set',
         'workout.controls.saveChanges': 'Save changes',
         'workout.controls.nextExercise': 'Next exercise',
@@ -140,6 +145,14 @@ jest.mock('react-i18next', () => ({
 
       if (key === 'workout.setStrip.summary') {
         return `${options?.completed}/${options?.total} completed`;
+      }
+
+      if (key === 'workout.finish.successStatsSets') {
+        return `${options?.completed}/${options?.total} sets`;
+      }
+
+      if (key === 'workout.finish.successStatsExercises') {
+        return `${options?.count} exercises`;
       }
 
       return translations[key] ?? key;
@@ -475,6 +488,13 @@ describe('WorkoutExecutionScreen', () => {
 
   it('finishes the workout when the last exercise has no pending sets', async () => {
     const baseState = buildHookState();
+    const completedFirstExercise = {
+      ...baseState.session.exercises[0],
+      sets: baseState.session.exercises[0].sets.map((set) => ({
+        ...set,
+        completed: true,
+      })),
+    };
     const finishedExercise = {
       ...baseState.session.exercises[1],
       sets: [
@@ -493,7 +513,7 @@ describe('WorkoutExecutionScreen', () => {
       session: {
         ...baseState.session,
         currentExerciseIndex: 1,
-        exercises: [baseState.session.exercises[0], finishedExercise],
+        exercises: [completedFirstExercise, finishedExercise],
       },
       currentExercise: finishedExercise,
       currentBlock: baseState.session.displayBlocks[0],
@@ -515,8 +535,15 @@ describe('WorkoutExecutionScreen', () => {
 
     expect(hookState.finishWorkout).toHaveBeenCalled();
     await waitFor(() => {
-      expect(mockReplace).toHaveBeenCalledWith('/(tabs)');
+      expect(getByText('Strong finish')).toBeTruthy();
     });
+    expect(getByText('3/3 sets')).toBeTruthy();
+    expect(getByText('2 exercises')).toBeTruthy();
+    expect(mockReplace).not.toHaveBeenCalled();
+
+    fireEvent.press(getByText('Back to Home'));
+
+    expect(mockReplace).toHaveBeenCalledWith('/(tabs)');
   });
 
   it('shows a visible loading state while the workout session is being prepared', () => {
