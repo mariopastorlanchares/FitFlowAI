@@ -48,6 +48,8 @@ export function ConfirmModal({
 
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
+                            accessibilityRole="button"
+                            accessibilityLabel={cancelText}
                             style={[styles.button, styles.cancelButton]}
                             onPress={onCancel}
                             activeOpacity={0.7}
@@ -56,6 +58,8 @@ export function ConfirmModal({
                         </TouchableOpacity>
 
                         <TouchableOpacity
+                            accessibilityRole="button"
+                            accessibilityLabel={confirmText}
                             style={[styles.button, isDestructive ? styles.destructiveButton : styles.confirmButton]}
                             onPress={onConfirm}
                             activeOpacity={0.7}

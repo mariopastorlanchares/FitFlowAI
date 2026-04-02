@@ -1,19 +1,14 @@
-import React from 'react';
 import { Text, View } from 'react-native';
 
 import { fonts, palette } from '@shared/constants/theme';
 
-interface AuthStatusBannerProps {
+interface StatusBannerProps {
   kind: 'error' | 'success';
   body: string;
   title?: string;
 }
 
-export function AuthStatusBanner({
-  kind,
-  body,
-  title,
-}: AuthStatusBannerProps) {
+export function StatusBanner({ kind, body, title }: StatusBannerProps) {
   const isSuccess = kind === 'success';
 
   return (

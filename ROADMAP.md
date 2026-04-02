@@ -205,3 +205,18 @@
 <p align="center">
   <sub>Segregación de UI generada completada el 28 de marzo de 2026: `P2-01 Ola C` cerrada con un store Zustand de `workoutIntent`. El Dashboard dejó atrás los mocks para renderizar el contexto real de generación, y la pantalla de workout consume ese intent para alimentar a Genkit.</sub>
 </p>
+<p align="center">
+  <sub>Accesibilidad y feedback de auth iniciados el 1 de abril de 2026: `shared/ui` y `auth` ya exponen estados `disabled/busy`, el toggle de contraseña anuncia su acción y Apple/Google quedan deshabilitados con feedback honesto hasta conectar Sign-In real.</sub>
+</p>
+<p align="center">
+  <sub>Accesibilidad operativa ampliada el 2 de abril de 2026: `dashboard` y `workout` endurecen CTAs y estados críticos; Home ya anuncia mejor el contexto de la sesión y Workout expone feedback accesible según `rest`, edición y progreso real.</sub>
+</p>
+<p align="center">
+  <sub>Accesibilidad de Profile ampliada el 2 de abril de 2026: `retry`, `save` y `logout` endurecen estados `disabled/busy`, y los errores operativos pasan a feedback inline coherente en vez de `Alert` puntual.</sub>
+</p>
+<p align="center">
+  <sub>Hardening runtime aplicado el 2 de abril de 2026: la navegación ya espera la hidratación inicial de Firebase Auth en arranque nativo y la validación del generador tolera opcionales `null` serializados por la callable para evitar falsos fallbacks a preview en `workout`.</sub>
+</p>
+<p align="center">
+  <sub>Workout afinado el 2 de abril de 2026 tras prueba manual: la pantalla enseña loading explícito al resolver la sesión y compacta la zona inferior eliminando helper visible y parte del aire muerto para recuperar altura útil.</sub>
+</p>

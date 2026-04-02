@@ -33,6 +33,18 @@ export function SetProgressStrip({
   const selectedSet = sets[selectedSetIndex];
   const flowSetNumber = nextPendingSetIndex !== -1 ? nextPendingSetIndex + 1 : sets.length;
 
+  const getStatusLabel = (set: ExerciseSet, index: number) => {
+    if (index === selectedSetIndex && isEditingSet) {
+      return t('workout.setStrip.editing');
+    }
+
+    if (index === nextPendingSetIndex) {
+      return t('workout.setStrip.current');
+    }
+
+    return set.completed ? t('workout.setStrip.completed') : t('workout.setStrip.pending');
+  };
+
   const getChipStyle = (set: ExerciseSet, index: number) => {
     const isSelected = index === selectedSetIndex;
     const isCurrent = index === nextPendingSetIndex;
@@ -96,7 +108,12 @@ export function SetProgressStrip({
             </Text>
           </View>
 
-          <TouchableOpacity style={styles.reviewAction} onPress={onToggleExpanded}>
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel={t('workout.setStrip.expand')}
+            onPress={onToggleExpanded}
+            style={styles.reviewAction}
+          >
             <Text style={styles.reviewActionText}>{t('workout.setStrip.expand')}</Text>
           </TouchableOpacity>
         </View>
@@ -110,7 +127,12 @@ export function SetProgressStrip({
               </Text>
             </View>
 
-            <TouchableOpacity style={styles.toggleButton} onPress={onToggleExpanded}>
+            <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel={t('workout.setStrip.collapse')}
+              onPress={onToggleExpanded}
+              style={styles.toggleButton}
+            >
               <Text style={styles.toggleButtonText}>{t('workout.setStrip.collapse')}</Text>
             </TouchableOpacity>
           </View>
@@ -120,10 +142,20 @@ export function SetProgressStrip({
               const chipStyle = getChipStyle(set, index);
               const isFuturePending =
                 nextPendingSetIndex !== -1 && index > nextPendingSetIndex && !set.completed;
+              const statusLabel = getStatusLabel(set, index);
 
               return (
                 <Pressable
                   key={set.id}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${t('workout.activeSet.progress', {
+                    current: index + 1,
+                    total: sets.length,
+                  })} ${statusLabel}`}
+                  accessibilityState={{
+                    disabled: isFuturePending,
+                    selected: index === selectedSetIndex,
+                  }}
                   style={[
                     styles.chip,
                     {
@@ -140,13 +172,7 @@ export function SetProgressStrip({
                     {index + 1}
                   </Text>
                   <Text style={[styles.chipStatus, { color: chipStyle.textColor }]}>
-                    {index === selectedSetIndex && isEditingSet
-                      ? t('workout.setStrip.editing')
-                      : index === nextPendingSetIndex
-                        ? t('workout.setStrip.current')
-                        : set.completed
-                          ? t('workout.setStrip.completed')
-                          : t('workout.setStrip.pending')}
+                    {statusLabel}
                   </Text>
                 </Pressable>
               );
@@ -154,11 +180,19 @@ export function SetProgressStrip({
           </View>
 
           <View style={styles.actionsRow}>
-            <TouchableOpacity style={styles.secondaryAction} onPress={onAddSet}>
+            <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel={t('workout.setStrip.add')}
+              onPress={onAddSet}
+              style={styles.secondaryAction}
+            >
               <Text style={styles.secondaryActionText}>{t('workout.setStrip.add')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel={t('workout.setStrip.removeLast')}
+              accessibilityState={{ disabled: sets.length <= 1 }}
               style={[styles.secondaryAction, sets.length <= 1 && styles.secondaryActionDisabled]}
               onPress={onRemoveLastSet}
               disabled={sets.length <= 1}

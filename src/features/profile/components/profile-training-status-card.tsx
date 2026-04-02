@@ -131,6 +131,7 @@ export function ProfileTrainingStatusCard({
         <View style={styles.retryContainer}>
           <PrimaryButton
             label={isRetrying ? t('common.loading') : t('profile.training.actions.retry')}
+            accessibilityHint={t('profile.training.errorBody')}
             onPress={onRetry}
             isLoading={isRetrying}
           />

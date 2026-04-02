@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ActiveSetLogger } from '../components/execution/active-set-logger';
@@ -131,7 +131,17 @@ export function WorkoutExecutionScreen() {
   };
 
   if (isLoading || !currentExercise || !session || !selectedSet) {
-    return <View style={styles.container} />;
+    return (
+      <SafeAreaView style={styles.container}>
+        <AppBackground>
+          <View style={styles.loadingState}>
+            <ActivityIndicator size="large" color={palette.primary} />
+            <Text style={styles.loadingTitle}>{t('workout.loading.title')}</Text>
+            <Text style={styles.loadingBody}>{t('workout.loading.body')}</Text>
+          </View>
+        </AppBackground>
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -235,7 +245,24 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 8,
-    paddingBottom: 32,
+    paddingBottom: 16,
+  },
+  loadingState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+    gap: 12,
+  },
+  loadingTitle: {
+    ...typography.h3,
+    color: palette.textPrimary,
+    textAlign: 'center',
+  },
+  loadingBody: {
+    ...typography.body,
+    color: palette.textSecondary,
+    textAlign: 'center',
   },
   timerSection: {
     width: '100%',

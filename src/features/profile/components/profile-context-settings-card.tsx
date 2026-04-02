@@ -83,6 +83,8 @@ export function ProfileContextSettingsCard({
                   <Pressable
                     key={`${location}-${capabilityId}`}
                     accessibilityRole="button"
+                    accessibilityLabel={t(`profile.contexts.capabilityOptions.${capabilityId}`)}
+                    accessibilityState={{ selected: isSelected }}
                     onPress={() => onToggleCapability(location, capabilityId)}
                     style={[styles.chip, isSelected && styles.chipSelected]}
                   >
@@ -101,6 +103,9 @@ export function ProfileContextSettingsCard({
         <Text style={styles.futureNote}>{t('profile.contexts.futureNote')}</Text>
         <PrimaryButton
           label={t('profile.contexts.save')}
+          accessibilityHint={
+            isDirty ? t('profile.contexts.saveHint') : t('profile.contexts.saveDisabledHint')
+          }
           onPress={onSave}
           isLoading={isSaving}
           disabled={!isDirty}

@@ -3,10 +3,15 @@ import React from 'react';
 
 import ProfileScreen from '../app/(tabs)/profile';
 
+const mockSignOut = jest.fn();
 const createUserProfileMock = jest.fn();
 const updateUserProfilePreferencesMock = jest.fn();
 const updateHomeEquipmentMock = jest.fn();
 const updateContextProfileMock = jest.fn();
+
+jest.mock('expo-blur', () => ({
+  BlurView: 'BlurView',
+}));
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -17,6 +22,12 @@ jest.mock('react-i18next', () => ({
         'profile.title': 'My Profile',
         'profile.noEmail': 'No email associated',
         'profile.logout': 'Sign Out',
+        'profile.logoutHint': 'Open the confirmation dialog to sign out from this device.',
+        'profile.logoutConfirmTitle': 'Sign Out',
+        'profile.logoutConfirmMessage': 'Are you sure you want to sign out?',
+        'profile.logoutCancel': 'Cancel',
+        'profile.logoutConfirm': 'Yes, sign out',
+        'profile.logoutError': 'Could not sign out.',
         'profile.sections.training': 'Training profile',
         'profile.sections.account': 'Account',
         'profile.sections.preferences': 'Preferences',
@@ -49,6 +60,10 @@ jest.mock('react-i18next', () => ({
         'profile.operational.description':
           'Adjust the training baseline before we wire context capture and AI generation to real constraints.',
         'profile.operational.save': 'Save profile',
+        'profile.operational.saveHint':
+          'Save the current training preferences and home equipment.',
+        'profile.operational.saveDisabledHint':
+          'There are no profile changes to save yet.',
         'profile.operational.saveError': 'We could not save your operational profile.',
         'profile.operational.preferredLocationsHelper':
           'These locations shape defaults and shortcuts in product, but they do not block other contexts.',
@@ -71,6 +86,10 @@ jest.mock('react-i18next', () => ({
         'profile.contexts.description':
           'Start from a broad template for each context and remove whatever your usual park or gym does not actually have.',
         'profile.contexts.save': 'Save contexts',
+        'profile.contexts.saveHint':
+          'Save the current park and gym capability configuration.',
+        'profile.contexts.saveDisabledHint':
+          'There are no external context changes to save yet.',
         'profile.contexts.saveError': 'We could not save your external contexts.',
         'profile.contexts.futureNote':
           'Street stays visible as a future context, but this V1 editor only closes park and gym.',
@@ -131,7 +150,7 @@ jest.mock('@features/auth/hooks/use-auth', () => ({
       uid: 'user-123',
       email: 'test@example.com',
     },
-    signOut: jest.fn(),
+    signOut: mockSignOut,
   }),
 }));
 
@@ -180,6 +199,7 @@ function buildHookValue(overrides?: Record<string, unknown>) {
 
 describe('ProfileScreen', () => {
   beforeEach(() => {
+    mockSignOut.mockReset();
     createUserProfileMock.mockReset();
     updateUserProfilePreferencesMock.mockReset();
     updateHomeEquipmentMock.mockReset();
@@ -190,7 +210,7 @@ describe('ProfileScreen', () => {
   it('renders the Firestore profile summary when the user profile exists', () => {
     useUserProfileMock.mockReturnValue(buildHookValue());
 
-    const { getAllByText, getByText } = render(<ProfileScreen />);
+    const { getAllByText, getByLabelText, getByText } = render(<ProfileScreen />);
 
     expect(getByText('My Profile')).toBeTruthy();
     expect(getByText('test@example.com')).toBeTruthy();
@@ -203,6 +223,15 @@ describe('ProfileScreen', () => {
     expect(getByText('Training setup you can actually use')).toBeTruthy();
     expect(getByText('Trim each place to what is really available')).toBeTruthy();
     expect(getByText('2 items in home setup')).toBeTruthy();
+    expect(getByLabelText('Save profile').props.accessibilityState).toMatchObject({
+      disabled: true,
+    });
+    expect(getByLabelText('Save contexts').props.accessibilityState).toMatchObject({
+      disabled: true,
+    });
+    expect(getByLabelText('Sign Out').props.accessibilityHint).toBe(
+      'Open the confirmation dialog to sign out from this device.'
+    );
     expect(createUserProfileMock).not.toHaveBeenCalled();
   });
 
@@ -226,12 +255,20 @@ describe('ProfileScreen', () => {
       })
     );
 
-    const { getAllByText, getByText } = render(<ProfileScreen />);
+    const { getAllByText, getByLabelText, getByText } = render(<ProfileScreen />);
+
+    expect(getByLabelText('Save profile').props.accessibilityState).toMatchObject({
+      disabled: true,
+    });
 
     fireEvent.press(getAllByText('Advanced')[0]);
     fireEvent.press(getAllByText('Street')[0]);
     fireEvent.press(getAllByText('Street')[1]);
     fireEvent.press(getAllByText('Bands')[0]);
+
+    expect(getByLabelText('Save profile').props.accessibilityState).toMatchObject({
+      disabled: false,
+    });
     fireEvent.press(getByText('Save profile'));
 
     await waitFor(() => {
@@ -295,6 +332,39 @@ describe('ProfileScreen', () => {
     expect(updateContextProfileMock).toHaveBeenCalledTimes(2);
   });
 
+  it('surfaces a consistent inline error when saving the operational profile fails', async () => {
+    updateUserProfilePreferencesMock.mockRejectedValue(new Error('boom'));
+    updateHomeEquipmentMock.mockResolvedValue(undefined);
+    useUserProfileMock.mockReturnValue(buildHookValue());
+
+    const { getAllByText, getByText, findByText } = render(<ProfileScreen />);
+
+    fireEvent.press(getAllByText('Advanced')[0]);
+    fireEvent.press(getByText('Save profile'));
+
+    expect(
+      await findByText('We could not save your operational profile.')
+    ).toBeTruthy();
+  });
+
+  it('shows retry as busy when bootstrap recovery is already in progress', () => {
+    useUserProfileMock.mockReturnValue(
+      buildHookValue({
+        userProfile: null,
+        error: new Error('missing'),
+        isCreatingProfile: true,
+      })
+    );
+
+    const { getByLabelText, getByText } = render(<ProfileScreen />);
+
+    expect(getByText('Profile setup needs attention')).toBeTruthy();
+    expect(getByLabelText('Loading...').props.accessibilityState).toMatchObject({
+      disabled: true,
+      busy: true,
+    });
+  });
+
   it('bootstraps the Firestore profile when the document does not exist yet', async () => {
     createUserProfileMock.mockResolvedValue(undefined);
 
@@ -317,5 +387,32 @@ describe('ProfileScreen', () => {
         contextProfiles: {},
       });
     });
+  });
+
+  it('disables logout while sign-out is pending and shows inline feedback on failure', async () => {
+    let mockRejectSignOut: ((reason?: unknown) => void) | undefined;
+    mockSignOut.mockReturnValue(
+      new Promise((_, reject) => {
+        mockRejectSignOut = reject;
+      })
+    );
+    useUserProfileMock.mockReturnValue(buildHookValue());
+
+    const { getByLabelText, getByText, findByText } = render(<ProfileScreen />);
+
+    fireEvent.press(getByText('Sign Out'));
+    fireEvent.press(getByText('Yes, sign out'));
+
+    expect(mockSignOut).toHaveBeenCalled();
+    expect(getByLabelText('Sign Out').props.accessibilityState).toMatchObject({
+      disabled: true,
+      busy: true,
+    });
+
+    if (mockRejectSignOut) {
+      mockRejectSignOut(new Error('logout failed'));
+    }
+
+    expect(await findByText('Could not sign out.')).toBeTruthy();
   });
 });

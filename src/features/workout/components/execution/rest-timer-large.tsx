@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { effects, palette, typography } from '@shared/constants/theme';
 
@@ -45,9 +45,14 @@ export function RestTimerLarge({ timeLeft, totalTime, onSkip }: RestTimerLargePr
         />
       </View>
 
-      <TouchableOpacity style={styles.skipButton} onPress={onSkip}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('workout.rest.skip')}
+        onPress={onSkip}
+        style={({ pressed }) => [styles.skipButton, pressed ? styles.skipButtonPressed : null]}
+      >
         <Text style={styles.skipButtonText}>{t('workout.rest.skip')}</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }
@@ -104,6 +109,9 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     paddingHorizontal: 18,
     paddingVertical: 10,
+  },
+  skipButtonPressed: {
+    opacity: 0.82,
   },
   skipButtonText: {
     ...typography.body,

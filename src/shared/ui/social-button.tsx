@@ -8,6 +8,8 @@ interface SocialButtonProps {
     icon: React.ReactNode;
     label: string;
     disabled?: boolean;
+    accessibilityLabel?: string;
+    accessibilityHint?: string;
 }
 
 export function SocialButton({
@@ -16,12 +18,18 @@ export function SocialButton({
     icon,
     label,
     disabled = false,
+    accessibilityLabel,
+    accessibilityHint,
 }: SocialButtonProps) {
     const isGoogle = provider === 'google';
 
     return (
         <Pressable
             accessibilityRole="button"
+            accessibilityLabel={accessibilityLabel ?? label}
+            accessibilityHint={accessibilityHint}
+            accessibilityState={{ disabled }}
+            disabled={disabled}
             onPress={disabled ? undefined : onPress}
             style={({ pressed }) => ({
                 flex: 1,

@@ -22,6 +22,12 @@ const baseUserProfile: UserProfile = {
   updatedAt: null,
 };
 
+const baseIntent = {
+  location: 'home' as const,
+  duration: 'medium' as const,
+  energy: 'medium' as const,
+};
+
 const generatedSession: GeneratedWorkoutSession = {
   session_id: 'generated-1',
   session_type: 'generated_ephemeral',
@@ -65,9 +71,10 @@ describe('workout service runtime integration', () => {
     const session = await getWorkoutSession('1', {
       authUid: 'user-1',
       userProfile: baseUserProfile,
+      intent: baseIntent,
     });
 
-    expect(mockRequestGeneratedWorkoutSession).toHaveBeenCalledWith(baseUserProfile);
+    expect(mockRequestGeneratedWorkoutSession).toHaveBeenCalledWith(baseUserProfile, baseIntent);
     expect(session.id).toBe('generated-1');
     expect(session.source).toBe('live_generated');
     expect(session.displayBlocks[0]?.blockType).toBe('straight_sets');
@@ -80,6 +87,7 @@ describe('workout service runtime integration', () => {
     const session = await getWorkoutSession('1', {
       authUid: 'user-1',
       userProfile: baseUserProfile,
+      intent: baseIntent,
     });
 
     expect(session.id).toBe('preview-session');

@@ -45,6 +45,12 @@ jest.mock('react-i18next', () => ({
         'common.apple': 'Apple',
         'common.google': 'Google',
         'common.loading': 'Loading...',
+        'common.showPassword': 'Show password',
+        'common.hidePassword': 'Hide password',
+        'common.passwordVisibilityHint':
+          'Double tap to toggle password visibility.',
+        'common.socialAuthUnavailable':
+          'Apple and Google sign-in are not connected yet.',
         'login.title': 'FitFlow AI',
         'login.eyebrow': 'Quick access',
         'login.subtitle':
@@ -102,6 +108,17 @@ describe('Auth screens', () => {
     expect(getByText('Please enter your email and password.')).toBeTruthy();
   });
 
+  it('clears login validation feedback when the user edits the form', () => {
+    const { getByLabelText, getByText, queryByText } = render(<LoginScreen />);
+
+    fireEvent.press(getByText('Sign In'));
+    expect(getByText('Please enter your email and password.')).toBeTruthy();
+
+    fireEvent.changeText(getByLabelText('Email'), 'athlete@example.com');
+
+    expect(queryByText('Please enter your email and password.')).toBeNull();
+  });
+
   it('submits trimmed credentials from login', async () => {
     mockSignIn.mockResolvedValue(undefined);
 
@@ -116,6 +133,23 @@ describe('Auth screens', () => {
     });
   });
 
+  it('toggles the password visibility control label on login', () => {
+    const { getByLabelText, queryByLabelText } = render(<LoginScreen />);
+
+    fireEvent.press(getByLabelText('Show password'));
+
+    expect(queryByLabelText('Show password')).toBeNull();
+    expect(getByLabelText('Hide password')).toBeTruthy();
+  });
+
+  it('marks social sign-in buttons as disabled while providers are pending', () => {
+    const { getByLabelText, getByText } = render(<LoginScreen />);
+
+    expect(getByLabelText('Apple').props.accessibilityState).toMatchObject({ disabled: true });
+    expect(getByLabelText('Google').props.accessibilityState).toMatchObject({ disabled: true });
+    expect(getByText('Apple and Google sign-in are not connected yet.')).toBeTruthy();
+  });
+
   it('shows register validation feedback when passwords do not match', () => {
     const { getByLabelText, getByText } = render(<RegisterScreen />);
 
@@ -125,6 +159,20 @@ describe('Auth screens', () => {
     fireEvent.press(getByText('Sign Up'));
 
     expect(getByText('Passwords do not match.')).toBeTruthy();
+  });
+
+  it('clears register validation feedback when the user edits the form', () => {
+    const { getByLabelText, getByText, queryByText } = render(<RegisterScreen />);
+
+    fireEvent.changeText(getByLabelText('Email'), 'athlete@example.com');
+    fireEvent.changeText(getByLabelText('Password'), 'StrongPass1');
+    fireEvent.changeText(getByLabelText('Confirm password'), 'StrongPass2');
+    fireEvent.press(getByText('Sign Up'));
+    expect(getByText('Passwords do not match.')).toBeTruthy();
+
+    fireEvent.changeText(getByLabelText('Confirm password'), 'StrongPass1');
+
+    expect(queryByText('Passwords do not match.')).toBeNull();
   });
 
   it('shows the success banner after register completes', async () => {

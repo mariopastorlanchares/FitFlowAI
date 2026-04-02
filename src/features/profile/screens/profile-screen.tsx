@@ -8,7 +8,7 @@ import {
 } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAuth } from '@features/auth/hooks/use-auth';
@@ -19,6 +19,7 @@ import { ProfileOperationalSettingsCard } from '../components/profile-operationa
 import { ProfileTrainingStatusCard } from '../components/profile-training-status-card';
 import { palette } from '@shared/constants/theme';
 import { ConfirmModal } from '@shared/ui/confirm-modal';
+import { StatusBanner } from '@shared/ui/status-banner';
 import { getDefaultUserProfileInput } from '../utils/profile-defaults';
 import {
   ContextCapabilityId,
@@ -71,6 +72,8 @@ export function ProfileScreen() {
   const userEmail = user?.email || t('profile.noEmail');
 
   const [isLogoutVisible, setIsLogoutVisible] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
   const [draftExperienceLevel, setDraftExperienceLevel] = useState<ExperienceLevel>('beginner');
   const [draftPreferredLocations, setDraftPreferredLocations] = useState<TrainingLocation[]>([
     'gym',
@@ -85,6 +88,7 @@ export function ProfileScreen() {
 
   useEffect(() => {
     hasAttemptedBootstrap.current = false;
+    setActionError(null);
   }, [user?.uid]);
 
   useEffect(() => {
@@ -128,16 +132,21 @@ export function ProfileScreen() {
 
   const confirmLogout = async () => {
     setIsLogoutVisible(false);
+    setActionError(null);
+    setIsSigningOut(true);
 
     try {
       await signOut();
     } catch {
-      Alert.alert(t('common.error'), t('profile.logoutError'));
+      setActionError(t('profile.logoutError'));
+    } finally {
+      setIsSigningOut(false);
     }
   };
 
   const handleRetryProfileBootstrap = async () => {
     hasAttemptedBootstrap.current = true;
+    setActionError(null);
 
     try {
       await createUserProfile(getDefaultUserProfileInput());
@@ -156,6 +165,7 @@ export function ProfileScreen() {
   const isSavingContextProfiles = isUpdatingContextProfile;
 
   const handleTogglePreferredLocation = (location: TrainingLocation) => {
+    setActionError(null);
     setDraftPreferredLocations((current) => {
       const isSelected = current.includes(location);
 
@@ -176,6 +186,7 @@ export function ProfileScreen() {
   };
 
   const handleToggleHomeEquipment = (equipmentId: HomeEquipmentId) => {
+    setActionError(null);
     setDraftHomeEquipment((current) => {
       const nextEquipment = { ...current };
 
@@ -193,6 +204,7 @@ export function ProfileScreen() {
     location: EditableContextProfileLocation,
     capabilityId: ContextCapabilityId
   ) => {
+    setActionError(null);
     setDraftContextProfiles((current) => {
       const currentProfile = current[location];
       const isEnabled = currentProfile.enabledCapabilities.includes(capabilityId);
@@ -215,6 +227,8 @@ export function ProfileScreen() {
       return;
     }
 
+    setActionError(null);
+
     try {
       await Promise.all([
         updateUserProfilePreferences({
@@ -224,7 +238,7 @@ export function ProfileScreen() {
         updateHomeEquipment(draftHomeEquipment),
       ]);
     } catch {
-      Alert.alert(t('common.error'), t('profile.operational.saveError'));
+      setActionError(t('profile.operational.saveError'));
     }
   };
 
@@ -241,6 +255,8 @@ export function ProfileScreen() {
       return;
     }
 
+    setActionError(null);
+
     try {
       await Promise.all(
         dirtyLocations.map((location) =>
@@ -251,7 +267,7 @@ export function ProfileScreen() {
         )
       );
     } catch {
-      Alert.alert(t('common.error'), t('profile.contexts.saveError'));
+      setActionError(t('profile.contexts.saveError'));
     }
   };
 
@@ -268,6 +284,12 @@ export function ProfileScreen() {
           <Text style={styles.title}>{t('profile.title')}</Text>
           <Text style={styles.emailText}>{userEmail}</Text>
         </View>
+
+        {actionError ? (
+          <View style={styles.feedbackSection}>
+            <StatusBanner kind="error" title={t('common.error')} body={actionError} />
+          </View>
+        ) : null}
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('profile.sections.training')}</Text>
@@ -288,9 +310,15 @@ export function ProfileScreen() {
               draftDefaultLocation={draftDefaultLocation}
               draftHomeEquipment={draftHomeEquipment}
               isSaving={isSavingOperationalProfile}
-              onSelectExperienceLevel={setDraftExperienceLevel}
+              onSelectExperienceLevel={(value) => {
+                setActionError(null);
+                setDraftExperienceLevel(value);
+              }}
               onTogglePreferredLocation={handleTogglePreferredLocation}
-              onSelectDefaultLocation={setDraftDefaultLocation}
+              onSelectDefaultLocation={(value) => {
+                setActionError(null);
+                setDraftDefaultLocation(value);
+              }}
               onToggleHomeEquipment={handleToggleHomeEquipment}
               onSave={handleSaveOperationalProfile}
             />
@@ -350,10 +378,28 @@ export function ProfileScreen() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.logoutButton} onPress={() => setIsLogoutVisible(true)}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('profile.logout')}
+          accessibilityHint={t('profile.logoutHint')}
+          accessibilityState={{ disabled: isSigningOut, busy: isSigningOut }}
+          disabled={isSigningOut}
+          style={({ pressed }) => [
+            styles.logoutButton,
+            isSigningOut ? styles.logoutButtonBusy : null,
+            pressed && !isSigningOut ? styles.logoutButtonPressed : null,
+          ]}
+          onPress={() => {
+            setActionError(null);
+            setIsLogoutVisible(true);
+          }}
+        >
           <LogOut size={20} color={palette.danger} />
-          <Text style={styles.logoutText}>{t('profile.logout')}</Text>
-        </TouchableOpacity>
+          <Text style={styles.logoutText}>
+            {isSigningOut ? t('common.loading') : t('profile.logout')}
+          </Text>
+          {isSigningOut ? <ActivityIndicator color={palette.danger} size="small" /> : null}
+        </Pressable>
 
         <View style={styles.bottomSpacer} />
       </ScrollView>
@@ -408,6 +454,9 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: 24,
   },
+  feedbackSection: {
+    marginBottom: 24,
+  },
   sectionTitle: {
     color: palette.textSecondary,
     fontFamily: 'Inter_600SemiBold',
@@ -435,6 +484,12 @@ const styles = StyleSheet.create({
     marginTop: 8,
     borderWidth: 1,
     borderColor: palette.border,
+  },
+  logoutButtonBusy: {
+    opacity: 0.72,
+  },
+  logoutButtonPressed: {
+    opacity: 0.88,
   },
   logoutText: {
     color: palette.danger,

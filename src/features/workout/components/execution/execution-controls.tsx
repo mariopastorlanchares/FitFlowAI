@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { effects, palette, typography } from '@shared/constants/theme';
 
@@ -27,12 +27,28 @@ export function ExecutionControls({
       : isExerciseFinished
         ? t('workout.controls.nextExercise')
         : t('workout.controls.logSet');
+  const helperText = isEditingSet
+    ? t('workout.controls.helperEditing')
+    : isExerciseFinished
+      ? t('workout.controls.helperFinished')
+      : restActive
+        ? t('workout.controls.helperRest')
+        : t('workout.controls.helperReady');
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.primaryButton} onPress={onNextAction}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={primaryActionText}
+        accessibilityHint={helperText}
+        onPress={onNextAction}
+        style={({ pressed }) => [
+          styles.primaryButton,
+          pressed ? styles.primaryButtonPressed : null,
+        ]}
+      >
         <Text style={styles.primaryButtonText}>{primaryActionText}</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }
@@ -40,9 +56,9 @@ export function ExecutionControls({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingHorizontal: 20,
-    paddingBottom: 18,
-    paddingTop: 8,
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    paddingTop: 6,
     backgroundColor: palette.surfaceInset,
     borderTopWidth: 1,
     borderTopColor: palette.borderSubtle,
@@ -51,9 +67,12 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 18,
     backgroundColor: palette.primary,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
     boxShadow: effects.primaryButton,
+  },
+  primaryButtonPressed: {
+    opacity: 0.92,
   },
   primaryButtonText: {
     ...typography.button,

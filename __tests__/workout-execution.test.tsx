@@ -74,6 +74,9 @@ jest.mock('react-i18next', () => ({
         'workout.controls.saveChanges': 'Save changes',
         'workout.controls.nextExercise': 'Next exercise',
         'workout.controls.finish': 'Finish workout',
+        'workout.loading.title': 'Preparing your session',
+        'workout.loading.body':
+          'We are generating the workout and loading the execution flow.',
         'workout.controls.helperReady': 'Save the current set when you finish it.',
         'workout.controls.helperEditing':
           'You are editing a previous set. Saving changes will not trigger rest.',
@@ -349,7 +352,9 @@ describe('WorkoutExecutionScreen', () => {
   it('renders operational header timers and main workout blocks in the right order', () => {
     (useWorkoutSession as jest.Mock).mockReturnValue(buildHookState());
 
-    const { getAllByText, getByText, queryByText } = render(<WorkoutExecutionScreen />);
+    const { getAllByText, getByLabelText, getByText, queryByText } = render(
+      <WorkoutExecutionScreen />
+    );
 
     expect(getByText('Exercise 1 of 2')).toBeTruthy();
     expect(getByText('Live AI')).toBeTruthy();
@@ -367,6 +372,12 @@ describe('WorkoutExecutionScreen', () => {
     expect(getByText('Log this set')).toBeTruthy();
     expect(getByText('REST TIMER')).toBeTruthy();
     expect(getByText('AI support')).toBeTruthy();
+    expect(getByLabelText('Save set').props.accessibilityHint).toBe(
+      'Rest is running, but you can prepare the next set now.'
+    );
+    expect(getByLabelText('Send to AI').props.accessibilityState).toMatchObject({
+      disabled: true,
+    });
     expect(queryByText('Add set')).toBeNull();
     expect(queryByText('Remove last')).toBeNull();
   });
@@ -403,12 +414,21 @@ describe('WorkoutExecutionScreen', () => {
     const hookState = buildHookState();
     (useWorkoutSession as jest.Mock).mockReturnValue(hookState);
 
-    const { getByPlaceholderText, getByText } = render(<WorkoutExecutionScreen />);
+    const { getByLabelText, getByPlaceholderText, getByText } = render(
+      <WorkoutExecutionScreen />
+    );
+
+    expect(getByLabelText('Send to AI').props.accessibilityState).toMatchObject({
+      disabled: true,
+    });
 
     fireEvent.changeText(
       getByPlaceholderText('Tell the AI if something feels off, unstable or unavailable.'),
       'Reduce load, left knee feels unstable.'
     );
+    expect(getByLabelText('Send to AI').props.accessibilityState).toMatchObject({
+      disabled: false,
+    });
     fireEvent.press(getByText('Send to AI'));
 
     expect(hookState.sendAIFeedback).toHaveBeenCalledWith(
@@ -434,10 +454,13 @@ describe('WorkoutExecutionScreen', () => {
 
     (useWorkoutSession as jest.Mock).mockReturnValue(hookState);
 
-    const { getByText } = render(<WorkoutExecutionScreen />);
+    const { getByLabelText, getByText } = render(<WorkoutExecutionScreen />);
 
     expect(getByText('Edit set 2')).toBeTruthy();
     expect(getByText('You are correcting a completed set.')).toBeTruthy();
+    expect(getByLabelText('Save changes').props.accessibilityHint).toBe(
+      'You are editing a previous set. Saving changes will not trigger rest.'
+    );
 
     fireEvent.press(getByText('Save changes'));
 
@@ -488,5 +511,21 @@ describe('WorkoutExecutionScreen', () => {
 
     expect(hookState.finishWorkout).toHaveBeenCalled();
     expect(mockReplace).toHaveBeenCalledWith('/(tabs)');
+  });
+
+  it('shows a visible loading state while the workout session is being prepared', () => {
+    (useWorkoutSession as jest.Mock).mockReturnValue(
+      buildHookState({
+        isLoading: true,
+      })
+    );
+
+    const { getByText, queryByText } = render(<WorkoutExecutionScreen />);
+
+    expect(getByText('Preparing your session')).toBeTruthy();
+    expect(
+      getByText('We are generating the workout and loading the execution flow.')
+    ).toBeTruthy();
+    expect(queryByText('Save set')).toBeNull();
   });
 });

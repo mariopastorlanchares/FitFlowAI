@@ -8,6 +8,8 @@ interface PrimaryButtonProps {
     onPress: () => void;
     isLoading?: boolean;
     disabled?: boolean;
+    accessibilityLabel?: string;
+    accessibilityHint?: string;
 }
 
 export function PrimaryButton({
@@ -15,12 +17,18 @@ export function PrimaryButton({
     onPress,
     isLoading = false,
     disabled = false,
+    accessibilityLabel,
+    accessibilityHint,
 }: PrimaryButtonProps) {
     const isDisabled = isLoading || disabled;
 
     return (
         <Pressable
             accessibilityRole="button"
+            accessibilityLabel={accessibilityLabel ?? label}
+            accessibilityHint={accessibilityHint}
+            accessibilityState={{ disabled: isDisabled, busy: isLoading }}
+            disabled={isDisabled}
             onPress={isDisabled ? undefined : onPress}
             style={({ pressed }) => ({
                 borderRadius: 20,

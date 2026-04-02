@@ -5,11 +5,18 @@ import {
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
 } from 'firebase/auth';
+import { auth } from '@shared/lib/firebase';
 
-import { onAuthChange, signIn, signOut, signUp } from '@features/auth/services/auth-service';
+import {
+  onAuthChange,
+  signIn,
+  signOut,
+  signUp,
+  waitForInitialAuthState,
+} from '@features/auth/services/auth-service';
 
 jest.mock('@shared/lib/firebase', () => ({
-  auth: { appName: 'test-auth' },
+  auth: { appName: 'test-auth', authStateReady: jest.fn(), currentUser: null },
 }));
 
 jest.mock('firebase/auth', () => ({
@@ -23,13 +30,14 @@ jest.mock('firebase/auth', () => ({
 describe('auth-service', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (auth as { currentUser: unknown }).currentUser = null;
   });
 
   it('delegates sign in to Firebase Auth', async () => {
     await signIn('coach@fitflow.ai', 'Secret123');
 
     expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
-      { appName: 'test-auth' },
+      auth,
       'coach@fitflow.ai',
       'Secret123'
     );
@@ -43,7 +51,7 @@ describe('auth-service', () => {
     await signUp('coach@fitflow.ai', 'Secret123');
 
     expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
-      { appName: 'test-auth' },
+      auth,
       'coach@fitflow.ai',
       'Secret123'
     );
@@ -55,12 +63,20 @@ describe('auth-service', () => {
 
     onAuthChange(callback);
 
-    expect(onAuthStateChanged).toHaveBeenCalledWith({ appName: 'test-auth' }, callback);
+    expect(onAuthStateChanged).toHaveBeenCalledWith(auth, callback);
+  });
+
+  it('waits for the initial Firebase auth hydration before reading currentUser', async () => {
+    (auth.authStateReady as jest.Mock).mockResolvedValue(undefined);
+    (auth as { currentUser: unknown }).currentUser = { uid: 'abc123' };
+
+    await expect(waitForInitialAuthState()).resolves.toEqual({ uid: 'abc123' });
+    expect(auth.authStateReady).toHaveBeenCalled();
   });
 
   it('delegates sign out to Firebase Auth', async () => {
     await signOut();
 
-    expect(firebaseSignOut).toHaveBeenCalledWith({ appName: 'test-auth' });
+    expect(firebaseSignOut).toHaveBeenCalledWith(auth);
   });
 });

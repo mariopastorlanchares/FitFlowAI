@@ -11,16 +11,17 @@ export function TodayWorkoutCard() {
   const { t } = useTranslation();
   const router = useRouter();
   const { location, duration, energy } = useWorkoutIntent();
+  const locationLabel = t(`dashboard.context.locationOptions.${location}`);
+  const durationLabel = t(`dashboard.context.durationOptions.${duration}`);
+  const energyLabel = t(`dashboard.context.energyOptions.${energy}`);
+  const workoutTitle = t('dashboard.card.title', { location: locationLabel });
+  const accessibilityHint = `${t('dashboard.card.summary')} ${durationLabel}. ${energyLabel}.`;
 
   return (
     <View style={styles.card}>
       <View style={styles.titleBlock}>
         <Text style={styles.kicker}>{t('dashboard.today_workout')}</Text>
-        <Text style={styles.title}>
-          {t('dashboard.card.title', { 
-            location: t(`dashboard.context.locationOptions.${location}`) 
-          })}
-        </Text>
+        <Text style={styles.title}>{workoutTitle}</Text>
         <Text style={styles.description}>{t('dashboard.card.description')}</Text>
       </View>
 
@@ -30,21 +31,19 @@ export function TodayWorkoutCard() {
         <View style={styles.metaCard}>
           <Feather name="clock" size={16} color={palette.primaryLight} />
           <Text style={styles.metaLabel}>{t('dashboard.time')}</Text>
-          <Text style={styles.metaValue}>
-            {t(`dashboard.context.durationOptions.${duration}`)}
-          </Text>
+          <Text style={styles.metaValue}>{durationLabel}</Text>
         </View>
         <View style={styles.metaCard}>
           <Feather name="target" size={16} color={palette.primaryLight} />
           <Text style={styles.metaLabel}>{t('dashboard.focus')}</Text>
-          <Text style={styles.metaValue}>
-            {t(`dashboard.context.energyOptions.${energy}`)}
-          </Text>
+          <Text style={styles.metaValue}>{energyLabel}</Text>
         </View>
       </View>
 
       <PrimaryButton
         label={t('dashboard.start_workout')}
+        accessibilityLabel={`${t('dashboard.start_workout')}. ${workoutTitle}.`}
+        accessibilityHint={accessibilityHint}
         onPress={() => router.push('/workout')}
       />
     </View>

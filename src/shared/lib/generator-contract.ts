@@ -83,6 +83,90 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+function nullToUndefined<T>(value: T | null | undefined): T | undefined {
+  return value === null ? undefined : value;
+}
+
+function normalizeGeneratedExerciseEntryTransport(value: unknown): unknown {
+  if (!isRecord(value)) {
+    return value;
+  }
+
+  const prescription = isRecord(value.prescription)
+    ? {
+        ...value.prescription,
+        set_count: nullToUndefined(value.prescription.set_count as number | null | undefined),
+        target_reps: nullToUndefined(
+          value.prescription.target_reps as number | number[] | null | undefined
+        ),
+        intensity_value: nullToUndefined(
+          value.prescription.intensity_value as number | null | undefined
+        ),
+        tempo: nullToUndefined(value.prescription.tempo as string | null | undefined),
+      }
+    : value.prescription;
+
+  const selectionReason = isRecord(value.selection_reason)
+    ? {
+        ...value.selection_reason,
+        reason_text: nullToUndefined(
+          value.selection_reason.reason_text as string | null | undefined
+        ),
+      }
+    : value.selection_reason;
+
+  return {
+    ...value,
+    prescription,
+    selection_reason: nullToUndefined(selectionReason as Record<string, unknown> | null | undefined),
+    coach_notes: nullToUndefined(value.coach_notes as string | null | undefined),
+  };
+}
+
+function normalizeWorkoutBlockTransport(value: unknown): unknown {
+  if (!isRecord(value)) {
+    return value;
+  }
+
+  return {
+    ...value,
+    title: nullToUndefined(value.title as string | null | undefined),
+    rest_seconds_after_exercise: nullToUndefined(
+      value.rest_seconds_after_exercise as number | null | undefined
+    ),
+    rest_seconds_after_block: nullToUndefined(
+      value.rest_seconds_after_block as number | null | undefined
+    ),
+    rest_seconds_after_round: nullToUndefined(
+      value.rest_seconds_after_round as number | null | undefined
+    ),
+    rounds: nullToUndefined(value.rounds as number | null | undefined),
+    duration_seconds: nullToUndefined(value.duration_seconds as number | null | undefined),
+    interval_seconds: nullToUndefined(value.interval_seconds as number | null | undefined),
+    exercise: value.exercise
+      ? normalizeGeneratedExerciseEntryTransport(value.exercise)
+      : value.exercise,
+    exercises: Array.isArray(value.exercises)
+      ? value.exercises.map((entry) => normalizeGeneratedExerciseEntryTransport(entry))
+      : value.exercises,
+  };
+}
+
+function normalizeGeneratedWorkoutSessionTransport(value: unknown): unknown {
+  if (!isRecord(value)) {
+    return value;
+  }
+
+  return {
+    ...value,
+    summary: nullToUndefined(value.summary as string | null | undefined),
+    session_notes: nullToUndefined(value.session_notes as string | null | undefined),
+    blocks: Array.isArray(value.blocks)
+      ? value.blocks.map((block) => normalizeWorkoutBlockTransport(block))
+      : value.blocks,
+  };
+}
+
 function isNonEmptyString(value: unknown) {
   return typeof value === 'string' && value.trim().length > 0;
 }
@@ -474,51 +558,52 @@ export function validateGeneratedWorkoutSession(
   value: unknown
 ): ValidationResult<GeneratedWorkoutSession> {
   const errors: string[] = [];
+  const normalizedValue = normalizeGeneratedWorkoutSessionTransport(value);
 
-  if (!isRecord(value)) {
+  if (!isRecord(normalizedValue)) {
     return {
       success: false,
       errors: ['GeneratedWorkoutSession must be an object.'],
     };
   }
 
-  if (!isNonEmptyString(value.session_id)) {
+  if (!isNonEmptyString(normalizedValue.session_id)) {
     errors.push('session_id must be a non-empty string.');
   }
 
-  if (!isIncludedIn(value.session_type, GENERATED_SESSION_TYPES)) {
+  if (!isIncludedIn(normalizedValue.session_type, GENERATED_SESSION_TYPES)) {
     errors.push('session_type must be a supported generated session type.');
   }
 
-  if (!isIncludedIn(value.location, ['home', 'gym', 'street', 'park'] as const)) {
+  if (!isIncludedIn(normalizedValue.location, ['home', 'gym', 'street', 'park'] as const)) {
     errors.push('location must be a supported training location.');
   }
 
-  if (!isIncludedIn(value.session_goal, SESSION_GOALS)) {
+  if (!isIncludedIn(normalizedValue.session_goal, SESSION_GOALS)) {
     errors.push('session_goal must be a supported session goal.');
   }
 
-  if (!isPositiveInteger(value.estimated_duration_minutes)) {
+  if (!isPositiveInteger(normalizedValue.estimated_duration_minutes)) {
     errors.push('estimated_duration_minutes must be a positive integer.');
   }
 
-  if (!isOptionalString(value.summary)) {
+  if (!isOptionalString(normalizedValue.summary)) {
     errors.push('summary must be a string when present.');
   }
 
-  if (!isOptionalString(value.session_notes)) {
+  if (!isOptionalString(normalizedValue.session_notes)) {
     errors.push('session_notes must be a string when present.');
   }
 
-  if (!Array.isArray(value.blocks) || value.blocks.length === 0) {
+  if (!Array.isArray(normalizedValue.blocks) || normalizedValue.blocks.length === 0) {
     errors.push('blocks must be a non-empty array.');
   } else {
-    value.blocks.forEach((block, index) => {
+    normalizedValue.blocks.forEach((block, index) => {
       validateWorkoutBlock(block, errors, `blocks[${index}]`);
     });
   }
 
-  return buildValidationResult(errors, value as unknown as GeneratedWorkoutSession);
+  return buildValidationResult(errors, normalizedValue as unknown as GeneratedWorkoutSession);
 }
 
 export function isValidGeneratedWorkoutSession(value: unknown): value is GeneratedWorkoutSession {

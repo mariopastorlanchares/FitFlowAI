@@ -6,6 +6,7 @@ import {
   signIn as signInService,
   signOut as signOutService,
   signUp as signUpService,
+  waitForInitialAuthState,
 } from '../services/auth-service';
 
 interface AuthContextValue {
@@ -23,12 +24,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     const unsubscribe = onAuthChange((firebaseUser) => {
+      if (!isMounted) {
+        return;
+      }
+
       setUser(firebaseUser);
-      setIsLoading(false);
     });
 
-    return unsubscribe;
+    waitForInitialAuthState()
+      .then((initialUser) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setUser(initialUser);
+      })
+      .finally(() => {
+        if (!isMounted) {
+          return;
+        }
+
+        setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
   }, []);
 
   const value: AuthContextValue = {

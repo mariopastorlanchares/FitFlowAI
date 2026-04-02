@@ -20,6 +20,10 @@ const en = {
       apple: 'Apple',
       google: 'Google',
       loading: 'Loading...',
+      showPassword: 'Show password',
+      hidePassword: 'Hide password',
+      passwordVisibilityHint: 'Double tap to toggle password visibility.',
+      socialAuthUnavailable: 'Apple and Google sign-in are not connected yet.',
       error: 'Error',
       unexpectedError: 'An unexpected error occurred.',
     },
@@ -122,6 +126,7 @@ const en = {
       logoutCancel: 'Cancel',
       logoutConfirm: 'Yes, sign out',
       logoutError: 'Could not sign out.',
+      logoutHint: 'Open the confirmation dialog to sign out from this device.',
       sections: {
         training: 'Training profile',
         account: 'Account',
@@ -176,6 +181,8 @@ const en = {
         summary_other: '{{count}} items in home setup',
         save: 'Save profile',
         saveError: 'We could not save your operational profile.',
+        saveHint: 'Save the current training preferences and home equipment.',
+        saveDisabledHint: 'There are no profile changes to save yet.',
         preferredLocationsHelper:
           'These locations shape defaults and shortcuts in product, but they do not block other contexts.',
         defaultLocationHelper:
@@ -210,6 +217,8 @@ const en = {
         summary_other: '{{count}} contexts already customized',
         save: 'Save contexts',
         saveError: 'We could not save your external contexts.',
+        saveHint: 'Save the current park and gym capability configuration.',
+        saveDisabledHint: 'There are no external context changes to save yet.',
         futureNote:
           'Street stays visible as a future context, but this V1 editor only closes park and gym.',
         status: {
@@ -243,6 +252,10 @@ const en = {
       },
     },
     workout: {
+      loading: {
+        title: 'Preparing your session',
+        body: 'We are generating the workout and loading the execution flow.',
+      },
       header: {
         activeLabel: 'Workout in progress',
         exerciseProgress: 'Exercise {{current}} of {{total}}',
@@ -434,6 +447,12 @@ const es = {
       apple: 'Apple',
       google: 'Google',
       loading: 'Cargando...',
+      showPassword: 'Mostrar contrasena',
+      hidePassword: 'Ocultar contrasena',
+      passwordVisibilityHint:
+        'Toca dos veces para alternar la visibilidad de la contrasena.',
+      socialAuthUnavailable:
+        'El acceso con Apple y Google todavia no esta conectado.',
       error: 'Error',
       unexpectedError: 'Ocurrió un error inesperado.',
     },
@@ -624,6 +643,10 @@ const es = {
       },
     },
     workout: {
+      loading: {
+        title: 'Preparando tu sesion',
+        body: 'Estamos generando el entrenamiento y cargando el flujo de ejecucion.',
+      },
       header: {
         activeLabel: 'Entrenamiento en curso',
         exerciseProgress: 'Ejercicio {{current}} de {{total}}',
@@ -807,6 +830,12 @@ en.translation.profile.operational.contextProfilesSummary_one =
   '{{count}} saved external context. External places are configured in the block below.';
 en.translation.profile.operational.contextProfilesSummary_other =
   '{{count}} saved external contexts. External places are configured in the block below.';
+(en.translation.profile as any).logoutHint =
+  'Open the confirmation dialog to sign out from this device.';
+((en.translation.profile as any).operational as any).saveHint =
+  'Save the current training preferences and home equipment.';
+((en.translation.profile as any).operational as any).saveDisabledHint =
+  'There are no profile changes to save yet.';
 (en.translation.profile as any).contexts = {
   eyebrow: 'External contexts',
   title: 'Trim each place to what is really available',
@@ -845,6 +874,12 @@ es.translation.profile.operational.contextProfilesSummary_one =
   '{{count}} contexto externo guardado. Los lugares externos se configuran en el bloque inferior.';
 es.translation.profile.operational.contextProfilesSummary_other =
   '{{count}} contextos externos guardados. Los lugares externos se configuran en el bloque inferior.';
+((es.translation.profile as any)).logoutHint =
+  'Abre la confirmacion para cerrar sesion en este dispositivo.';
+((es.translation.profile as any).operational as any).saveHint =
+  'Guarda las preferencias de entrenamiento y el equipamiento de casa actuales.';
+((es.translation.profile as any).operational as any).saveDisabledHint =
+  'Todavia no hay cambios de perfil para guardar.';
 (es.translation.profile as any).contexts = {
   eyebrow: 'Contextos externos',
   title: 'Recorta cada lugar a lo que de verdad tienes',
@@ -878,6 +913,15 @@ es.translation.profile.operational.contextProfilesSummary_other =
     machine_access: 'Acceso a mÃ¡quinas',
   },
 };
+
+(en.translation.profile as any).contexts.saveHint =
+  'Save the current park and gym capability configuration.';
+(en.translation.profile as any).contexts.saveDisabledHint =
+  'There are no external context changes to save yet.';
+(es.translation.profile as any).contexts.saveHint =
+  'Guarda la configuracion actual de capacidades para parque y gimnasio.';
+(es.translation.profile as any).contexts.saveDisabledHint =
+  'Todavia no hay cambios de contextos externos para guardar.';
 
 const systemLang = Localization.getLocales()[0]?.languageCode || 'es';
 const supportedLangs = ['en', 'es'];

@@ -21,6 +21,21 @@ export function LoginScreen() {
 
   const { signIn } = useAuth();
   const { t } = useTranslation();
+  const socialAuthUnavailable = t('common.socialAuthUnavailable');
+
+  const updateEmail = (value: string) => {
+    setEmail(value);
+    if (error) {
+      setError('');
+    }
+  };
+
+  const updatePassword = (value: string) => {
+    setPassword(value);
+    if (error) {
+      setError('');
+    }
+  };
 
   const handleLogin = async () => {
     const trimmedEmail = email.trim();
@@ -58,7 +73,7 @@ export function LoginScreen() {
           label={t('common.emailLabel')}
           placeholder={t('common.emailPlaceholder')}
           value={email}
-          onChangeText={setEmail}
+          onChangeText={updateEmail}
           keyboardType="email-address"
           autoComplete="email"
           textContentType="emailAddress"
@@ -70,7 +85,7 @@ export function LoginScreen() {
           label={t('common.passwordLabel')}
           placeholder={t('common.passwordPlaceholder')}
           value={password}
-          onChangeText={setPassword}
+          onChangeText={updatePassword}
           secureTextEntry
           autoComplete="password"
           textContentType="password"
@@ -99,35 +114,52 @@ export function LoginScreen() {
 
       <Divider label={t('common.orConnectWith')} />
 
-      <View style={{ flexDirection: 'row', gap: 12 }}>
-        <SocialButton
-          provider="apple"
-          label={t('common.apple')}
-          onPress={() => {}}
-          icon={
-            <MaterialCommunityIcons
-              name="apple"
-              size={20}
-              color={palette.textPrimary}
-            />
-          }
-        />
-        <SocialButton
-          provider="google"
-          label={t('common.google')}
-          onPress={() => {}}
-          icon={
-            <Text
-              style={{
-                fontSize: 18,
-                fontFamily: fonts.bold,
-                color: palette.primary,
-              }}
-            >
-              G
-            </Text>
-          }
-        />
+      <View style={{ gap: 10 }}>
+        <View style={{ flexDirection: 'row', gap: 12 }}>
+          <SocialButton
+            provider="apple"
+            label={t('common.apple')}
+            onPress={() => {}}
+            disabled
+            accessibilityHint={socialAuthUnavailable}
+            icon={
+              <MaterialCommunityIcons
+                name="apple"
+                size={20}
+                color={palette.textPrimary}
+              />
+            }
+          />
+          <SocialButton
+            provider="google"
+            label={t('common.google')}
+            onPress={() => {}}
+            disabled
+            accessibilityHint={socialAuthUnavailable}
+            icon={
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: fonts.bold,
+                  color: palette.primary,
+                }}
+              >
+                G
+              </Text>
+            }
+          />
+        </View>
+        <Text
+          style={{
+            color: palette.textSecondary,
+            fontFamily: fonts.regular,
+            fontSize: 13,
+            lineHeight: 18,
+            textAlign: 'center',
+          }}
+        >
+          {socialAuthUnavailable}
+        </Text>
       </View>
     </AuthShell>
   );

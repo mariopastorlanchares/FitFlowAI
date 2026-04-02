@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { fonts, palette } from '@shared/constants/theme';
 
@@ -37,6 +38,7 @@ export function FormInput({
     autoFocus = false,
     onSubmitEditing,
 }: FormInputProps) {
+    const { t } = useTranslation();
     const [hidden, setHidden] = useState(secureTextEntry);
     const [isFocused, setIsFocused] = useState(false);
 
@@ -98,7 +100,15 @@ export function FormInput({
                     onBlur={() => setIsFocused(false)}
                 />
                 {secureTextEntry && (
-                    <Pressable onPress={() => setHidden((h) => !h)} hitSlop={8}>
+                    <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={
+                            hidden ? t('common.showPassword') : t('common.hidePassword')
+                        }
+                        accessibilityHint={t('common.passwordVisibilityHint')}
+                        onPress={() => setHidden((h) => !h)}
+                        hitSlop={8}
+                    >
                         <MaterialCommunityIcons
                             name={hidden ? 'eye-off-outline' : 'eye-outline'}
                             size={22}

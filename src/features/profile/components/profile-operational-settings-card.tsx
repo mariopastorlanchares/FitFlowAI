@@ -89,6 +89,8 @@ export function ProfileOperationalSettingsCard({
               <Pressable
                 key={level}
                 accessibilityRole="button"
+                accessibilityLabel={t(`profile.training.experienceLevels.${level}`)}
+                accessibilityState={{ selected: isSelected }}
                 onPress={() => onSelectExperienceLevel(level)}
                 style={[styles.chip, isSelected && styles.chipSelected]}
               >
@@ -111,6 +113,8 @@ export function ProfileOperationalSettingsCard({
               <Pressable
                 key={location}
                 accessibilityRole="button"
+                accessibilityLabel={t(`dashboard.context.locationOptions.${location}`)}
+                accessibilityState={{ selected: isSelected }}
                 onPress={() => onTogglePreferredLocation(location)}
                 style={[styles.chip, isSelected && styles.chipSelected]}
               >
@@ -133,6 +137,8 @@ export function ProfileOperationalSettingsCard({
               <Pressable
                 key={location}
                 accessibilityRole="button"
+                accessibilityLabel={t(`dashboard.context.locationOptions.${location}`)}
+                accessibilityState={{ selected: isSelected }}
                 onPress={() => onSelectDefaultLocation(location)}
                 style={[styles.chip, isSelected && styles.chipSelected]}
               >
@@ -155,6 +161,8 @@ export function ProfileOperationalSettingsCard({
               <Pressable
                 key={equipmentId}
                 accessibilityRole="button"
+                accessibilityLabel={t(`profile.operational.homeEquipmentOptions.${equipmentId}`)}
+                accessibilityState={{ selected: isSelected }}
                 onPress={() => onToggleHomeEquipment(equipmentId)}
                 style={[styles.chip, isSelected && styles.chipSelected]}
               >
@@ -175,6 +183,11 @@ export function ProfileOperationalSettingsCard({
         </Text>
         <PrimaryButton
           label={t('profile.operational.save')}
+          accessibilityHint={
+            isDirty
+              ? t('profile.operational.saveHint')
+              : t('profile.operational.saveDisabledHint')
+          }
           onPress={onSave}
           isLoading={isSaving}
           disabled={!isDirty}

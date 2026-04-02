@@ -24,19 +24,23 @@ export function RegisterScreen() {
 
   const { signUp } = useAuth();
   const { t } = useTranslation();
+  const socialAuthUnavailable = t('common.socialAuthUnavailable');
 
   const updateEmail = (value: string) => {
     setEmail(value);
+    setError('');
     setSuccessMessage('');
   };
 
   const updatePassword = (value: string) => {
     setPassword(value);
+    setError('');
     setSuccessMessage('');
   };
 
   const updateConfirmPassword = (value: string) => {
     setConfirmPassword(value);
+    setError('');
     setSuccessMessage('');
   };
 
@@ -151,35 +155,52 @@ export function RegisterScreen() {
 
       <Divider label={t('common.orRegisterWith')} />
 
-      <View style={{ flexDirection: 'row', gap: 12 }}>
-        <SocialButton
-          provider="apple"
-          label={t('common.apple')}
-          onPress={() => {}}
-          icon={
-            <MaterialCommunityIcons
-              name="apple"
-              size={20}
-              color={palette.textPrimary}
-            />
-          }
-        />
-        <SocialButton
-          provider="google"
-          label={t('common.google')}
-          onPress={() => {}}
-          icon={
-            <Text
-              style={{
-                fontSize: 18,
-                fontFamily: fonts.bold,
-                color: palette.primary,
-              }}
-            >
-              G
-            </Text>
-          }
-        />
+      <View style={{ gap: 10 }}>
+        <View style={{ flexDirection: 'row', gap: 12 }}>
+          <SocialButton
+            provider="apple"
+            label={t('common.apple')}
+            onPress={() => {}}
+            disabled
+            accessibilityHint={socialAuthUnavailable}
+            icon={
+              <MaterialCommunityIcons
+                name="apple"
+                size={20}
+                color={palette.textPrimary}
+              />
+            }
+          />
+          <SocialButton
+            provider="google"
+            label={t('common.google')}
+            onPress={() => {}}
+            disabled
+            accessibilityHint={socialAuthUnavailable}
+            icon={
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: fonts.bold,
+                  color: palette.primary,
+                }}
+              >
+                G
+              </Text>
+            }
+          />
+        </View>
+        <Text
+          style={{
+            color: palette.textSecondary,
+            fontFamily: fonts.regular,
+            fontSize: 13,
+            lineHeight: 18,
+            textAlign: 'center',
+          }}
+        >
+          {socialAuthUnavailable}
+        </Text>
       </View>
     </AuthShell>
   );

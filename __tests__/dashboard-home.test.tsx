@@ -41,9 +41,11 @@ jest.mock('react-i18next', () => ({
           'Main lifts first, accessories after. Estimated setup: 2 min.',
         'dashboard.weeklyStreak.label': 'Consistency',
         'dashboard.weeklyStreak.title': 'Weekly progress',
-        'dashboard.weeklyStreak.caption': 'sessions completed this week',
+        'dashboard.weeklyStreak.progress': '0 sessions',
+        'dashboard.weeklyStreak.caption': 'No history connected',
         'dashboard.weeklyStreak.helper':
-          'One more session keeps the streak on track.',
+          'Your completed sessions will be tracked here once the history module is ready.',
+        'dashboard.weeklyStreak.daysLabel': '0 days active',
         'dashboard.context.locationLabel': 'Where are you training today?',
         'dashboard.context.durationLabel': 'Available time',
         'dashboard.context.energyLabel': 'Energy level',
@@ -59,14 +61,6 @@ jest.mock('react-i18next', () => ({
         'dashboard.context.energyOptions.medium': 'Normal',
         'dashboard.context.energyOptions.high': 'High',
       };
-
-      if (key === 'dashboard.weeklyStreak.progress') {
-        return `${options?.completed}/${options?.goal}`;
-      }
-
-      if (key === 'dashboard.weeklyStreak.daysLabel') {
-        return `${options?.days} days active`;
-      }
 
       return translations[key] ?? key;
     },
@@ -87,10 +81,13 @@ describe('Dashboard home blocks', () => {
   });
 
   it('renders the main workout card and starts the workout flow', () => {
-    const { getByText } = render(<TodayWorkoutCard />);
+    const { getByLabelText, getByText } = render(<TodayWorkoutCard />);
 
     expect(getByText('Your workout today')).toBeTruthy();
     expect(getByText('Main lifts first, accessories after. Estimated setup: 2 min.')).toBeTruthy();
+    expect(getByLabelText('Start workout. DAY 1 PUSH.').props.accessibilityHint).toContain(
+      'Main lifts first, accessories after. Estimated setup: 2 min.'
+    );
 
     fireEvent.press(getByText('Start workout'));
 
@@ -101,8 +98,10 @@ describe('Dashboard home blocks', () => {
     const { getByText } = render(<WeeklyStreak />);
 
     expect(getByText('Weekly progress')).toBeTruthy();
-    expect(getByText('3/4')).toBeTruthy();
-    expect(getByText('One more session keeps the streak on track.')).toBeTruthy();
+    expect(getByText('0 sessions')).toBeTruthy();
+    expect(
+      getByText('Your completed sessions will be tracked here once the history module is ready.')
+    ).toBeTruthy();
   });
 
   it('renders a compact session summary and expands when needed', () => {

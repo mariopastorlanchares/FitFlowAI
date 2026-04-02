@@ -13,6 +13,11 @@ export function onAuthChange(callback: (user: User | null) => void) {
   return onAuthStateChanged(auth, callback);
 }
 
+export async function waitForInitialAuthState() {
+  await auth.authStateReady();
+  return auth.currentUser;
+}
+
 export async function signIn(email: string, password: string) {
   await signInWithEmailAndPassword(auth, email, password);
 }

@@ -235,6 +235,78 @@ describe('generator contract validation', () => {
     });
   });
 
+  it('normalizes null optional transport fields in a generated session payload', () => {
+    const session = {
+      session_id: 'session-nullable-1',
+      session_type: 'generated_ephemeral' as const,
+      location: 'gym' as const,
+      session_goal: 'general_fitness' as const,
+      estimated_duration_minutes: 30,
+      summary: null,
+      session_notes: null,
+      blocks: [
+        {
+          block_id: 'block-1',
+          block_type: 'straight_sets' as const,
+          order_index: 0,
+          title: null,
+          exercise: {
+            entry_id: 'entry-1',
+            exercise_id: 'push_up' as const,
+            prescription: {
+              set_count: 3,
+              target_reps: 12,
+              intensity_method: 'bodyweight' as const,
+            },
+            coach_notes: null,
+          },
+          rest_seconds_after_exercise: 60,
+        },
+      ],
+    };
+
+    expect(validateGeneratedWorkoutSession(session)).toEqual({
+      success: true,
+      data: {
+        session_id: 'session-nullable-1',
+        session_type: 'generated_ephemeral',
+        location: 'gym',
+        session_goal: 'general_fitness',
+        estimated_duration_minutes: 30,
+        summary: undefined,
+        session_notes: undefined,
+        blocks: [
+          {
+            block_id: 'block-1',
+            block_type: 'straight_sets',
+            order_index: 0,
+            title: undefined,
+            exercise: {
+              entry_id: 'entry-1',
+              exercise_id: 'push_up',
+              prescription: {
+                set_count: 3,
+                target_reps: 12,
+                intensity_method: 'bodyweight',
+                intensity_value: undefined,
+                tempo: undefined,
+              },
+              selection_reason: undefined,
+              coach_notes: undefined,
+            },
+            rest_seconds_after_exercise: 60,
+            exercises: undefined,
+            rest_seconds_after_block: undefined,
+            rest_seconds_after_round: undefined,
+            rounds: undefined,
+            duration_seconds: undefined,
+            interval_seconds: undefined,
+          },
+        ],
+      },
+    });
+  });
+
   it('accepts a valid circuit payload with controlled free-text fields', () => {
     const session = {
       session_id: 'session-circuit-1',

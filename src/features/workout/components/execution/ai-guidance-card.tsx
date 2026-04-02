@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { palette, typography } from '@shared/constants/theme';
 
@@ -46,6 +46,8 @@ export function AIGuidanceCard({
       <Text style={styles.feedbackLabel}>{t('workout.ai.feedbackLabel')}</Text>
       <TextInput
         style={styles.feedbackInput}
+        accessibilityLabel={t('workout.ai.feedbackLabel')}
+        accessibilityHint={t('workout.ai.feedbackPlaceholder')}
         placeholder={t('workout.ai.feedbackPlaceholder')}
         placeholderTextColor={palette.textSecondary}
         value={feedback}
@@ -53,13 +55,21 @@ export function AIGuidanceCard({
         multiline
       />
 
-      <TouchableOpacity
-        style={[styles.submitButton, isSubmitDisabled && styles.submitButtonDisabled]}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('workout.ai.feedbackSubmit')}
+        accessibilityHint={t('workout.ai.pendingFeedbackBody')}
+        accessibilityState={{ disabled: isSubmitDisabled }}
         onPress={onSubmitFeedback}
         disabled={isSubmitDisabled}
+        style={({ pressed }) => [
+          styles.submitButton,
+          isSubmitDisabled && styles.submitButtonDisabled,
+          pressed && !isSubmitDisabled ? styles.submitButtonPressed : null,
+        ]}
       >
         <Text style={styles.submitButtonText}>{t('workout.ai.feedbackSubmit')}</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }
@@ -72,7 +82,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: palette.border,
     padding: 20,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   headerTitle: {
     ...typography.title,
@@ -125,6 +135,9 @@ const styles = StyleSheet.create({
   submitButtonDisabled: {
     opacity: 0.45,
     borderColor: palette.border,
+  },
+  submitButtonPressed: {
+    opacity: 0.82,
   },
   submitButtonText: {
     ...typography.body,
