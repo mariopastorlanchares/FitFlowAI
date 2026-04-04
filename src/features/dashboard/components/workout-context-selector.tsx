@@ -38,6 +38,10 @@ export function WorkoutContextSelector() {
           return (
             <Pressable
               key={option}
+              accessibilityRole="button"
+              accessibilityLabel={t(`${translationKey}.${option}`)}
+              accessibilityState={{ selected: isSelected }}
+              hitSlop={6}
               style={[styles.chip, isSelected && styles.chipSelected]}
               onPress={() => onSelect(option)}
             >
@@ -54,6 +58,15 @@ export function WorkoutContextSelector() {
   return (
     <View style={styles.container}>
       <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('dashboard.sessionSetup.title')}
+        accessibilityHint={
+          isExpanded
+            ? t('dashboard.sessionSetup.collapseHint')
+            : t('dashboard.sessionSetup.expandHint')
+        }
+        accessibilityState={{ expanded: isExpanded }}
+        hitSlop={6}
         style={styles.header}
         onPress={() => setIsExpanded((current) => !current)}
       >
@@ -125,6 +138,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   header: {
+    minHeight: 56,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -183,8 +197,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   chip: {
+    minHeight: 44,
     paddingHorizontal: 14,
     paddingVertical: 10,
+    justifyContent: 'center',
     borderRadius: 16,
     borderCurve: 'continuous',
     backgroundColor: palette.surfaceMuted,

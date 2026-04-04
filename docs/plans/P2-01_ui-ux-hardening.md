@@ -1,6 +1,6 @@
 # P2-01 Endurecimiento UI/UX de Superficies Actuales
 
-> **Fase:** 2 | **Complejidad:** L | **Estado:** 🔄
+> **Fase:** 2 | **Complejidad:** L | **Estado:** ✅
 
 ## 🎯 Objetivo
 Convertir los hallazgos de la auditoría visual en un backlog ejecutable que reduzca deuda de interfaz antes de seguir expandiendo backend e IA. El foco no es "embellecer" la app, sino hacerla más coherente, más utilitaria y menos dependiente de patrones visuales genéricos.
@@ -34,7 +34,7 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 ### Paso 1: Cerrar deuda transversal visible (Ola A)
 - [x] **Acción:** Eliminar strings hardcodeados de UI y moverlos a `i18next`
 - [x] **Archivos afectados:** `src/features/auth/*`, `src/features/dashboard/*`, `src/features/workout/*`, `src/features/analytics/screens/stats-screen.tsx`, `src/features/profile/*`, `src/shared/ui/*`, `src/shared/lib/i18n.ts`
-- [ ] **Detalles pendientes:** Las superficies principales ya usan `i18next` y `stats`/`profile` muestran copy traducida. `workout` ya elimina el `defaultValue` residual y los mensajes de "mock técnico", pero la sesión sigue siendo una muestra operativa hasta conectar datos reales.
+- [x] **Detalles:** Las superficies principales ya usan `i18next`, `stats`/`profile` muestran copy traducida y `workout` dejó atrás tanto el `defaultValue` residual como el tono de mock técnico una vez se conectó a datos y feedback reales.
 
 ### Paso 2: Reforzar `theme.ts` como única fuente de verdad (Ola A)
 - [x] **Acción:** Auditar colores, radios, superficies, sombras y estados fuera de tokens
@@ -44,7 +44,7 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 ### Paso 3: Limpiar placeholders y señales de prototipo (Ola A)
 - [x] **Acción:** Retirar textos provisionales, datos falsos visibles y affordances poco creíbles
 - [x] **Archivos afectados:** `src/features/dashboard/*`, `src/features/analytics/screens/stats-screen.tsx`, `src/features/workout/components/execution/*`, `src/features/profile/components/profile-training-status-card.tsx`
-- [ ] **Detalles pendientes:** `stats` ya tiene un placeholder digno y `profile` ya expone el bootstrap real de Firestore. `workout` ya cambia el tono técnico de mock por estados honestos de "pendiente/no conectado" en IA y media, pero la sesión sigue dependiendo de una muestra operativa hasta la Ola C.
+- [x] **Detalles:** `stats` ya sustituye el placeholder fijo por métricas básicas reales cuando hay historial, `profile` expone bootstrap real de Firestore y `workout` reemplazó ya la muestra operativa por un flujo conectado y estados honestos de conectividad.
 
 ### Paso 4: Refactor visual de Auth tras migración FSD (Ola B) ✅
 - [x] **Acción:** Simplificar Login/Registro para que se apoyen más en jerarquía, espaciado y contraste que en blur, glow y pills
@@ -77,9 +77,9 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
   5. Asegurar que `requestGeneratedWorkoutSession` recibe el intent desde Zustand para la llamada a Genkit.
 
 ### Paso 9: Accesibilidad, feedback y tests visuales básicos (Ola D)
-- [ ] **Acción:** Añadir revisión de contraste, targets táctiles, estados disabled/loading y tests de componentes críticos
-- [ ] **Archivos afectados:** `src/shared/ui/*`, features `auth`, `dashboard`, `workout`, `profile`, tests de RTL/Jest
-- [ ] **Detalles:** `shared/ui`, `auth`, `dashboard`, `workout` y `profile` ya exponen una primera pasada útil de semántica accesible y feedback honesto. Las CTAs principales anuncian mejor su intención/estado, `workout` ya refleja también el estado del flujo (`rest`, `editing`, `finished`) en el CTA operativo, añade ya un cierre visible y motivante al completar la sesión, y `profile` muestra feedback inline coherente para `save/retry/logout`. La deuda abierta de esta ola queda reducida a la revisión final transversal de contraste, targets táctiles y pequeños remates de consistencia.
+- [x] **Acción:** Añadir revisión de contraste, targets táctiles, estados disabled/loading y tests de componentes críticos
+- [x] **Archivos afectados:** `src/shared/ui/*`, features `auth`, `dashboard`, `workout`, `profile`, tests de RTL/Jest
+- [x] **Detalles:** `shared/ui`, `auth`, `dashboard`, `workout` y `profile` ya exponen una pasada coherente de semántica accesible y feedback honesto. Las CTAs principales anuncian mejor su intención/estado, `workout` refleja el estado del flujo (`rest`, `editing`, `finished`), añade un cierre visible y motivante al completar la sesión, y la pasada final endurece también targets táctiles y controles compactos en Home, Profile y el header de Workout.
 
 ## ✅ Criterios de Aceptación
 - [x] No quedan strings hardcodeados en pantallas principales ni en componentes UI reutilizables
@@ -116,3 +116,4 @@ Este plan se ejecutará en varias olas para evitar retrabajo:
 - `2026-04-02`: Navegación de `workout` afinada: la ejecución activa oculta la tab bar inferior para recuperar altura útil real y evitar que la CTA principal compita visualmente con una barra persistente que no aporta durante la sesión. Verificado con `npx tsc --noEmit` y `npx expo lint app/(tabs)/_layout.tsx src/features/workout/screens/workout-execution-screen.tsx src/features/workout/components/execution/execution-controls.tsx`.
 - `2026-04-02`: Pendiente añadido a `P2-01 / Paso 9` tras QA manual: `workout` necesita un feedback explícito de éxito/motivación al completar un entrenamiento, para que el cierre del flujo no dependa solo de volver a Home con el historial actualizado.
 - `2026-04-02`: Cierre de `workout` endurecido: al finalizar una sesión aparece ahora un modal breve y motivante con resumen mínimo de sets/ejercicios y CTA de salida a Home, en lugar de saltar de contexto sin feedback. Verificado con `npx tsc --noEmit`, `npx jest __tests__/workout-execution.test.tsx --runInBand` y `npx expo lint src/features/workout src/shared/lib __tests__/workout-execution.test.tsx`.
+- `2026-04-02`: ✅ `P2-01` cerrado: la pasada final endurece targets táctiles y semántica en el selector contextual de Home, los chips de `profile` y el cierre de `workout`, sin abrir nueva deuda funcional. Verificado con `npx tsc --noEmit`, `npx jest __tests__/workout-execution.test.tsx __tests__/profile.test.tsx __tests__/dashboard-home.test.tsx --runInBand` y `npx expo lint src/features/dashboard src/features/profile src/features/workout src/shared/lib __tests__/workout-execution.test.tsx __tests__/profile.test.tsx __tests__/dashboard-home.test.tsx`.

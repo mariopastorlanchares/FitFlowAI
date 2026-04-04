@@ -61,7 +61,7 @@
 |:---:|---|:---:|---|
 | ✅ | Integración de Firebase Auth (Email/Password) + i18n | L | - |
 | ✅ | **Refactorización Arquitectónica** (FSD + React Query) | L | [🔗 P2-00 Refactor Arquitectónico](docs/plans/P2-00_architectural-refactor.md) |
-| 🔄 | **Endurecimiento UI/UX de superficies actuales** (i18n, theme, jerarquía y placeholders) | L | [🔗 P2-01 UI/UX Hardening](docs/plans/P2-01_ui-ux-hardening.md) |
+| ✅ | **Endurecimiento UI/UX de superficies actuales** (i18n, theme, jerarquía y placeholders) | L | [🔗 P2-01 UI/UX Hardening](docs/plans/P2-01_ui-ux-hardening.md) |
 | ✅ | Configuración base de Firestore (infraestructura y validación en emulador cerradas) | M | [🔗 P2-03 Firestore Foundation](docs/plans/P2-03_firestore-foundation.md) |
 | 🔄 | Esquema de datos: Usuarios, Rutinas, Historial y Perfil de Equipamiento | L | [🔗 P2-02 Data Schema + Equipment Profile](docs/plans/P2-02_data-schema-equipment-profile.md) |
 | ⬜ | Firebase Auth (Apple Sign-In + Google Sign-In) | M | Pendiente de plan |
@@ -231,4 +231,10 @@
 </p>
 <p align="center">
   <sub>Cierre de workout reforzado el 2 de abril de 2026: completar una sesión ya muestra feedback positivo y un resumen breve antes de volver a Home, para que el final del entrenamiento no se perciba como un salto abrupto de pantalla.</sub>
+</p>
+<p align="center">
+  <sub>P2-01 cerrado el 2 de abril de 2026: la pasada final deja consistentes los estados, la semántica accesible y los targets táctiles de `auth`, `dashboard`, `workout` y `profile`.</sub>
+</p>
+<p align="center">
+  <sub>Reglas de historial validadas materialmente el 2 de abril de 2026: `firestore.rules` pasa ya en emulador para `userProfiles` y `workoutSessions`, así que la deuda abierta de `P2-02` vuelve a ser de producto/modelo y no de infraestructura base.</sub>
 </p>

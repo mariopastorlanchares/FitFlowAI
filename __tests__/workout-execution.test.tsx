@@ -34,6 +34,8 @@ jest.mock('react-i18next', () => ({
         'workout.header.totalTimer': 'Session',
         'workout.header.exerciseTimer': 'Exercise',
         'workout.header.restTimer': 'Rest',
+        'workout.header.closeLabel': 'Close workout',
+        'workout.header.closeHint': 'Leave the workout screen and return to the previous view.',
         'workout.exercise.currentLabel': 'Current exercise',
         'workout.exercise.alternativeAction': 'See alternative',
         'workout.exercise.mediaPending':

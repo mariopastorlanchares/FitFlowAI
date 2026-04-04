@@ -91,6 +91,7 @@ export function ProfileOperationalSettingsCard({
                 accessibilityRole="button"
                 accessibilityLabel={t(`profile.training.experienceLevels.${level}`)}
                 accessibilityState={{ selected: isSelected }}
+                hitSlop={6}
                 onPress={() => onSelectExperienceLevel(level)}
                 style={[styles.chip, isSelected && styles.chipSelected]}
               >
@@ -115,6 +116,7 @@ export function ProfileOperationalSettingsCard({
                 accessibilityRole="button"
                 accessibilityLabel={t(`dashboard.context.locationOptions.${location}`)}
                 accessibilityState={{ selected: isSelected }}
+                hitSlop={6}
                 onPress={() => onTogglePreferredLocation(location)}
                 style={[styles.chip, isSelected && styles.chipSelected]}
               >
@@ -139,6 +141,7 @@ export function ProfileOperationalSettingsCard({
                 accessibilityRole="button"
                 accessibilityLabel={t(`dashboard.context.locationOptions.${location}`)}
                 accessibilityState={{ selected: isSelected }}
+                hitSlop={6}
                 onPress={() => onSelectDefaultLocation(location)}
                 style={[styles.chip, isSelected && styles.chipSelected]}
               >
@@ -163,6 +166,7 @@ export function ProfileOperationalSettingsCard({
                 accessibilityRole="button"
                 accessibilityLabel={t(`profile.operational.homeEquipmentOptions.${equipmentId}`)}
                 accessibilityState={{ selected: isSelected }}
+                hitSlop={6}
                 onPress={() => onToggleHomeEquipment(equipmentId)}
                 style={[styles.chip, isSelected && styles.chipSelected]}
               >
@@ -267,8 +271,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   chip: {
+    minHeight: 44,
     paddingHorizontal: 14,
     paddingVertical: 10,
+    justifyContent: 'center',
     borderRadius: 16,
     borderCurve: 'continuous',
     backgroundColor: palette.surfaceMuted,

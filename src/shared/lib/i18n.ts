@@ -70,6 +70,8 @@ const en = {
       },
       sessionSetup: {
         title: 'Tune today’s session',
+        expandHint: 'Expand to review and change location, duration and energy.',
+        collapseHint: 'Collapse the session setup panel.',
       },
       today_workout: 'Ready to generate',
       time: 'min',
@@ -278,6 +280,8 @@ const en = {
         totalTimer: 'Session',
         exerciseTimer: 'Exercise',
         restTimer: 'Rest',
+        closeLabel: 'Close workout',
+        closeHint: 'Leave the workout screen and return to the previous view.',
       },
       exercise: {
         currentLabel: 'Current exercise',
@@ -526,6 +530,8 @@ const es = {
       },
       sessionSetup: {
         title: 'Ajusta la sesión de hoy',
+        expandHint: 'Despliega para revisar y cambiar ubicacion, duracion y energia.',
+        collapseHint: 'Pliega el panel de configuracion de la sesion.',
       },
       today_workout: 'Listo para generar',
       time: 'min',
@@ -696,6 +702,8 @@ const es = {
         totalTimer: 'Sesión',
         exerciseTimer: 'Ejercicio',
         restTimer: 'Descanso',
+        closeLabel: 'Cerrar entrenamiento',
+        closeHint: 'Salir de la pantalla de entrenamiento y volver a la vista anterior.',
       },
       exercise: {
         currentLabel: 'Ejercicio actual',

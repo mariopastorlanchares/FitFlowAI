@@ -85,6 +85,7 @@ export function ProfileContextSettingsCard({
                     accessibilityRole="button"
                     accessibilityLabel={t(`profile.contexts.capabilityOptions.${capabilityId}`)}
                     accessibilityState={{ selected: isSelected }}
+                    hitSlop={6}
                     onPress={() => onToggleCapability(location, capabilityId)}
                     style={[styles.chip, isSelected && styles.chipSelected]}
                   >
@@ -207,8 +208,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   chip: {
+    minHeight: 44,
     paddingHorizontal: 14,
     paddingVertical: 10,
+    justifyContent: 'center',
     borderRadius: 16,
     borderCurve: 'continuous',
     backgroundColor: palette.surfaceMuted,

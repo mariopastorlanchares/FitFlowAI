@@ -29,7 +29,15 @@ export function WorkoutHeader({
   return (
     <View style={styles.header}>
       <View style={styles.topRow}>
-        <TouchableOpacity style={styles.backButton} onPress={onClose} activeOpacity={0.7}>
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityLabel={t('workout.header.closeLabel')}
+          accessibilityHint={t('workout.header.closeHint')}
+          hitSlop={8}
+          style={styles.backButton}
+          onPress={onClose}
+          activeOpacity={0.7}
+        >
           <Ionicons name="chevron-back" size={24} color={palette.textPrimary} />
         </TouchableOpacity>
 
@@ -89,9 +97,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   backButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: palette.surfaceMuted,
     borderWidth: 1,
     borderColor: palette.border,
